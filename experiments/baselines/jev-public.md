@@ -1,6 +1,6 @@
 # Published Jev references / Jev 公开实验参考
 
-Accessed **2026-09-20**. We inspected original reports, aggregate JSON and timing code. **No Jev inference was run and none of these model results was reproduced locally.** [Machine-readable records](jev-public.json) include immutable source commits, downloaded-source SHA-256, metric definitions and missing fields as `null`.
+Accessed **2026-09-20**. We inspected original reports, aggregate JSON and timing code. **This historical reference compilation did not run Jev inference or reproduce these external model results locally.** A separate [matched AGY/Jev experiment](../COMPARISON.md) uses our own cases and native OpenRouter calls. [Machine-readable records](jev-public.json) include immutable source commits, downloaded-source SHA-256, metric definitions and missing fields as `null`.
 
 这些是外部作者报告，不能与 fast-jev 的新 synthetic 测试集直接排名。下面保留不同任务的强项与弱项；不拼接不同数据集的最佳准确率和最低时延来宣称胜出。
 

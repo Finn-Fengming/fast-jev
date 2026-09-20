@@ -1,10 +1,28 @@
 # fast-jev 0.1 验证记录
 
-日期：2026-09-20。环境：macOS arm64、Node.js v26.0.0。项目要求 Node.js 22+；[CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)已在 Node.js 22/24 × Linux/macOS 四组环境全部通过。
+日期：2026-09-20。环境：macOS arm64、Node.js v26.0.0。项目要求 Node.js 22+。当前模型实验入口为 [AGY / 原生 Jev 对比](../experiments/COMPARISON.md)，本轮状态和指标见[60 秒后续实验报告](../experiments/results/agy-jev-openrouter-60s-test-20260920/comparison.md)。早期 AGY-only、外部 Jev 资料和离线封装开销实验作为历史证据保留。
 
-后续实验更新：当前 **130 项测试全部通过**，`npm run check` 通过。新增固定数据集、原始证据重算、runner 与数据隔离测试，以及错误分类、元数据隐私与后端错误脱敏回归测试；5 对本地开销 A/B 的 30,000 个正式样本与真实 agy 实验见 [experiments](../experiments/README.md)。下表保留初版 71 项测试的历史验证记录。agy 的真实成功输出、开发集及正式单例/批量测试结果见下文；原有单例/批量计划仍保留为未执行记录。
+## 当前对比实现的验证
 
-## 已通过
+60 秒后续实验已结束，状态 `completed_with_errors`：148/148 次计划调用全部执行，两个后端、两种模式均覆盖 64/64 案例，无 `not_run`。单例端到端正确率为 AGY **59/64**、Jev **64/64**；批量为 AGY **48/64**、Jev **63/64**。AGY 单例包含 2 次超时和 3 次 `AGY_FAILED`，批量包含 2 次超时、影响 16 条案例；成功输出全部正确。Jev 所有请求成功，批量唯一错误为评分题。成功请求时延、评分 MAE/精确匹配及全体请求分位数见[对比汇总](../experiments/COMPARISON.md#completed-60-second-follow-up)。
+
+本轮独立报告保留 2 个 UTC 与单调时钟差异提示；单调计时的耗时一致性和串行无重叠检查通过。22 个被测源码文件 hash 保持冻结版本不变，运行时 HEAD 为 `60066f4`。失败、计时边界和[分析](../experiments/results/agy-jev-openrouter-60s-test-20260920/analysis.md)一并保留；未把完整覆盖误写成全部调用成功。初轮 30 秒部分结果仍见下文。
+
+本机执行 `node --test --test-concurrency=1 test/*.test.mjs`，**169/169 测试通过**。此前一次并行测试中，一个模拟 AGY 子进程测试触发了 15 秒测试限制；随后完整串行重跑全部通过。测试覆盖原有生产行为，以及新增原生 Jev 类型与范围验证、固定官方 endpoint、无重试、秘密脱敏、配对调度、失败停止、计时一致性、冻结快照及原生答案重算。离线 fixture 不消耗模型额度，其固定正确答案不能充当模型准确率。
+
+历史发布版本的 [CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)曾在 Node.js 22/24 × Linux/macOS 四组环境通过；这不是对本次新提交 CI 状态的声明。本轮实现测试和真实模型结果分别记录。
+
+两轮正式调用使用同一份冻结实现 [`d09f240`](https://github.com/Finn-Fengming/fast-jev/commit/d09f2408e79b32b4bec99db62af10268911c1195)。[初轮 30 秒协议](../experiments/protocols/agy-jev-openrouter-20260920.md)按规则停止，其[完整记录](../experiments/results/agy-jev-openrouter-test-20260920/comparison.md)保留：两后端各尝试 15/64 条单例案例，AGY 8/15 正确、7 次超时，Jev 15/15 正确；连续 3 次 AGY 正式超时触发停止，剩余各 49 条单例和全部批量案例未运行。
+
+之后在新调用前明确记录[后续协议](../experiments/protocols/agy-jev-openrouter-60s-20260920.md)：双方时限改为产品默认的 60 秒，先运行每批 8 例模式，再单例。新一轮启动 HEAD 为 `60066f4`，被测源码 hash 与初轮相同；题目、标签、模型、适配器和评分规则均未改变。双方在新目录重新调用同一组 64 条案例，各模式一轮，同样种子、顺序和批次，串行 AB/BA 交替，无应用层重试。失败停止规则保持原样。修订发生在观察到初轮失败之后，两轮完整记录并列，不补写旧记录或挑选最佳预测。
+
+两轮之间的[三条开发案例诊断](../experiments/results/agy-jev-timeout-dev-20260920/README.md)在 60 秒时限下全部成功，耗时 11.37–14.58 秒，成功事件到进程退出约 1 秒。该观察不能确证初轮超时原因；未据此进行生产修复。转发原始流的观察代理只用于这次开发诊断，正式调用不使用代理。
+
+Jev 使用 OpenRouter 原生 Decisions API。`noul >= 0.5` 转为布尔答案，评分保留浮点值；本轮报告同时展示评分 MAE、精确匹配和 ≤ 0.5 容差。该集原有案例与先前成绩已经被观察，因此属于固定诊断集重新测量，不是新增盲测。Jev 的概率与 AGY 自报告 confidence 不作比较。
+
+[开发接口检查](../experiments/results/agy-jev-openrouter-dev-20260920/comparison.md)只用于确认接入，它保留正式提交前工作树的源码 hash，不计入正式质量与速度表。正式结果的源码快照、全局调度、开始/结束计时及原生答案转换由 `experiments/compare-report.mjs` 独立核验。详见[复现说明](../experiments/README.md)和[来源说明](../experiments/PROVENANCE.md)。
+
+## 初版历史验证
 
 | 检查 | 结果与覆盖范围 |
 | --- | --- |
@@ -19,7 +37,7 @@
 
 HTTP fixture 使用本地固定决策，不是真实模型。它证明安装包、CLI、HTTP transport 和结果验证能够协作，不能证明任意第三方服务的兼容性或模型质量。
 
-## 真实 agy 推理
+## 历史 AGY 单后端推理
 
 生产 `runAgy` 使用临时目录、stdin stream-json、JSON Schema、`--mode plan`、`--sandbox`、`--disable-slash-commands` 发起请求。
 
@@ -37,9 +55,9 @@ HTTP fixture 使用本地固定决策，不是真实模型。它证明安装包�
 
 两组正式运行之后修复了实验 runner 的辅助错误分类：超时错误提示含有 `login`，旧规则因先匹配该词而将 `AGY_TIMEOUT` 误归为 `authentication`。原始错误码正确，计分、超时限制和失败数量不受影响。原始文件保持不变；[勘误说明](../experiments/ERRATA.md)记录修复与受影响条目。这次错误分类修复未修改生产适配器、提示词、模型和评分规则。修复新增的 10 项测试与原有 103 项测试合计 **113/113 通过**。
 
-本次没有用户指定的远端 OpenAI-compatible endpoint、模型和凭据，因而只做了 compatible 协议验证，没有宣称已完成该远端模型的在线验证。
+初版对通用 OpenAI-compatible Chat Completions 的验证仅使用本地 HTTP fixture。本轮新增的远端 Jev 调用走专用 Decisions API，不等于已经实测所有通用 compatible 服务。
 
-## 在可用后端上复测
+## 通用后端连通检查
 
 ```sh
 # 先确认原始 agy 能正常推理，再测试封装
@@ -57,9 +75,8 @@ npm run benchmark -- --provider agy --runs 3
 ## 公开安装包与隐私处理
 
 发布版增加固定的 AGY 错误提示和数值 token 元数据过滤，不直接输出任意后端错误
-内容；实验导出不保存兼容端点的主机名/路径。历史探测清单仅保留被测型号与必要
-参数。这些发布后的代码变化没有被当作一次新的模型 benchmark，实验输出、
-准确率和耗时保持原值，见[来源说明](../experiments/PROVENANCE.md)。
+内容；通用 compatible 实验不导出本机配置的私有端点，当前原生 Jev 实验明确记录固定的公开官方 endpoint。历史探测清单仅保留被测型号与必要
+参数。发布时的隐私调整没有被追溯伪装成旧实验的测量版本，旧输出、准确率和耗时保持原值；当前配对实验另存新源码快照和调用记录，见[来源说明](../experiments/PROVENANCE.md)。
 
 `npm run package` 使用明确的文件清单生成 `dist/fast-jev.tgz` 和校验文件；
 `npm run test:package` 从该归档进行全新离线安装，验证两个命令、stdin、dry-run

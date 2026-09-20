@@ -216,7 +216,7 @@ npm run package
 npm run test:package
 ```
 
-`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency. All 130 local tests passed; the [CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml) passed on Linux/macOS with Node.js 22/24.
+`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency. All 169 local tests passed in a serial run; [CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml) runs on Linux/macOS with Node.js 22/24.
 
 For a small, real-call timing check:
 
@@ -237,51 +237,43 @@ A [live check on 2026-09-20](experiments/results/agy-recovered-preflight-2026092
 
 ## Reproducible experiments
 
-The [experiment guide](experiments/README.md) includes a frozen 96-case English/Chinese diagnostic suite (32 dev / 64 test), seeded request order, raw records, source/data hashes, and a report generator that independently recomputes scores. Reference labels are AI-assisted and rule-derived, not independently human-annotated.
+**Live AGY / Gemini versus native OpenRouter Jev (2026-09-20).** Models are `gemini-3.8-flash-low` and `typesafe/jev-1.13`. Both use a 60 s deadline, batch-of-eight before singleton, one measured pass, serial alternating AB/BA order and no application retries. Each backend/mode plans **64 cases**; warmups are excluded. Run status: `completed_with_errors`.
 
-Run these commands from a repository checkout; the npm package excludes `experiments/`.
+Jev had higher end-to-end accuracy and lower successful-request latency in this run. All successful AGY outputs were correct; failed calls reduced its end-to-end accuracy. Jev uses a benchmark-only native Decisions API adapter; the production CLI's compatible backend uses Chat Completions.
 
-```sh
-# Inspect the plan without making a model call
-npm run experiment -- --provider agy --model gemini-3.8-flash-low --plan --split test --out experiments/results/my-plan
-# Use dev to choose settings, then freeze settings before evaluating test
-env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split dev --limit 8 --repeats 1 --out experiments/results/my-dev
-env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 1 --batch-size 1 --out experiments/results/my-test-single
-env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 3 --batch-size 8 --out experiments/results/my-test-batch-8
-npm run experiment:report -- experiments/results/my-test-single
-npm run experiment:report -- experiments/results/my-test-batch-8
-```
+| Mode | Backend | Correct / attempted cases | Case coverage | Failed / attempted requests | Successful-request p50 / p95 (s) |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Singleton | AGY / Gemini | 59/64 (92.19%) | 64/64 | 5/64 | 13.447 / 44.665 |
+| Singleton | OpenRouter Jev | 64/64 (100.00%) | 64/64 | 0/64 | 0.318 / 0.458 |
+| Batch of 8 | AGY / Gemini | 48/64 (75.00%) | 64/64 | 2/8 | 12.892 / 44.182 |
+| Batch of 8 | OpenRouter Jev | 63/64 (98.44%) | 64/64 | 0/8 | 0.324 / 0.462 |
 
-**Live AGY results (2026-09-20).** The frozen 64-case test suite has real singleton and batch results:
+End-to-end accuracy includes backend failures. Coverage is attempted / 64; unrun cases are not predictions. Conditional accuracy among successful responses is: singleton AGY 59/59 (100.00%), Jev 64/64 (100.00%); batch AGY 48/48 (100.00%), Jev 63/64 (98.44%). Successful-request percentiles exclude failure times; see the [raw report](experiments/results/agy-jev-openrouter-60s-test-20260920/comparison.md) for failures, all-attempt timings and coverage.
 
-| Mode | First-repeat correct / attempted | Request success / attempted (all repeats) | Successful-request p50 / p95 |
-| --- | ---: | ---: | ---: |
-| [Singleton, one repeat](experiments/results/agy-recovered-test-single/report.md) | 62/64 (96.88%) | 62/64 | 11.92 s / 23.73 s |
-| [Batch of eight, three repeats](experiments/results/agy-recovered-test-batch-8/report.md) | 64/64 (100%) | 24/24 | 12.82 s / 21.16 s |
+Choice/boolean use exact match; score correctness allows absolute error **≤ 0.5**. Native Jev scores stay continuous, without rounding. Score metrics below cover returned score answers, with MAE restricted to valid values; backend errors remain in the main table's denominator.
 
-Both failed requests were `AGY_TIMEOUT` at the 30 s timeout. All 62 successful predictions were correct; score tasks matched exactly in 16/16 cases (MAE 0). The 96.88% end-to-end rate includes the two failures. Successful-request percentiles exclude them; all-attempt p50/p95 were 11.94 s / 29.59 s.
+| Mode | Backend | Score MAE | Score exact match | Valid scores |
+| --- | --- | ---: | ---: | ---: |
+| Singleton | AGY / Gemini | 0.0000 | 100.00% | 15 |
+| Singleton | OpenRouter Jev | 0.0075 | 56.25% | 16 |
+| Batch of 8 | AGY / Gemini | 0.0000 | 100.00% | 15 |
+| Batch of 8 | OpenRouter Jev | 0.0569 | 68.75% | 16 |
 
-Batch mode answered all 192 case executions correctly, with exactly consistent predictions for all 64 cases across three repeats. Those repeats are not 192 independent quality samples. Mean batch time divided by eight was **1.69 s per case**, an amortized cost rather than individual response latency; request p50 was still 12.82 s. This small synthetic suite is not a production-quality guarantee.
+Mean successful batch amortization: **AGY 2823.74 ms/case; Jev 45.26 ms/case**. This is not individual response latency: each case waits for the complete batch. Timings include fresh AGY process startup or Jev's Node fetch transport, plus request construction, parsing and validation; they do not isolate model compute. Batch mode has at most eight request samples; p95 of eight samples is their maximum.
 
-The raw singleton artifacts incorrectly label the two timeout errors as `authentication` in a secondary category field. Their `AGY_TIMEOUT` codes, failure counts and reported metrics are correct. The [erratum](experiments/ERRATA.md) preserves the original records and documents the error-classification fix applied after both formal runs.
+**The initial 30 s attempt remains visible:** [its report](experiments/results/agy-jev-openrouter-test-20260920/comparison.md) covers 15/64 singleton cases per backend: AGY 8/15 correct with seven timeouts, Jev 15/15 correct. Three consecutive AGY timeouts stopped measurement; each backend's remaining 49 singleton cases and all batch cases were unrun. The 60 s deadline and batch-first order were explicitly selected after observing those failures. No question, label or model prompt changed, and the best predictions were not combined across attempts.
 
-The [formal protocol](experiments/protocols/agy-recovery-20260920.md) was frozen before testing: all 64 test cases, one singleton repeat and three batch-of-eight repeats, a 30 s timeout, and unchanged production code. It contains the exact reproduction commands. Earlier [singleton](experiments/results/agy-recovered-dev-single/report.md) and [batch](experiments/results/agy-recovered-dev-batch-8/report.md) development checks each scored 8/8. A [lean-agent candidate](experiments/results/agy-lean-dev-single/report.md) also scored 8/8 on dev, but did not improve mean or tail latency and was not adopted. The historical `agy-single` and `agy-batch-8` directories remain **unexecuted plans**; actual runs use separate directories.
+This small synthetic set has already been observed. Labels are AI-assisted and rule-derived, without independent human annotation. One pass does not establish production accuracy or stable latency; native Jev probabilities are not compared to AGY's self-reported confidence. [Comparison guide](experiments/COMPARISON.md) · [Protocol](experiments/protocols/agy-jev-openrouter-60s-20260920.md) · [Results and analysis](experiments/results/agy-jev-openrouter-60s-test-20260920/analysis.md) · [JSON](experiments/results/agy-jev-openrouter-60s-test-20260920/comparison.json).
 
-[Published Jev experiments](experiments/baselines/jev-public.md) are separately sourced historical references. Different datasets, environments, and timing boundaries prevent a direct ranking or a claim that fast-jev beats Jev.
-
-We measured and improved local wrapper overhead by reusing an already validated request. In five alternating AB/BA pairs, each with 1,000 measured samples per batch size, the medians of per-run p50 were:
-
-| Items per call | Before | After | Median paired reduction |
-| ---: | ---: | ---: | ---: |
-| 1 | 0.0260 ms | 0.0220 ms | 15.60% |
-| 8 | 0.0829 ms | 0.0553 ms | 33.96% |
-| 32 | 0.2414 ms | 0.1550 ms | 35.73% |
-
-These are **local fixture timings with zero network or model inference**, not AGY response times or a Jev comparison. The saved pre-change implementation and all 30,000 samples are included. [Raw A/B comparison](experiments/results/overhead-ab/comparison.json).
+Reproduction requires working local agy and `OPENAI_API_KEY` configured for OpenRouter. Run from a source checkout; the installation package excludes experiment scripts. Every output directory must be new:
 
 ```sh
-npm run benchmark:local -- --out experiments/results/my-overhead-ab
+node experiments/compare.mjs --timeout 60000 --batch-sizes 8,1 \
+  --out experiments/results/my-comparison
+node experiments/compare-report.mjs experiments/results/my-comparison
 ```
+
+Add `--plan` to the first command for a no-inference plan. The second command only verifies saved answers, request hashes, scoring and paired order. [Historical AGY, external Jev and local overhead experiments](experiments/README.md#历史实验索引) are retained separately.
 
 ## Limits
 

@@ -1,0 +1,2890 @@
+{
+  "schema_version": 1,
+  "experiment": "paired-jev-agy-v1",
+  "created_at": "2026-09-20T08:20:13.245Z",
+  "status": "completed_with_errors",
+  "source": {
+    "sha256": "9f6c59b2ece1d41e07859d9b8973c02ace983af790cbd5bff00d8d49bab82b75",
+    "files": {
+      "experiments/compare-overhead.mjs": "7b95b1bbc29aa9000a68d15ceaaaba2b0dc959b59c312728449c939de88393c3",
+      "experiments/compare-report.mjs": "387816ec43ecb48177b43f07431efd93b0eefc1f2abe21c0f70abf05f3615d87",
+      "experiments/compare.mjs": "a7ce04086bbdd345d0c04e3796af776d304d1915be5cf6e1786b8a360bfcb96b",
+      "experiments/lib/errors.mjs": "e5c4c20ad35c317e1a6fa7dda7c2047192333252358c16818ad95c91c12f185a",
+      "experiments/lib/jev-openrouter.mjs": "4f1fbfd72b19ef9bae4d9c78048ad58226920a4a85cd65f8af205f7376e28cdf",
+      "experiments/lib/metrics.mjs": "b962d32d48c64eddf8221b8da069a2530c50ebb781f6900097036e9109729602",
+      "experiments/lib/privacy.mjs": "2ab241918ef8dc125e681f87d60dcd45cdb7c9e752435cd627cfcc8f5f34c9fc",
+      "experiments/lib/suite.mjs": "174dc3912f915f527d9e1f6b1a5dd6fa710e89e67b6505392da8f2dfe710190c",
+      "experiments/local-overhead.mjs": "9466b2d6b6c2ddfd3608044bdfaff1be7af36e6df2d5f2e941fd313de9b36d23",
+      "experiments/report.mjs": "ae5d498a476a5b5191e625125a83d6302d2cedbdb9624b1ecbbfd9fb175bdb56",
+      "experiments/run.mjs": "352f137b71a7e166493ed15db78227d233338435885fa3d9cb88adb0f9156ce9",
+      "experiments/variants/agy-lean-audit.mjs": "11e2bd64bf9e8eaffda3a67542c52ba88178da747c7905ec64a743b142814c55",
+      "experiments/variants/agy-lean-candidate.mjs": "31458445fdb0968700e89656e1d16345629b55d01a542302ab3b428bc020d97f",
+      "experiments/variants/decision-before-validation-reuse.mjs": "8967545fd781223686feb2f78ddfbddfa948c3a801c6446fcf6012ac38fa0df3",
+      "package.json": "88b779881a56b2e3dc7eabc50d18d0438b71a14f258b560db92038db5051e941",
+      "src/agy.mjs": "73067a78937b291d214de836743e4419b29de138eed5d61bedeb83315c3924c6",
+      "src/cli.mjs": "9091844d8c5439ecdee0488c6ef99d5020ef4d5c62b116b2ec92e07cbc47c2ce",
+      "src/config.mjs": "7edd2965b00c6d753f465e4cfe398b3709761d0d4ac7623f1ffc6191cbb743fc",
+      "src/decision.mjs": "ab06d87de38d06d29bec767ba63107f5a286a09f1f27f392904bec8cbaaf5910",
+      "src/errors.mjs": "43746a56956376351bab5974d51ffb4a9d67c919f99d85f55107683cb60f77cf",
+      "src/privacy.mjs": "4aca0150e158acb4d173006c883080414ee427b506d8b975dc043beef68a5ae0",
+      "src/providers.mjs": "2bb7b13565cb97445993e5badaaea5ec04f719f435a1ef5751599ba38f5e1802"
+    }
+  },
+  "git_commit": "60066f40dfe74cc18eac7ab88527ce7a165b38f6",
+  "environment": {
+    "node": "v26.0.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "os_release": "25.4.0",
+    "cpu": "Apple M5 Pro",
+    "logical_cpus": 18,
+    "memory_gib": 48
+  },
+  "dataset": {
+    "filename": "decision-suite.jsonl",
+    "sha256": "f0bfdd47121bf16ee1600583ea06aa58a69aeecd8e5d679560dc1447ba696e2c",
+    "snapshot_sha256": "084dfcd0772d93850d6e80532c8fac289bf13e3773b9e09c4e633e27567f949a",
+    "bytes": 82920,
+    "total_cases": 96,
+    "eligible_cases": 64,
+    "selected_cases": 64,
+    "split": "test",
+    "is_subset": false,
+    "selected_ids": [
+      "grounded_boolean-zh-09",
+      "grounded_boolean-en-11",
+      "policy_choice-en-11",
+      "policy_choice-en-12",
+      "rubric_score-en-12",
+      "grounded_boolean-en-12",
+      "rubric_score-zh-05",
+      "rubric_score-en-06",
+      "routing_choice-en-10",
+      "grounded_boolean-en-08",
+      "routing_choice-en-12",
+      "rubric_score-en-10",
+      "rubric_score-en-07",
+      "policy_choice-en-05",
+      "policy_choice-zh-10",
+      "routing_choice-en-11",
+      "rubric_score-zh-12",
+      "policy_choice-en-06",
+      "rubric_score-en-05",
+      "rubric_score-zh-09",
+      "grounded_boolean-en-10",
+      "grounded_boolean-zh-07",
+      "rubric_score-en-08",
+      "grounded_boolean-zh-12",
+      "grounded_boolean-en-05",
+      "grounded_boolean-zh-11",
+      "rubric_score-en-11",
+      "policy_choice-zh-08",
+      "policy_choice-zh-06",
+      "routing_choice-zh-08",
+      "routing_choice-zh-06",
+      "rubric_score-zh-08",
+      "policy_choice-zh-09",
+      "routing_choice-en-05",
+      "routing_choice-en-06",
+      "policy_choice-zh-12",
+      "policy_choice-en-07",
+      "policy_choice-en-10",
+      "routing_choice-en-08",
+      "policy_choice-en-08",
+      "routing_choice-en-07",
+      "rubric_score-zh-11",
+      "routing_choice-zh-09",
+      "rubric_score-zh-06",
+      "grounded_boolean-zh-06",
+      "routing_choice-en-09",
+      "grounded_boolean-zh-05",
+      "rubric_score-zh-10",
+      "routing_choice-zh-10",
+      "grounded_boolean-zh-08",
+      "grounded_boolean-zh-10",
+      "policy_choice-zh-07",
+      "routing_choice-zh-12",
+      "routing_choice-zh-11",
+      "grounded_boolean-en-09",
+      "rubric_score-en-09",
+      "policy_choice-en-09",
+      "policy_choice-zh-05",
+      "routing_choice-zh-07",
+      "rubric_score-zh-07",
+      "grounded_boolean-en-06",
+      "policy_choice-zh-11",
+      "grounded_boolean-en-07",
+      "routing_choice-zh-05"
+    ]
+  },
+  "models": {
+    "agy": "gemini-3.8-flash-low",
+    "jev": "typesafe/jev-1.13"
+  },
+  "protocol": {
+    "repeats": 1,
+    "excluded_warmup_requests": 1,
+    "max_consecutive_errors": 3,
+    "seed": 20260920,
+    "concurrency": 1,
+    "automatic_retries": 0,
+    "score_tolerance": 0.5,
+    "primary_quality": "One measured repeat; backend failures count against end-to-end accuracy; unrun cases remain visible.",
+    "cache": "none in fast-jev; upstream cache unknown",
+    "schedule": "Paired serial requests on identical cases, alternating AGY/Jev then Jev/AGY across pairs, including warmups.",
+    "latency": "Wall clock around the complete adapter call: input validation, provider request construction, transport/process startup, parsing and result validation; canonical batch construction, warmup, probing and artifact writes excluded. Batch elapsed/N is amortized cost, not individual response latency.",
+    "boolean_threshold": "Jev noul >= 0.5 becomes true; no confidence gating.",
+    "score_conversion": "Native Jev score is retained without rounding; both backends use absolute error <= 0.5 plus separate MAE and exact match.",
+    "dataset_disclosure": "Previously observed, frozen synthetic test cases; this is a fresh measurement, not a new blind holdout.",
+    "batch_sizes": [
+      8,
+      1
+    ],
+    "planned_total_requests_including_warmup": 148
+  },
+  "runs": [
+    {
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8
+    },
+    {
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8
+    },
+    {
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1
+    },
+    {
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1
+    }
+  ],
+  "schedule": [
+    {
+      "sequence_index": 0,
+      "pair_index": 0,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r0",
+      "phase": "warmup",
+      "case_ids": [
+        "grounded_boolean-zh-02",
+        "policy_choice-zh-03",
+        "rubric_score-en-01",
+        "routing_choice-zh-03",
+        "rubric_score-en-02",
+        "grounded_boolean-zh-01",
+        "rubric_score-zh-03",
+        "routing_choice-en-03"
+      ],
+      "request_sha256": "a1f2e910b83744f4b5cf306362148eabaf030361a11cf9fae852871b04281595"
+    },
+    {
+      "sequence_index": 1,
+      "pair_index": 0,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r0",
+      "phase": "warmup",
+      "case_ids": [
+        "grounded_boolean-zh-02",
+        "policy_choice-zh-03",
+        "rubric_score-en-01",
+        "routing_choice-zh-03",
+        "rubric_score-en-02",
+        "grounded_boolean-zh-01",
+        "rubric_score-zh-03",
+        "routing_choice-en-03"
+      ],
+      "request_sha256": "a1f2e910b83744f4b5cf306362148eabaf030361a11cf9fae852871b04281595",
+      "wire_request_sha256": "ece40e917c18374cdc2b62b991a2fd1768b0cc26e6cf110af38b15208caa07ef"
+    },
+    {
+      "sequence_index": 2,
+      "pair_index": 1,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r1",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-07",
+        "grounded_boolean-en-08",
+        "routing_choice-zh-11",
+        "policy_choice-zh-11",
+        "grounded_boolean-zh-12",
+        "rubric_score-en-12",
+        "grounded_boolean-en-10",
+        "policy_choice-zh-12"
+      ],
+      "request_sha256": "a77e36f9f329961e972e3e9097687fe844eb5b7d7050f62bbd88b10dc33fabab",
+      "wire_request_sha256": "5a15e81a242d584f2e2e9685353b539660be840a9f0ee9009ac01517ef0d607f"
+    },
+    {
+      "sequence_index": 3,
+      "pair_index": 1,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r1",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-07",
+        "grounded_boolean-en-08",
+        "routing_choice-zh-11",
+        "policy_choice-zh-11",
+        "grounded_boolean-zh-12",
+        "rubric_score-en-12",
+        "grounded_boolean-en-10",
+        "policy_choice-zh-12"
+      ],
+      "request_sha256": "a77e36f9f329961e972e3e9097687fe844eb5b7d7050f62bbd88b10dc33fabab"
+    },
+    {
+      "sequence_index": 4,
+      "pair_index": 2,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r2",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-06",
+        "rubric_score-en-10",
+        "policy_choice-en-10",
+        "routing_choice-en-09",
+        "grounded_boolean-zh-07",
+        "routing_choice-en-12",
+        "policy_choice-zh-05",
+        "policy_choice-zh-10"
+      ],
+      "request_sha256": "f5a3224eeb8c9a0288e1f0b5d940c7df3a0c8565fad6b5ee1443d4cc0866d48a"
+    },
+    {
+      "sequence_index": 5,
+      "pair_index": 2,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r2",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-06",
+        "rubric_score-en-10",
+        "policy_choice-en-10",
+        "routing_choice-en-09",
+        "grounded_boolean-zh-07",
+        "routing_choice-en-12",
+        "policy_choice-zh-05",
+        "policy_choice-zh-10"
+      ],
+      "request_sha256": "f5a3224eeb8c9a0288e1f0b5d940c7df3a0c8565fad6b5ee1443d4cc0866d48a",
+      "wire_request_sha256": "744ac8dd97bcef02db379b305dac1c49638eb9cd7347f89a4fb3042f2fb6a472"
+    },
+    {
+      "sequence_index": 6,
+      "pair_index": 3,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r3",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-09",
+        "grounded_boolean-en-07",
+        "rubric_score-en-09",
+        "routing_choice-en-08",
+        "routing_choice-zh-10",
+        "routing_choice-zh-12",
+        "rubric_score-en-05",
+        "rubric_score-zh-06"
+      ],
+      "request_sha256": "a03b6be5d63a774e6eb07a64a29340064b44ff88c44e15349813408dccbcc3b5",
+      "wire_request_sha256": "3a4946ab9de756a59f43757f98a5db6271eb8b541de1fff44d3729aa363052d8"
+    },
+    {
+      "sequence_index": 7,
+      "pair_index": 3,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r3",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-09",
+        "grounded_boolean-en-07",
+        "rubric_score-en-09",
+        "routing_choice-en-08",
+        "routing_choice-zh-10",
+        "routing_choice-zh-12",
+        "rubric_score-en-05",
+        "rubric_score-zh-06"
+      ],
+      "request_sha256": "a03b6be5d63a774e6eb07a64a29340064b44ff88c44e15349813408dccbcc3b5"
+    },
+    {
+      "sequence_index": 8,
+      "pair_index": 4,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r4",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-05",
+        "routing_choice-en-05",
+        "policy_choice-en-08",
+        "policy_choice-zh-09",
+        "routing_choice-zh-06",
+        "grounded_boolean-zh-08",
+        "rubric_score-zh-11",
+        "routing_choice-zh-07"
+      ],
+      "request_sha256": "7876303e14af1a68407114b475405f4ee55a6367ac057badbcc700fb67d3c069"
+    },
+    {
+      "sequence_index": 9,
+      "pair_index": 4,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r4",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-05",
+        "routing_choice-en-05",
+        "policy_choice-en-08",
+        "policy_choice-zh-09",
+        "routing_choice-zh-06",
+        "grounded_boolean-zh-08",
+        "rubric_score-zh-11",
+        "routing_choice-zh-07"
+      ],
+      "request_sha256": "7876303e14af1a68407114b475405f4ee55a6367ac057badbcc700fb67d3c069",
+      "wire_request_sha256": "b4c5e3221eaa6826aaf3c52ae276e830cca7f455ab30c7dc9aacdc0bf5c0bdfb"
+    },
+    {
+      "sequence_index": 10,
+      "pair_index": 5,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r5",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-12",
+        "routing_choice-zh-08",
+        "routing_choice-en-11",
+        "grounded_boolean-en-09",
+        "policy_choice-en-07",
+        "rubric_score-zh-08",
+        "rubric_score-zh-09",
+        "grounded_boolean-zh-05"
+      ],
+      "request_sha256": "c49a17f613845ca94a310ca86652789386e156736a51ad4bebe120507b46705e",
+      "wire_request_sha256": "53487310f1b1d34c9029f2bbb9b1c74575f1ded3783a7f149350fc2a9562fe93"
+    },
+    {
+      "sequence_index": 11,
+      "pair_index": 5,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r5",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-12",
+        "routing_choice-zh-08",
+        "routing_choice-en-11",
+        "grounded_boolean-en-09",
+        "policy_choice-en-07",
+        "rubric_score-zh-08",
+        "rubric_score-zh-09",
+        "grounded_boolean-zh-05"
+      ],
+      "request_sha256": "c49a17f613845ca94a310ca86652789386e156736a51ad4bebe120507b46705e"
+    },
+    {
+      "sequence_index": 12,
+      "pair_index": 6,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r6",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-10",
+        "grounded_boolean-en-06",
+        "policy_choice-en-05",
+        "routing_choice-en-06",
+        "routing_choice-zh-05",
+        "policy_choice-zh-07",
+        "policy_choice-zh-06",
+        "policy_choice-zh-08"
+      ],
+      "request_sha256": "1b4561af1e9c5de198fcd38d25127b920c00179afc149e5a49be798e602b722d"
+    },
+    {
+      "sequence_index": 13,
+      "pair_index": 6,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r6",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-10",
+        "grounded_boolean-en-06",
+        "policy_choice-en-05",
+        "routing_choice-en-06",
+        "routing_choice-zh-05",
+        "policy_choice-zh-07",
+        "policy_choice-zh-06",
+        "policy_choice-zh-08"
+      ],
+      "request_sha256": "1b4561af1e9c5de198fcd38d25127b920c00179afc149e5a49be798e602b722d",
+      "wire_request_sha256": "127c1d2809a67d88ae368546497f4a91db89c797bc5da6caf36cad939ceeca1c"
+    },
+    {
+      "sequence_index": 14,
+      "pair_index": 7,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r7",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-08",
+        "rubric_score-zh-10",
+        "rubric_score-en-06",
+        "rubric_score-zh-12",
+        "grounded_boolean-zh-10",
+        "grounded_boolean-en-11",
+        "rubric_score-zh-05",
+        "rubric_score-en-11"
+      ],
+      "request_sha256": "a8556ac0aade326d8b834956ffbca20399173f513ffb11474f79fe195a8f1e29",
+      "wire_request_sha256": "e3d7207a9e7dbe18062e485816a002d11acb276c6e58500dbd5eda8d15cf3b2e"
+    },
+    {
+      "sequence_index": 15,
+      "pair_index": 7,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r7",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-08",
+        "rubric_score-zh-10",
+        "rubric_score-en-06",
+        "rubric_score-zh-12",
+        "grounded_boolean-zh-10",
+        "grounded_boolean-en-11",
+        "rubric_score-zh-05",
+        "rubric_score-en-11"
+      ],
+      "request_sha256": "a8556ac0aade326d8b834956ffbca20399173f513ffb11474f79fe195a8f1e29"
+    },
+    {
+      "sequence_index": 16,
+      "pair_index": 8,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/agy",
+      "backend": "agy",
+      "batch_size": 8,
+      "request_id": "r8",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-09",
+        "routing_choice-zh-09",
+        "policy_choice-en-06",
+        "grounded_boolean-zh-11",
+        "policy_choice-en-11",
+        "routing_choice-en-07",
+        "rubric_score-en-07",
+        "policy_choice-en-12"
+      ],
+      "request_sha256": "904aa7121c66685c515357b631b393d38f30f0845f65b028979ae008760f6e92"
+    },
+    {
+      "sequence_index": 17,
+      "pair_index": 8,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b8/jev",
+      "backend": "jev",
+      "batch_size": 8,
+      "request_id": "r8",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-09",
+        "routing_choice-zh-09",
+        "policy_choice-en-06",
+        "grounded_boolean-zh-11",
+        "policy_choice-en-11",
+        "routing_choice-en-07",
+        "rubric_score-en-07",
+        "policy_choice-en-12"
+      ],
+      "request_sha256": "904aa7121c66685c515357b631b393d38f30f0845f65b028979ae008760f6e92",
+      "wire_request_sha256": "b7fa6fddb967cf8dad3a5788b65a95b9d466406a5359336164f451f902ea8936"
+    },
+    {
+      "sequence_index": 18,
+      "pair_index": 9,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r0",
+      "phase": "warmup",
+      "case_ids": [
+        "grounded_boolean-zh-02"
+      ],
+      "request_sha256": "8731837866b3d6916efb3350f2a0e27302abd9bc5e1f1b97e1112777abcfdcd2",
+      "wire_request_sha256": "36efedfbbfacb5b8b37e990fb7aa0420b54d4308c8c12af2b9269cdab162ce87"
+    },
+    {
+      "sequence_index": 19,
+      "pair_index": 9,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r0",
+      "phase": "warmup",
+      "case_ids": [
+        "grounded_boolean-zh-02"
+      ],
+      "request_sha256": "8731837866b3d6916efb3350f2a0e27302abd9bc5e1f1b97e1112777abcfdcd2"
+    },
+    {
+      "sequence_index": 20,
+      "pair_index": 10,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r1",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-07"
+      ],
+      "request_sha256": "7934e28891299f06393352cdde855acbfa31325dced938151d5605843cbc95bf"
+    },
+    {
+      "sequence_index": 21,
+      "pair_index": 10,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r1",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-07"
+      ],
+      "request_sha256": "7934e28891299f06393352cdde855acbfa31325dced938151d5605843cbc95bf",
+      "wire_request_sha256": "0808ece0bbe5fd00f229a3a9861045676b31f270fffae65bf6e5f8b6ff7c7250"
+    },
+    {
+      "sequence_index": 22,
+      "pair_index": 11,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r2",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-08"
+      ],
+      "request_sha256": "4bc1676b6b74711131807018bb800fd43f364448b676aa61309eaebf039acceb",
+      "wire_request_sha256": "ee74d0195cefc2493d5e3bdbc3c53adfb8a060ce58762eeb4bb167965dfd8200"
+    },
+    {
+      "sequence_index": 23,
+      "pair_index": 11,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r2",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-08"
+      ],
+      "request_sha256": "4bc1676b6b74711131807018bb800fd43f364448b676aa61309eaebf039acceb"
+    },
+    {
+      "sequence_index": 24,
+      "pair_index": 12,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r3",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-11"
+      ],
+      "request_sha256": "ab1ef02356aa23b8c7b53a709fd9c84b3a459ec85cbe040708ec279e920b2f18"
+    },
+    {
+      "sequence_index": 25,
+      "pair_index": 12,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r3",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-11"
+      ],
+      "request_sha256": "ab1ef02356aa23b8c7b53a709fd9c84b3a459ec85cbe040708ec279e920b2f18",
+      "wire_request_sha256": "a593745f2e838dacb2302aa8847f2168fe30c52b37669ac737e9beba08c861c8"
+    },
+    {
+      "sequence_index": 26,
+      "pair_index": 13,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r4",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-11"
+      ],
+      "request_sha256": "6ed4b00571f4bda9a46c8804b53c7ce87e016d338e08f93a2e6ecf48e9f1f6ef",
+      "wire_request_sha256": "a0c11c87e52650a49aa8b431c8d4cdef334912b05e366565bb8bbf81e82c7fa8"
+    },
+    {
+      "sequence_index": 27,
+      "pair_index": 13,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r4",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-11"
+      ],
+      "request_sha256": "6ed4b00571f4bda9a46c8804b53c7ce87e016d338e08f93a2e6ecf48e9f1f6ef"
+    },
+    {
+      "sequence_index": 28,
+      "pair_index": 14,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r5",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-12"
+      ],
+      "request_sha256": "6d6285a947f867fb3f7cd5a70f7ec567cd050bbfe232d5a325ae310be97fe26b"
+    },
+    {
+      "sequence_index": 29,
+      "pair_index": 14,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r5",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-12"
+      ],
+      "request_sha256": "6d6285a947f867fb3f7cd5a70f7ec567cd050bbfe232d5a325ae310be97fe26b",
+      "wire_request_sha256": "31bfb98b151a7d2e57cb6109e2f18dcd6150594a0be1a3524a06ea8d66db4fe4"
+    },
+    {
+      "sequence_index": 30,
+      "pair_index": 15,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r6",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-12"
+      ],
+      "request_sha256": "9407abd084881f5f9279bc45793415c56311b683e9295e4b57a44cae3ec4a137",
+      "wire_request_sha256": "acc68d10296e1c7a938c63fb9793e10082712cb4cb8ea4cae619bea0316c9bde"
+    },
+    {
+      "sequence_index": 31,
+      "pair_index": 15,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r6",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-12"
+      ],
+      "request_sha256": "9407abd084881f5f9279bc45793415c56311b683e9295e4b57a44cae3ec4a137"
+    },
+    {
+      "sequence_index": 32,
+      "pair_index": 16,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r7",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-10"
+      ],
+      "request_sha256": "e9ff2ae3c958942a611d0435b65c9a6f1c26500e183b62d62b336d064be854ab"
+    },
+    {
+      "sequence_index": 33,
+      "pair_index": 16,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r7",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-10"
+      ],
+      "request_sha256": "e9ff2ae3c958942a611d0435b65c9a6f1c26500e183b62d62b336d064be854ab",
+      "wire_request_sha256": "74fc3ce7bd8bf192e787c11fc6bc9fbbefa7ced4725b702331c7855037733374"
+    },
+    {
+      "sequence_index": 34,
+      "pair_index": 17,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r8",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-12"
+      ],
+      "request_sha256": "1d33ca51bbd3ea691956398186e88bb11893cd3d440541389525b7cda9910bf7",
+      "wire_request_sha256": "788207cc4a98c5fa9e79825f39c5ed15a1caa4ab83ccbcd019fc62b2a3b21f74"
+    },
+    {
+      "sequence_index": 35,
+      "pair_index": 17,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r8",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-12"
+      ],
+      "request_sha256": "1d33ca51bbd3ea691956398186e88bb11893cd3d440541389525b7cda9910bf7"
+    },
+    {
+      "sequence_index": 36,
+      "pair_index": 18,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r9",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-06"
+      ],
+      "request_sha256": "b514c2571e009fded28750ac2429727170c4789c0802d522a8d69939d89687b1"
+    },
+    {
+      "sequence_index": 37,
+      "pair_index": 18,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r9",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-06"
+      ],
+      "request_sha256": "b514c2571e009fded28750ac2429727170c4789c0802d522a8d69939d89687b1",
+      "wire_request_sha256": "9e8c69618fd18137b533bc18047a5f9df70d597dcdbd3fd5503d0d34fd6da933"
+    },
+    {
+      "sequence_index": 38,
+      "pair_index": 19,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r10",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-10"
+      ],
+      "request_sha256": "0d758f3489bf69f90a8db80385ee67acbea16757766a37415f64140575955ee7",
+      "wire_request_sha256": "8309a76c8e5b12478f931b995b4be32e55e877bd359e235491690a66c8aeb110"
+    },
+    {
+      "sequence_index": 39,
+      "pair_index": 19,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r10",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-10"
+      ],
+      "request_sha256": "0d758f3489bf69f90a8db80385ee67acbea16757766a37415f64140575955ee7"
+    },
+    {
+      "sequence_index": 40,
+      "pair_index": 20,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r11",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-10"
+      ],
+      "request_sha256": "6a64691aea64fedc8d31b23427d981265c478048a0589165e8524b08414dade5"
+    },
+    {
+      "sequence_index": 41,
+      "pair_index": 20,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r11",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-10"
+      ],
+      "request_sha256": "6a64691aea64fedc8d31b23427d981265c478048a0589165e8524b08414dade5",
+      "wire_request_sha256": "ee544a1d44651c010e1d2729c42bdede69a130553acd9f93a12fd66e6b088c8d"
+    },
+    {
+      "sequence_index": 42,
+      "pair_index": 21,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r12",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-09"
+      ],
+      "request_sha256": "76251defbf2636d789ff5b411b90bb6f84e9aadeba56f23a71f1f3a33d9d6960",
+      "wire_request_sha256": "012b261bf12978aac906cb169e410b1e3189bcc99d8245578db9dbce19619fa1"
+    },
+    {
+      "sequence_index": 43,
+      "pair_index": 21,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r12",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-09"
+      ],
+      "request_sha256": "76251defbf2636d789ff5b411b90bb6f84e9aadeba56f23a71f1f3a33d9d6960"
+    },
+    {
+      "sequence_index": 44,
+      "pair_index": 22,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r13",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-07"
+      ],
+      "request_sha256": "ffc78944d02a8c5ccef171365d28f0419937fd77839223bc0984ffbd5655dac2"
+    },
+    {
+      "sequence_index": 45,
+      "pair_index": 22,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r13",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-07"
+      ],
+      "request_sha256": "ffc78944d02a8c5ccef171365d28f0419937fd77839223bc0984ffbd5655dac2",
+      "wire_request_sha256": "5aea4b47d26b9731f65da1f1144dc0a543773538805fe072053bb0430ed088e7"
+    },
+    {
+      "sequence_index": 46,
+      "pair_index": 23,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r14",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-12"
+      ],
+      "request_sha256": "4cbb5bcd6417504f35d35f6ad981b09a36b4b0e91546c3ec492ce080256b22c2",
+      "wire_request_sha256": "f511c1cfd8cba61854e85d696a01224dd63d7b55560d011b91a3374d95e3092a"
+    },
+    {
+      "sequence_index": 47,
+      "pair_index": 23,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r14",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-12"
+      ],
+      "request_sha256": "4cbb5bcd6417504f35d35f6ad981b09a36b4b0e91546c3ec492ce080256b22c2"
+    },
+    {
+      "sequence_index": 48,
+      "pair_index": 24,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r15",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-05"
+      ],
+      "request_sha256": "96e8031379de641f6589c3e542c74af89b077304d539339bc0c74bacac229836"
+    },
+    {
+      "sequence_index": 49,
+      "pair_index": 24,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r15",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-05"
+      ],
+      "request_sha256": "96e8031379de641f6589c3e542c74af89b077304d539339bc0c74bacac229836",
+      "wire_request_sha256": "2e4d4d7c2d751aee77a19cf301064d2b69d5f663f2b2ae67936ae56d1a971c88"
+    },
+    {
+      "sequence_index": 50,
+      "pair_index": 25,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r16",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-10"
+      ],
+      "request_sha256": "d9a53f47e35bf98f9b0ec093e90f35d476b8bf5b3795c2a2052c1d2357e2f55c",
+      "wire_request_sha256": "cc92e4af026b087ea596c90ba57e09f7451c03cfc0f6c58945b27f5f53619d17"
+    },
+    {
+      "sequence_index": 51,
+      "pair_index": 25,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r16",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-10"
+      ],
+      "request_sha256": "d9a53f47e35bf98f9b0ec093e90f35d476b8bf5b3795c2a2052c1d2357e2f55c"
+    },
+    {
+      "sequence_index": 52,
+      "pair_index": 26,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r17",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-09"
+      ],
+      "request_sha256": "74426f94b82cebff639cec2487750e9869e37c6aa4f463317a43f975c1acee44"
+    },
+    {
+      "sequence_index": 53,
+      "pair_index": 26,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r17",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-09"
+      ],
+      "request_sha256": "74426f94b82cebff639cec2487750e9869e37c6aa4f463317a43f975c1acee44",
+      "wire_request_sha256": "5de258d9e5c00224fa61e47203e0feca02e1052c457b17a36970a736c633184b"
+    },
+    {
+      "sequence_index": 54,
+      "pair_index": 27,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r18",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-07"
+      ],
+      "request_sha256": "47e5271bceb559aa959fe5a05f69976f37ef19bc999ebbcac4e748b0f380c9c5",
+      "wire_request_sha256": "e332d516153d552286598e74f231325e4608b7f3af255f8eb8dc2cc7dc186a01"
+    },
+    {
+      "sequence_index": 55,
+      "pair_index": 27,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r18",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-07"
+      ],
+      "request_sha256": "47e5271bceb559aa959fe5a05f69976f37ef19bc999ebbcac4e748b0f380c9c5"
+    },
+    {
+      "sequence_index": 56,
+      "pair_index": 28,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r19",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-09"
+      ],
+      "request_sha256": "93313bbbfd02105f29b0c2d16aa2addffad2f420950a2503ec7377ae80db9782"
+    },
+    {
+      "sequence_index": 57,
+      "pair_index": 28,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r19",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-09"
+      ],
+      "request_sha256": "93313bbbfd02105f29b0c2d16aa2addffad2f420950a2503ec7377ae80db9782",
+      "wire_request_sha256": "c280bba8d96d4ca786325ef65bbf050c6b7add1404a7cb67a529050273eb8cfe"
+    },
+    {
+      "sequence_index": 58,
+      "pair_index": 29,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r20",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-08"
+      ],
+      "request_sha256": "c4ebe46a94ce4e2f4df2b7a7d20edcd5d993cd11e18c904221289edbd65990d9",
+      "wire_request_sha256": "d914120e2f4e5533650896ed355eb2d4c907b6f3b1671c835b8a6baefa859a04"
+    },
+    {
+      "sequence_index": 59,
+      "pair_index": 29,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r20",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-08"
+      ],
+      "request_sha256": "c4ebe46a94ce4e2f4df2b7a7d20edcd5d993cd11e18c904221289edbd65990d9"
+    },
+    {
+      "sequence_index": 60,
+      "pair_index": 30,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r21",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-10"
+      ],
+      "request_sha256": "801a228f717b7a04a78f36466354d14bb0a4b148e09fa85233a087f19273050c"
+    },
+    {
+      "sequence_index": 61,
+      "pair_index": 30,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r21",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-10"
+      ],
+      "request_sha256": "801a228f717b7a04a78f36466354d14bb0a4b148e09fa85233a087f19273050c",
+      "wire_request_sha256": "64c510db7897ccec86553ff0f53a7a251f87806e0e90e7934c26b2cad0b3df31"
+    },
+    {
+      "sequence_index": 62,
+      "pair_index": 31,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r22",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-12"
+      ],
+      "request_sha256": "fe1aac5d58c7afe7a53f4d459075a61a3b69b45b24fc6e3ceb302910f6da887b",
+      "wire_request_sha256": "1c4156251b42b86e30bd12040efd5229e4a6de6ba10530f592104fc53b54b0e3"
+    },
+    {
+      "sequence_index": 63,
+      "pair_index": 31,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r22",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-12"
+      ],
+      "request_sha256": "fe1aac5d58c7afe7a53f4d459075a61a3b69b45b24fc6e3ceb302910f6da887b"
+    },
+    {
+      "sequence_index": 64,
+      "pair_index": 32,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r23",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-05"
+      ],
+      "request_sha256": "fd6fd152a9e41a97cc54cf5cb605bf47682a689235faaeec25f7d1d7cffed302"
+    },
+    {
+      "sequence_index": 65,
+      "pair_index": 32,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r23",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-05"
+      ],
+      "request_sha256": "fd6fd152a9e41a97cc54cf5cb605bf47682a689235faaeec25f7d1d7cffed302",
+      "wire_request_sha256": "e735963609b3122c942e725e4584553c706f8fcd68e5d1e0c3e17643c7a776da"
+    },
+    {
+      "sequence_index": 66,
+      "pair_index": 33,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r24",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-06"
+      ],
+      "request_sha256": "742621a9b9a712dfe480c17c757d9e7a9e2196fd6237f26dc3afb3fed7d6e4f9",
+      "wire_request_sha256": "771d5275941c9a0bed9bfa764c47c4a1eb901c414b7633800b857689b0373773"
+    },
+    {
+      "sequence_index": 67,
+      "pair_index": 33,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r24",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-06"
+      ],
+      "request_sha256": "742621a9b9a712dfe480c17c757d9e7a9e2196fd6237f26dc3afb3fed7d6e4f9"
+    },
+    {
+      "sequence_index": 68,
+      "pair_index": 34,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r25",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-05"
+      ],
+      "request_sha256": "cb6ffb51a5d55718a6ec3e07c1e43668d9fb21e055b97e08f6ac71a8de7956a1"
+    },
+    {
+      "sequence_index": 69,
+      "pair_index": 34,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r25",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-05"
+      ],
+      "request_sha256": "cb6ffb51a5d55718a6ec3e07c1e43668d9fb21e055b97e08f6ac71a8de7956a1",
+      "wire_request_sha256": "20a720a663a1f2393a41fe501780c7d0c628aac164cc3638685fe29ed0387e5d"
+    },
+    {
+      "sequence_index": 70,
+      "pair_index": 35,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r26",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-05"
+      ],
+      "request_sha256": "63bf871fb239b471bd8c10cf8d46a16820d0dd300ec37a6ec78c0b1b2b6ef125",
+      "wire_request_sha256": "1feedf8a990a3dfb34281d948cb74d1e2d351aa4a5fe337730c575d89b8bbfa3"
+    },
+    {
+      "sequence_index": 71,
+      "pair_index": 35,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r26",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-05"
+      ],
+      "request_sha256": "63bf871fb239b471bd8c10cf8d46a16820d0dd300ec37a6ec78c0b1b2b6ef125"
+    },
+    {
+      "sequence_index": 72,
+      "pair_index": 36,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r27",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-08"
+      ],
+      "request_sha256": "a366b4b310a0fb290fa28fdebc0f35dd0f9fe484639cc82df4d0d0eb7cb2f497"
+    },
+    {
+      "sequence_index": 73,
+      "pair_index": 36,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r27",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-08"
+      ],
+      "request_sha256": "a366b4b310a0fb290fa28fdebc0f35dd0f9fe484639cc82df4d0d0eb7cb2f497",
+      "wire_request_sha256": "24e6baac69593bcae472b6af700ac831398268030a0092502af9d11a2321fd10"
+    },
+    {
+      "sequence_index": 74,
+      "pair_index": 37,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r28",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-09"
+      ],
+      "request_sha256": "562d907e540a6e380a1ef11dfc2168f055a40f60127fbdc0fdf57145e51e20ad",
+      "wire_request_sha256": "a0100fe14929da4ef5182ffd1360c7a7e2648e83eaa4ff384ff14200539d45cc"
+    },
+    {
+      "sequence_index": 75,
+      "pair_index": 37,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r28",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-09"
+      ],
+      "request_sha256": "562d907e540a6e380a1ef11dfc2168f055a40f60127fbdc0fdf57145e51e20ad"
+    },
+    {
+      "sequence_index": 76,
+      "pair_index": 38,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r29",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-06"
+      ],
+      "request_sha256": "d68c76c9cf78f0a908ef0691610d2b2b24c550b39974f36c9a6993c2813556c1"
+    },
+    {
+      "sequence_index": 77,
+      "pair_index": 38,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r29",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-06"
+      ],
+      "request_sha256": "d68c76c9cf78f0a908ef0691610d2b2b24c550b39974f36c9a6993c2813556c1",
+      "wire_request_sha256": "3aede521eae9d8c138c57dbc6ee72e5c85afba45d52c07ace6eb16a02adc4290"
+    },
+    {
+      "sequence_index": 78,
+      "pair_index": 39,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r30",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-08"
+      ],
+      "request_sha256": "655e5131329cf00375da907db0594d284c9ce0c148d17f3bd30fc887c3c14f11",
+      "wire_request_sha256": "0261f1dbb422c473e074b91d88f566ff85ac1e8be2cffd729abf9fbe3db11d11"
+    },
+    {
+      "sequence_index": 79,
+      "pair_index": 39,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r30",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-08"
+      ],
+      "request_sha256": "655e5131329cf00375da907db0594d284c9ce0c148d17f3bd30fc887c3c14f11"
+    },
+    {
+      "sequence_index": 80,
+      "pair_index": 40,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r31",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-11"
+      ],
+      "request_sha256": "240565af6733c93e2731621df53413da7bdd5c38ff3bd662a69b704abe50818a"
+    },
+    {
+      "sequence_index": 81,
+      "pair_index": 40,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r31",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-11"
+      ],
+      "request_sha256": "240565af6733c93e2731621df53413da7bdd5c38ff3bd662a69b704abe50818a",
+      "wire_request_sha256": "0129e229f26ab93e2d281e1dcf01e61c646b65b9997756cdda61ece3ad9215d6"
+    },
+    {
+      "sequence_index": 82,
+      "pair_index": 41,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r32",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-07"
+      ],
+      "request_sha256": "390a93a47873114ca26443c27ab729743c9c7d1037de2addcab04788ad81963f",
+      "wire_request_sha256": "ee0ff324f7e716600c1116ecb2e87cb8d62420ebc7fdee86e6da2981bb87aee9"
+    },
+    {
+      "sequence_index": 83,
+      "pair_index": 41,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r32",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-07"
+      ],
+      "request_sha256": "390a93a47873114ca26443c27ab729743c9c7d1037de2addcab04788ad81963f"
+    },
+    {
+      "sequence_index": 84,
+      "pair_index": 42,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r33",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-12"
+      ],
+      "request_sha256": "3c6e01ef8c1e55eb1260f44dd719e74d39d328220f85160279a98ee93c151056"
+    },
+    {
+      "sequence_index": 85,
+      "pair_index": 42,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r33",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-12"
+      ],
+      "request_sha256": "3c6e01ef8c1e55eb1260f44dd719e74d39d328220f85160279a98ee93c151056",
+      "wire_request_sha256": "4e65840007d2ac2a2cfefd3eab7dca5df97e6b68224bbe3487da2ca0ae4ce301"
+    },
+    {
+      "sequence_index": 86,
+      "pair_index": 43,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r34",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-08"
+      ],
+      "request_sha256": "6041e684c2e4543db3ba272b3a515a2740adc2ae5018ac32a2b5d86abc124e90",
+      "wire_request_sha256": "1b831adb44c9d94fd127c1aad3173644b766585e174a75235bc2439bb1771a96"
+    },
+    {
+      "sequence_index": 87,
+      "pair_index": 43,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r34",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-08"
+      ],
+      "request_sha256": "6041e684c2e4543db3ba272b3a515a2740adc2ae5018ac32a2b5d86abc124e90"
+    },
+    {
+      "sequence_index": 88,
+      "pair_index": 44,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r35",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-11"
+      ],
+      "request_sha256": "f06be13bfb332513ffbd423afcfa3dc9988e8c825654cd1caebc4ed6aa576f1e"
+    },
+    {
+      "sequence_index": 89,
+      "pair_index": 44,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r35",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-11"
+      ],
+      "request_sha256": "f06be13bfb332513ffbd423afcfa3dc9988e8c825654cd1caebc4ed6aa576f1e",
+      "wire_request_sha256": "ca3be2b4f8ebd1e4bcd2cdd42954852301fc41ab5f537be7bbfd6f5d94dc9e51"
+    },
+    {
+      "sequence_index": 90,
+      "pair_index": 45,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r36",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-09"
+      ],
+      "request_sha256": "83cb8d0d4df9fbb8ce5d339fbd95762834d454798c6a78a80b9520b220697f12",
+      "wire_request_sha256": "229b96f6ae70fe804307023a86c031046b01a357925c081553a1c4ab32757ead"
+    },
+    {
+      "sequence_index": 91,
+      "pair_index": 45,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r36",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-09"
+      ],
+      "request_sha256": "83cb8d0d4df9fbb8ce5d339fbd95762834d454798c6a78a80b9520b220697f12"
+    },
+    {
+      "sequence_index": 92,
+      "pair_index": 46,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r37",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-07"
+      ],
+      "request_sha256": "6c65ea65e0e2eaf42b21377e0d84dadf198c6e5d08fc312dcb2c4a8c80820057"
+    },
+    {
+      "sequence_index": 93,
+      "pair_index": 46,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r37",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-07"
+      ],
+      "request_sha256": "6c65ea65e0e2eaf42b21377e0d84dadf198c6e5d08fc312dcb2c4a8c80820057",
+      "wire_request_sha256": "9561d8d9d67b4fca13b841773cacf2fcf874aba177942cc16f1411ff26b7c4e5"
+    },
+    {
+      "sequence_index": 94,
+      "pair_index": 47,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r38",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-08"
+      ],
+      "request_sha256": "b515e65469ff1ffcb7504b4b0cbba3ff26dcd9d742ad0537acf2c27dc88ff23a",
+      "wire_request_sha256": "c1a1f653808547509bb36a8638f1544297a628cf910303d8cb6249b0d5ed0d72"
+    },
+    {
+      "sequence_index": 95,
+      "pair_index": 47,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r38",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-08"
+      ],
+      "request_sha256": "b515e65469ff1ffcb7504b4b0cbba3ff26dcd9d742ad0537acf2c27dc88ff23a"
+    },
+    {
+      "sequence_index": 96,
+      "pair_index": 48,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r39",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-09"
+      ],
+      "request_sha256": "905e10ad10f3ecff18403da6ec15b5ab76d246d2257192f45c1a4d1c6482cb17"
+    },
+    {
+      "sequence_index": 97,
+      "pair_index": 48,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r39",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-09"
+      ],
+      "request_sha256": "905e10ad10f3ecff18403da6ec15b5ab76d246d2257192f45c1a4d1c6482cb17",
+      "wire_request_sha256": "9b6a17a51271f645737413a7b0ed17bff37f3fadbf1dc5f88418318c331672eb"
+    },
+    {
+      "sequence_index": 98,
+      "pair_index": 49,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r40",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-05"
+      ],
+      "request_sha256": "b223f659306ee12baae8dbed1f75c61abbc860d8032b59e117d3e2ed87cd5d8d",
+      "wire_request_sha256": "8bfd2324844f2237328f3d7d20c7141afccb314438261d71d096bc7a1735f407"
+    },
+    {
+      "sequence_index": 99,
+      "pair_index": 49,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r40",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-05"
+      ],
+      "request_sha256": "b223f659306ee12baae8dbed1f75c61abbc860d8032b59e117d3e2ed87cd5d8d"
+    },
+    {
+      "sequence_index": 100,
+      "pair_index": 50,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r41",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-10"
+      ],
+      "request_sha256": "a8188c0992c699f2f30c61400c33b00369240c72f7b503eb1d5efa311cb47bc5"
+    },
+    {
+      "sequence_index": 101,
+      "pair_index": 50,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r41",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-10"
+      ],
+      "request_sha256": "a8188c0992c699f2f30c61400c33b00369240c72f7b503eb1d5efa311cb47bc5",
+      "wire_request_sha256": "dcaa69fdac748a9d487f1d8adac587beb9445caf4154b339968b7de9b588b34f"
+    },
+    {
+      "sequence_index": 102,
+      "pair_index": 51,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r42",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-06"
+      ],
+      "request_sha256": "f5c7470f9afc019dffd01cb1a7675472bc3813fab33fc9333206809f2757a224",
+      "wire_request_sha256": "ec136b321bb59e48fde40f8a63a235906b4bfb22e473027e22970399da388fbc"
+    },
+    {
+      "sequence_index": 103,
+      "pair_index": 51,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r42",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-06"
+      ],
+      "request_sha256": "f5c7470f9afc019dffd01cb1a7675472bc3813fab33fc9333206809f2757a224"
+    },
+    {
+      "sequence_index": 104,
+      "pair_index": 52,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r43",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-05"
+      ],
+      "request_sha256": "d3be3ea96db482d1333ed2910598813af51400505b4a7ac595cb07f6daf66b57"
+    },
+    {
+      "sequence_index": 105,
+      "pair_index": 52,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r43",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-05"
+      ],
+      "request_sha256": "d3be3ea96db482d1333ed2910598813af51400505b4a7ac595cb07f6daf66b57",
+      "wire_request_sha256": "77a1ad6704d251b6a6a630a47317e5d148ddbc99358b40cc967fd5b2d813e30f"
+    },
+    {
+      "sequence_index": 106,
+      "pair_index": 53,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r44",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-06"
+      ],
+      "request_sha256": "f77e28e9ab104a083ca17b35cb212413e5c78adb49dd028d505333979473050e",
+      "wire_request_sha256": "60ac4e2d9a93b30dd6c829e74528f32a261ac5f97683273fef53f23ae06ccd1c"
+    },
+    {
+      "sequence_index": 107,
+      "pair_index": 53,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r44",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-06"
+      ],
+      "request_sha256": "f77e28e9ab104a083ca17b35cb212413e5c78adb49dd028d505333979473050e"
+    },
+    {
+      "sequence_index": 108,
+      "pair_index": 54,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r45",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-05"
+      ],
+      "request_sha256": "998c9e24d484d6cd7e1780e7d51a095144e0a649e62bace353e072f28afb0230"
+    },
+    {
+      "sequence_index": 109,
+      "pair_index": 54,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r45",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-05"
+      ],
+      "request_sha256": "998c9e24d484d6cd7e1780e7d51a095144e0a649e62bace353e072f28afb0230",
+      "wire_request_sha256": "b0a8bc485707342e1746c7b00cb75c64db16da361a0fe00f688a3f6d045f6279"
+    },
+    {
+      "sequence_index": 110,
+      "pair_index": 55,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r46",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-07"
+      ],
+      "request_sha256": "5b18e24b9ec4d15c6c2c8a667173cb60cfff630ad89789533bc77948ee25ba7b",
+      "wire_request_sha256": "2e4449a9ee60192163a81ea046e54a186ecb42a64acf4d349c69d89a8dd8b8a2"
+    },
+    {
+      "sequence_index": 111,
+      "pair_index": 55,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r46",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-07"
+      ],
+      "request_sha256": "5b18e24b9ec4d15c6c2c8a667173cb60cfff630ad89789533bc77948ee25ba7b"
+    },
+    {
+      "sequence_index": 112,
+      "pair_index": 56,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r47",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-06"
+      ],
+      "request_sha256": "22c436a872c233a85f5fd37d18b0fd85801eeb03018d2e7f9335f51b75447301"
+    },
+    {
+      "sequence_index": 113,
+      "pair_index": 56,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r47",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-06"
+      ],
+      "request_sha256": "22c436a872c233a85f5fd37d18b0fd85801eeb03018d2e7f9335f51b75447301",
+      "wire_request_sha256": "4f4e20f6c00b326fca6acf176e329451a1ea24998ebd8dcb06bb39312332f9ea"
+    },
+    {
+      "sequence_index": 114,
+      "pair_index": 57,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r48",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-08"
+      ],
+      "request_sha256": "91c9924a99135201c09a00f47b1cc73ceb0964eb237683aaff14a24bbc094324",
+      "wire_request_sha256": "346c7ab9647f0c57e89d5dda325608d24de8fc7609098317f249e2da10cf9585"
+    },
+    {
+      "sequence_index": 115,
+      "pair_index": 57,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r48",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-zh-08"
+      ],
+      "request_sha256": "91c9924a99135201c09a00f47b1cc73ceb0964eb237683aaff14a24bbc094324"
+    },
+    {
+      "sequence_index": 116,
+      "pair_index": 58,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r49",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-08"
+      ],
+      "request_sha256": "93a4515461dc9f229809a1877fed5ceb56a117b7c288a2aaf01628b972da1609"
+    },
+    {
+      "sequence_index": 117,
+      "pair_index": 58,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r49",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-08"
+      ],
+      "request_sha256": "93a4515461dc9f229809a1877fed5ceb56a117b7c288a2aaf01628b972da1609",
+      "wire_request_sha256": "56b4a185b6497e03fff2d0a5ada835135247fb2428e4dd044a32bc11fc625741"
+    },
+    {
+      "sequence_index": 118,
+      "pair_index": 59,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r50",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-10"
+      ],
+      "request_sha256": "0a5ec8908d5a37cf6bbf6d5725570dca383a8bc76ef6c863b29d59e0a1c1b07c",
+      "wire_request_sha256": "58c4a8cb133eebba16ff1e194b4f73c5534eb5c31b440647792bd155f85af4cf"
+    },
+    {
+      "sequence_index": 119,
+      "pair_index": 59,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r50",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-10"
+      ],
+      "request_sha256": "0a5ec8908d5a37cf6bbf6d5725570dca383a8bc76ef6c863b29d59e0a1c1b07c"
+    },
+    {
+      "sequence_index": 120,
+      "pair_index": 60,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r51",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-06"
+      ],
+      "request_sha256": "4fc95808f3b1a6e63bb486c3ca44404c2069b82822624c6e8b25123b71c09042"
+    },
+    {
+      "sequence_index": 121,
+      "pair_index": 60,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r51",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-06"
+      ],
+      "request_sha256": "4fc95808f3b1a6e63bb486c3ca44404c2069b82822624c6e8b25123b71c09042",
+      "wire_request_sha256": "0011cb2b2a33cd2c9da3f3d16893038f47a7d7ba2805dd8366d2f3049f7b1f80"
+    },
+    {
+      "sequence_index": 122,
+      "pair_index": 61,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r52",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-12"
+      ],
+      "request_sha256": "90ba7d2e3c4b4a8060c3c92811f5e9f3f878cc077b9ba95bb648d7f0d789ad27",
+      "wire_request_sha256": "2f230a56f4ae9f02fdf17c8680ef7ad3608bb7d1188dc2cf6af0f2d8c37bd5c6"
+    },
+    {
+      "sequence_index": 123,
+      "pair_index": 61,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r52",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-12"
+      ],
+      "request_sha256": "90ba7d2e3c4b4a8060c3c92811f5e9f3f878cc077b9ba95bb648d7f0d789ad27"
+    },
+    {
+      "sequence_index": 124,
+      "pair_index": 62,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r53",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-10"
+      ],
+      "request_sha256": "aec9d6813d22e49fde27a0bbd143b104e80a26021b7a16ad6acf88e757163f6c"
+    },
+    {
+      "sequence_index": 125,
+      "pair_index": 62,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r53",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-10"
+      ],
+      "request_sha256": "aec9d6813d22e49fde27a0bbd143b104e80a26021b7a16ad6acf88e757163f6c",
+      "wire_request_sha256": "6adfe81a6c4d66e849b6d9e09c077347caee84bb4ed03cc7cdef9868e7264891"
+    },
+    {
+      "sequence_index": 126,
+      "pair_index": 63,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r54",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-11"
+      ],
+      "request_sha256": "61ca853b17ad5413b6e36a5241aeeebd1b47672a2057bc8f628f7b3deece1940",
+      "wire_request_sha256": "4cf3c54f5cdad2ad2f5901846dece3b3ae950a9928f10901a35cc86ae7b91b3a"
+    },
+    {
+      "sequence_index": 127,
+      "pair_index": 63,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r54",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-en-11"
+      ],
+      "request_sha256": "61ca853b17ad5413b6e36a5241aeeebd1b47672a2057bc8f628f7b3deece1940"
+    },
+    {
+      "sequence_index": 128,
+      "pair_index": 64,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r55",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-05"
+      ],
+      "request_sha256": "a64291b90214b22f0b6711d9cdb78d839fe67aace20923d562578abcc38de30a"
+    },
+    {
+      "sequence_index": 129,
+      "pair_index": 64,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r55",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-zh-05"
+      ],
+      "request_sha256": "a64291b90214b22f0b6711d9cdb78d839fe67aace20923d562578abcc38de30a",
+      "wire_request_sha256": "9b94e6e20a1b00b5fbf29208ca0d753c9db00ea383f7ffd335402251f49c5239"
+    },
+    {
+      "sequence_index": 130,
+      "pair_index": 65,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r56",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-11"
+      ],
+      "request_sha256": "121b5c15cdf0363c387d9c4c5fea1ab6f34d3e210ad385ddac1bbe322e1cd0d7",
+      "wire_request_sha256": "a492af2b888144e67e58bcf35720e9cb6c3a062c074201f4cf434a4d088b61de"
+    },
+    {
+      "sequence_index": 131,
+      "pair_index": 65,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r56",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-11"
+      ],
+      "request_sha256": "121b5c15cdf0363c387d9c4c5fea1ab6f34d3e210ad385ddac1bbe322e1cd0d7"
+    },
+    {
+      "sequence_index": 132,
+      "pair_index": 66,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r57",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-09"
+      ],
+      "request_sha256": "86d61ce74a9151f256a2c5339fe234ca7735a93502a3d4f465681887c2125a8d"
+    },
+    {
+      "sequence_index": 133,
+      "pair_index": 66,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r57",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-09"
+      ],
+      "request_sha256": "86d61ce74a9151f256a2c5339fe234ca7735a93502a3d4f465681887c2125a8d",
+      "wire_request_sha256": "846ca3def077247d54f28842b5dad3205881810bd2d5906f811d70b519b28b6f"
+    },
+    {
+      "sequence_index": 134,
+      "pair_index": 67,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r58",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-09"
+      ],
+      "request_sha256": "601f9879d6a45b1088c345e7ba64e11951d67c45d9149a4fed0dd511f7ead6f2",
+      "wire_request_sha256": "2e8fa74df909ce230531a8c2d394fa08d10163c6969535c68ccbb7ff2cf28932"
+    },
+    {
+      "sequence_index": 135,
+      "pair_index": 67,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r58",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-zh-09"
+      ],
+      "request_sha256": "601f9879d6a45b1088c345e7ba64e11951d67c45d9149a4fed0dd511f7ead6f2"
+    },
+    {
+      "sequence_index": 136,
+      "pair_index": 68,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r59",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-06"
+      ],
+      "request_sha256": "be892279629947aa044581e48e83823736e6c4c348b9b3327bb2b9dbadc370e9"
+    },
+    {
+      "sequence_index": 137,
+      "pair_index": 68,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r59",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-06"
+      ],
+      "request_sha256": "be892279629947aa044581e48e83823736e6c4c348b9b3327bb2b9dbadc370e9",
+      "wire_request_sha256": "20907de9b130b0ef2ba4d5f182fbe4549bfacd4103d0ba5892a2418be43d32cc"
+    },
+    {
+      "sequence_index": 138,
+      "pair_index": 69,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r60",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-11"
+      ],
+      "request_sha256": "fd142969ee35f590cd03e4912b316259127e454559b3aa1486f87ce54fd9c1bb",
+      "wire_request_sha256": "ba8c32794bdd2b4650d8ab9f878f48f40532c29a760cfc7819eddb53ac47e08a"
+    },
+    {
+      "sequence_index": 139,
+      "pair_index": 69,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r60",
+      "phase": "measure",
+      "case_ids": [
+        "grounded_boolean-zh-11"
+      ],
+      "request_sha256": "fd142969ee35f590cd03e4912b316259127e454559b3aa1486f87ce54fd9c1bb"
+    },
+    {
+      "sequence_index": 140,
+      "pair_index": 70,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r61",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-11"
+      ],
+      "request_sha256": "33bd2e5898891bb495bd3d7b4aa76f82a3ad9aecd2d57df26499b885ae52b360"
+    },
+    {
+      "sequence_index": 141,
+      "pair_index": 70,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r61",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-11"
+      ],
+      "request_sha256": "33bd2e5898891bb495bd3d7b4aa76f82a3ad9aecd2d57df26499b885ae52b360",
+      "wire_request_sha256": "3833cbbc5ca1d9d8749f8728e00032b2e0f4b17a6bf98459e37d75891ba303dd"
+    },
+    {
+      "sequence_index": 142,
+      "pair_index": 71,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r62",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-07"
+      ],
+      "request_sha256": "09ed28ae402619999897c0641af6e6f5eb37ac0067d68f0aa09c756c29128f98",
+      "wire_request_sha256": "d1f24a01804a07fb8dd4d568be9f2911a77382981232133356c911c21ca59160"
+    },
+    {
+      "sequence_index": 143,
+      "pair_index": 71,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r62",
+      "phase": "measure",
+      "case_ids": [
+        "routing_choice-en-07"
+      ],
+      "request_sha256": "09ed28ae402619999897c0641af6e6f5eb37ac0067d68f0aa09c756c29128f98"
+    },
+    {
+      "sequence_index": 144,
+      "pair_index": 72,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r63",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-07"
+      ],
+      "request_sha256": "67750ef689fd1697475d35298a652f544e894bd12fd340c4c52fede350fa1cfa"
+    },
+    {
+      "sequence_index": 145,
+      "pair_index": 72,
+      "backend_order": [
+        "agy",
+        "jev"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r63",
+      "phase": "measure",
+      "case_ids": [
+        "rubric_score-en-07"
+      ],
+      "request_sha256": "67750ef689fd1697475d35298a652f544e894bd12fd340c4c52fede350fa1cfa",
+      "wire_request_sha256": "209b19c2363253101289b80bdd20d59fc1f56f48a9daea752c6511fbfd221100"
+    },
+    {
+      "sequence_index": 146,
+      "pair_index": 73,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/jev",
+      "backend": "jev",
+      "batch_size": 1,
+      "request_id": "r64",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-12"
+      ],
+      "request_sha256": "4dccce20d9b07009cbf5b2f2905680d13bc92ad1c2868486992934c8e011676a",
+      "wire_request_sha256": "afada9e87781590a2d14344b40f110dabc93816c455443aaf71b79d147e92490"
+    },
+    {
+      "sequence_index": 147,
+      "pair_index": 73,
+      "backend_order": [
+        "jev",
+        "agy"
+      ],
+      "directory": "b1/agy",
+      "backend": "agy",
+      "batch_size": 1,
+      "request_id": "r64",
+      "phase": "measure",
+      "case_ids": [
+        "policy_choice-en-12"
+      ],
+      "request_sha256": "4dccce20d9b07009cbf5b2f2905680d13bc92ad1c2868486992934c8e011676a"
+    }
+  ],
+  "warmup_snapshot_sha256": "ea7e09f7a30e21bd448994513597018591eb7cc68724ecb2616150bdbb50d348",
+  "finished_at": "2026-09-20T08:45:36.394Z",
+  "stop_reason": null,
+  "fatal": null,
+  "elapsed_run_ms": 1523127
+}

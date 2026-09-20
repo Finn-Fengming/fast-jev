@@ -216,7 +216,7 @@ npm run package
 npm run test:package
 ```
 
-`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。本地 130 项测试通过；[CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)的 Linux/macOS × Node.js 22/24 四组任务也全部通过。
+`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。本地串行运行 169 项测试全部通过；[CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)覆盖 Linux/macOS × Node.js 22/24。
 
 可以进行小规模真实调用计时：
 
@@ -237,51 +237,43 @@ npm run benchmark -- --provider openai --model your-model-id --runs 3
 
 ## 可复现实验
 
-[实验指南](experiments/README.md) 包含固定的 96 条中英文诊断案例（开发集 32、测试集 64）、固定随机种子、逐条原始结果、源码/数据哈希，以及从原始输出重新评分的报告脚本。标签是按明确规则预先生成的 AI 辅助参考答案，未经独立人工标注。
+**AGY / Gemini 与 OpenRouter 原生 Jev 实测（2026-09-20）。** 模型分别为 `gemini-3.8-flash-low` 和 `typesafe/jev-1.13`；双方限时 60 秒，先每批 8 例再单例，各一轮，串行 AB/BA 交替，无应用层重试。每后端、每模式计划 **64 条案例**，预热排除；本轮状态：`completed_with_errors`。
 
-请从克隆的仓库根目录运行以下命令；npm 安装包不包含 `experiments/`。
+本轮 Jev 的端到端正确率更高、成功请求时延更低。AGY 成功返回的答案全部正确，调用失败拉低了其端到端正确率。Jev 使用实验专用的原生 Decisions API 适配器；生产 CLI 的 compatible 后端仍使用 Chat Completions。
 
-```sh
-# 先查看计划，不调用模型
-npm run experiment -- --provider agy --model gemini-3.8-flash-low --plan --split test --out experiments/results/my-plan
-# 仅用开发集选配置，冻结后再运行测试集
-env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split dev --limit 8 --repeats 1 --out experiments/results/my-dev
-env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 1 --batch-size 1 --out experiments/results/my-test-single
-env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 3 --batch-size 8 --out experiments/results/my-test-batch-8
-npm run experiment:report -- experiments/results/my-test-single
-npm run experiment:report -- experiments/results/my-test-batch-8
-```
+| 模式 | 后端 | 正确 / 已尝试案例 | 案例覆盖 | 失败 / 已尝试请求 | 成功请求 p50 / p95（秒） |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 单例 | AGY / Gemini | 59/64 (92.19%) | 64/64 | 5/64 | 13.447 / 44.665 |
+| 单例 | OpenRouter Jev | 64/64 (100.00%) | 64/64 | 0/64 | 0.318 / 0.458 |
+| 每批 8 例 | AGY / Gemini | 48/64 (75.00%) | 64/64 | 2/8 | 12.892 / 44.182 |
+| 每批 8 例 | OpenRouter Jev | 63/64 (98.44%) | 64/64 | 0/8 | 0.324 / 0.462 |
 
-**agy 真实测试结果（2026-09-20）。** 固定的 64 条测试案例已取得真实单例与批量结果：
+端到端正确率包含后端失败；覆盖列为实际尝试 / 64，未运行案例不伪装成预测。成功响应条件下准确率另为：单例 AGY 59/59 (100.00%)、Jev 64/64 (100.00%)；批量 AGY 48/48 (100.00%)、Jev 63/64 (98.44%)。成功请求分位数排除失败耗时；完整失败、全体请求时延和覆盖见[原始报告](experiments/results/agy-jev-openrouter-60s-test-20260920/comparison.md)。
 
-| 模式 | 首轮正确 / 已尝试案例 | 成功 / 已尝试请求（全部轮次） | 成功请求 p50 / p95 |
-| --- | ---: | ---: | ---: |
-| [单例，1 轮](experiments/results/agy-recovered-test-single/report.md) | 62/64（96.88%） | 62/64 | 11.92 秒 / 23.73 秒 |
-| [每批 8 例，3 轮](experiments/results/agy-recovered-test-batch-8/report.md) | 64/64（100%） | 24/24 | 12.82 秒 / 21.16 秒 |
+分类/布尔精确匹配；评分以绝对误差 **≤ 0.5** 计入正确率，保留 Jev 连续值，不四舍五入。下面评分指标只针对返回的评分答案，MAE 仅使用有效数值；后端失败保留在上表分母。
 
-两次失败均为 30 秒超时限制触发的 `AGY_TIMEOUT`。其余 62 条成功预测全部正确；评分题 16/16 完全命中，MAE 为 0。96.88% 的端到端正确率包含这两次失败；成功请求时延分位数不包含失败，全体请求 p50/p95 为 11.94 秒 / 29.59 秒。
+| 模式 | 后端 | 评分 MAE | 评分精确匹配 | 有效评分数 |
+| --- | --- | ---: | ---: | ---: |
+| 单例 | AGY / Gemini | 0.0000 | 100.00% | 15 |
+| 单例 | OpenRouter Jev | 0.0075 | 56.25% | 16 |
+| 每批 8 例 | AGY / Gemini | 0.0000 | 100.00% | 15 |
+| 每批 8 例 | OpenRouter Jev | 0.0569 | 68.75% | 16 |
 
-批量模式三轮共 192 次案例执行全部正确，64 条案例的预测跨轮完全一致；重复调用不等于 192 条独立质量样本。平均批次耗时除以八为 **1.69 秒/例**，这是摊销耗时，每次请求 p50 仍为 12.82 秒。这套小规模合成案例不能保证生产环境质量。
+批量成功请求平均摊销：**AGY 2823.74 ms/例；Jev 45.26 ms/例**，不是单条响应延迟，整批须等待完整返回。计时包含 AGY 新进程启动、或 Jev 的 Node fetch 网络调用，以及各自构造、解析与校验；不代表纯模型计算。批量最多 8 个请求样本，8 个样本的 p95 就是最大值。
 
-原始单例记录的辅助错误类别曾将两次超时误标为 `authentication`；`AGY_TIMEOUT` 错误码、失败数量和指标均正确。[勘误](experiments/ERRATA.md)保留原记录，并说明两组正式运行结束后应用的错误分类修复。
+**保留初轮 30 秒结果：** [初轮报告](experiments/results/agy-jev-openrouter-test-20260920/comparison.md)中双方各尝试 15/64 条单例；AGY 8/15 正确、7 次超时，Jev 15/15 正确。连续 3 次 AGY 超时触发停止，各剩余 49 条单例及全部批量未运行。60 秒与批量优先是在看到这些失败后公开修订的协议；未改题目、标签或模型提示词，未拼接两轮最佳输出。
 
-[正式协议](experiments/protocols/agy-recovery-20260920.md)在测试前冻结：完整 64 条测试案例，单例 1 轮、8 例批量 3 轮，超时 30 秒，生产代码保持原样；协议附完整复现命令。此前[单例](experiments/results/agy-recovered-dev-single/report.md)与[批量](experiments/results/agy-recovered-dev-batch-8/report.md)开发检查各答对 8/8。[精简 agent 候选方案](experiments/results/agy-lean-dev-single/report.md)在开发集同样答对 8/8，但平均和尾部时延没有改善，因此未采用。历史 `agy-single`、`agy-batch-8` 目录仍是**未执行的计划**；实际实验另存目录。
+这是已经观察过的小型合成集，参考答案由 AI 辅助按规则编写，未经独立人工标注。一轮结果不证明生产泛化或稳定速度，原生 Jev 概率不与 AGY 自报告 confidence 比较。[对比说明](experiments/COMPARISON.md) · [协议](experiments/protocols/agy-jev-openrouter-60s-20260920.md) · [结果与分析](experiments/results/agy-jev-openrouter-60s-test-20260920/analysis.md) · [JSON](experiments/results/agy-jev-openrouter-60s-test-20260920/comparison.json)。
 
-[公开 Jev 实验](experiments/baselines/jev-public.md)单独列出来源与条件。不同数据集、环境和计时方法不用于直接排名，也不能据此声称 fast-jev 超过 Jev。
-
-已通过复用校验后的请求，去掉一次重复输入校验。5 组交替 AB/BA 实验、每组每种批量大小各 1,000 个样本，得到以下各次运行 p50 的中位数：
-
-| 每次条目数 | 优化前 | 优化后 | 配对降幅中位数 |
-| ---: | ---: | ---: | ---: |
-| 1 | 0.0260 ms | 0.0220 ms | 15.60% |
-| 8 | 0.0829 ms | 0.0553 ms | 33.96% |
-| 32 | 0.2414 ms | 0.1550 ms | 35.73% |
-
-这仅是**无网络、无模型调用的本地封装开销**，不是 agy 响应时间，也不是与 Jev 的速度比较。优化前代码和全部 30,000 个时延样本均已保留。[A/B 原始结果](experiments/results/overhead-ab/comparison.json)。
+复现需要工作正常的本机 agy，以及配置为 OpenRouter 凭据的 `OPENAI_API_KEY`。从源码仓库运行（安装包不含实验脚本）；每次使用新输出目录：
 
 ```sh
-npm run benchmark:local -- --out experiments/results/my-overhead-ab
+node experiments/compare.mjs --timeout 60000 --batch-sizes 8,1 \
+  --out experiments/results/my-comparison
+node experiments/compare-report.mjs experiments/results/my-comparison
 ```
+
+第一条加 `--plan` 可不调用模型查看计划；第二条只离线核验原始答案、请求 hash、评分和配对顺序。[历史 AGY、外部 Jev 与本地封装开销实验](experiments/README.md#历史实验索引)单独保留。
 
 ## 能力边界
 
