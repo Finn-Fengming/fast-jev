@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "experiment": "paired-jev-agy-v1",
+  "created_at": "2026-09-20T07:52:23.777Z",
+  "status": "completed",
+  "source": {
+    "sha256": "83e3266dbbd0dab7f27282f750064e970df075b07d3469900e68605f6a660544",
+    "files": {
+      "experiments/compare-overhead.mjs": "7b95b1bbc29aa9000a68d15ceaaaba2b0dc959b59c312728449c939de88393c3",
+      "experiments/compare-report.mjs": "b0e7220c5da85fa5b9ff865c0ab43a693986abee926ea5ffd8562ad35451fa0e",
+      "experiments/compare.mjs": "a7ce04086bbdd345d0c04e3796af776d304d1915be5cf6e1786b8a360bfcb96b",
+      "experiments/lib/errors.mjs": "e5c4c20ad35c317e1a6fa7dda7c2047192333252358c16818ad95c91c12f185a",
+      "experiments/lib/jev-openrouter.mjs": "4f1fbfd72b19ef9bae4d9c78048ad58226920a4a85cd65f8af205f7376e28cdf",
+      "experiments/lib/metrics.mjs": "b962d32d48c64eddf8221b8da069a2530c50ebb781f6900097036e9109729602",
+      "experiments/lib/privacy.mjs": "2ab241918ef8dc125e681f87d60dcd45cdb7c9e752435cd627cfcc8f5f34c9fc",
+      "experiments/lib/suite.mjs": "174dc3912f915f527d9e1f6b1a5dd6fa710e89e67b6505392da8f2dfe710190c",
+      "experiments/local-overhead.mjs": "9466b2d6b6c2ddfd3608044bdfaff1be7af36e6df2d5f2e941fd313de9b36d23",
+      "experiments/report.mjs": "ae5d498a476a5b5191e625125a83d6302d2cedbdb9624b1ecbbfd9fb175bdb56",
+      "experiments/run.mjs": "352f137b71a7e166493ed15db78227d233338435885fa3d9cb88adb0f9156ce9",
+      "experiments/variants/agy-lean-audit.mjs": "11e2bd64bf9e8eaffda3a67542c52ba88178da747c7905ec64a743b142814c55",
+      "experiments/variants/agy-lean-candidate.mjs": "31458445fdb0968700e89656e1d16345629b55d01a542302ab3b428bc020d97f",
+      "experiments/variants/decision-before-validation-reuse.mjs": "8967545fd781223686feb2f78ddfbddfa948c3a801c6446fcf6012ac38fa0df3",
+      "package.json": "88b779881a56b2e3dc7eabc50d18d0438b71a14f258b560db92038db5051e941",
+      "src/agy.mjs": "73067a78937b291d214de836743e4419b29de138eed5d61bedeb83315c3924c6",
+      "src/cli.mjs": "9091844d8c5439ecdee0488c6ef99d5020ef4d5c62b116b2ec92e07cbc47c2ce",
+      "src/config.mjs": "7edd2965b00c6d753f465e4cfe398b3709761d0d4ac7623f1ffc6191cbb743fc",
+      "src/decision.mjs": "ab06d87de38d06d29bec767ba63107f5a286a09f1f27f392904bec8cbaaf5910",
+      "src/errors.mjs": "43746a56956376351bab5974d51ffb4a9d67c919f99d85f55107683cb60f77cf",
+      "src/privacy.mjs": "4aca0150e158acb4d173006c883080414ee427b506d8b975dc043beef68a5ae0",
+      "src/providers.mjs": "2bb7b13565cb97445993e5badaaea5ec04f719f435a1ef5751599ba38f5e1802"
+    }
+  },
+  "git_commit": "1acd3349575e75c05e4c547051c11d208f46ee5c",
+  "environment": {
+    "node": "v26.0.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "os_release": "25.4.0",
+    "cpu": "Apple M5 Pro",
+    "logical_cpus": 18,
+    "memory_gib": 48
+  },
+  "dataset": {
+    "filename": "decision-suite.jsonl",
+    "sha256": "f0bfdd47121bf16ee1600583ea06aa58a69aeecd8e5d679560dc1447ba696e2c",
+    "snapshot_sha256": "ea7e09f7a30e21bd448994513597018591eb7cc68724ecb2616150bdbb50d348",
+    "bytes": 82920,
+    "total_cases": 96,
+    "eligible_cases": 32,
+    "selected_cases": 8,
+    "split": "dev",
+    "is_subset": true,
+    "selected_ids": [
+      "grounded_boolean-zh-02",
+      "policy_choice-zh-03",
+      "rubric_score-en-01",
+      "routing_choice-zh-03",
+      "rubric_score-en-02",
+      "grounded_boolean-zh-01",
+      "rubric_score-zh-03",
+      "routing_choice-en-03"
+    ]
+  },
+  "backend": {
+    "provider": "agy",
+    "requested_model": "gemini-3.8-flash-low",
+    "effort": null,
+    "response_format": "agy-json-schema",
+    "timeout_ms": 30000,
+    "max_tokens": null,
+    "api_key_present": false,
+    "agy_version": "1.2.7",
+    "requested_model_listed": true
+  },
+  "protocol": {
+    "repeats": 1,
+    "excluded_warmup_requests": 1,
+    "max_consecutive_errors": 3,
+    "seed": 20260920,
+    "concurrency": 1,
+    "automatic_retries": 0,
+    "score_tolerance": 0.5,
+    "primary_quality": "One measured repeat; backend failures count against end-to-end accuracy; unrun cases remain visible.",
+    "cache": "none in fast-jev; upstream cache unknown",
+    "schedule": "Paired serial requests on identical cases, alternating AGY/Jev then Jev/AGY across pairs, including warmups.",
+    "latency": "Wall clock around the complete adapter call: input validation, provider request construction, transport/process startup, parsing and result validation; canonical batch construction, warmup, probing and artifact writes excluded. Batch elapsed/N is amortized cost, not individual response latency.",
+    "boolean_threshold": "Jev noul >= 0.5 becomes true; no confidence gating.",
+    "score_conversion": "Native Jev score is retained without rounding; both backends use absolute error <= 0.5 plus separate MAE and exact match.",
+    "dataset_disclosure": "Previously observed, frozen synthetic test cases; this is a fresh measurement, not a new blind holdout.",
+    "batch_size": 8,
+    "planned_measured_requests": 1,
+    "planned_measured_cases": 8,
+    "process": "fresh agy process per request"
+  },
+  "order": [
+    {
+      "repeat": 0,
+      "case_ids": [
+        "rubric_score-en-01",
+        "grounded_boolean-zh-01",
+        "rubric_score-en-02",
+        "rubric_score-zh-03",
+        "routing_choice-en-03",
+        "routing_choice-zh-03",
+        "policy_choice-zh-03",
+        "grounded_boolean-zh-02"
+      ]
+    }
+  ],
+  "finished_at": "2026-09-20T07:52:52.521Z"
+}

@@ -22,10 +22,10 @@ Jev 最值得复用的设计是：**把判断限制为已知答案空间，把�
 
 - **接口事实**：官方文档明确给出的请求、字段、限制。
 - **厂商报告**：训练方法、时延、成本收益和评估结果，保留其测量条件。
-- **独立报告**：评测作者自己的数据与结论；本次没有重新调用 Jev 复测。
+- **独立报告**：评测作者自己的数据与结论；本报告初稿没有复跑这些外部评测。
 - **本项目判断**：从上述材料推导出的工程建议，后续仍需测试。
 
-此次工作是资料调研，**没有 Jev 与 Gemini 的同环境对照实测**，也没有从本报告推出 Gemini 的吞吐量、准确率或概率校准水平。
+本报告初稿属于资料调研，当时没有 Jev 与 Gemini 的同环境对照实测，不能据此推出 Gemini 的吞吐量、准确率或概率校准水平。后续 OpenRouter 接口核实见第 4.3 节；本项目的对照实验方法与记录见[实验说明](../experiments/COMPARISON.md)，与下文引用的历史外部评测分开。
 
 ## 2. Jev 是什么，为什么值得关注
 
@@ -113,6 +113,14 @@ TypeSafe 原生端点是 `POST https://api.typesafe.ai/v1/systemone`，使用 Be
 别名会随发布移动；固定模型 ID 更利于重复评估。官方也说明客户无需微调或 LoRA，主要通过状态、问题和判据适配业务。[Models](https://docs.typesafe.ai/models)
 
 上述限制只属于当日 Jev 服务；**不能搬到 Gemini 或其他 compatible provider 上当作其能力声明**。
+
+### 4.3 后续核实：OpenRouter 的原生 Jev 接口
+
+同日进一步核实：OpenRouter 的 `typesafe/jev-1.13` 标注为 **text → decisions**，返回结构化决策。官方 OpenAPI 将其接口定义为 `POST https://openrouter.ai/api/alpha/decisions`，请求包含 `model`、`state`、`questions`，响应使用 `answers`。接入时应遵循该原生契约，不能只把模型名填入通用 `/chat/completions` 请求。[OpenRouter 模型页](https://openrouter.ai/typesafe/jev-1.13)、[官方 OpenAPI](https://openrouter.ai/openapi.json)
+
+实验映射保留原始状态与问题指令：Choice 将选项映射为 `criteria`；Score 使用完整的有序等级描述，并保留返回的连续分数；Noul 保留原始概率，再按预先约定的 `noul >= 0.5` 转成布尔值，恰好 0.5 时取 true。原生 Score 是等级索引的概率加权值，Noul 是命题成立概率，二者不能混用。批量问题需要在指令里指明对应状态字段，不能只依靠问题 ID 定位内容。[TypeSafe 原语](https://docs.typesafe.ai/primitives)、[Score](https://docs.typesafe.ai/primitives/score)、[Noul](https://docs.typesafe.ai/primitives/noul)
+
+仓库中的 `experiments/lib/jev-openrouter.mjs` 是对照实验专用适配器；生产 CLI 仍提供 agy 和通用 OpenAI-compatible 两种后端。这项实验接入不代表生产 CLI 新增了原生 Jev provider；接口核实本身也不构成质量或速度结论。
 
 ## 5. 工作原理：公开信息能说明什么
 
@@ -335,7 +343,7 @@ JSON / JSONL / 简洁文本 + 耗时与状态
 
 ### 13.3 性能对照协议
 
-分别记录 1、5、20 个问题，短/中/长输入，单条/小批量，可控并发，至少有足够多重复来估计 p95。固定输出信息量，公平比较 agy 与 compatible provider；若将来接入 Jev 对照，也使用同一数据、相同候选、相近的重试与计时起止点。
+分别记录 1、5、20 个问题，短/中/长输入，单条/小批量，可控并发，至少有足够多重复来估计 p95。固定输出信息量，公平比较 agy 与 compatible provider；接入 Jev 对照时，也应使用同一数据、相同候选、相近的重试与计时起止点。
 
 优化优先级建议：先减少无关输入和重复调用，再减少不需要的输出，最后根据测量调整批量与并发。若 CLI 启动占主导，应单独量化后再决定是否需要常驻进程；不要先增加复杂架构。
 
@@ -349,7 +357,7 @@ JSON / JSONL / 简洁文本 + 耗时与状态
 
 建议实施 fast-jev。其价值是给已有模型提供**简单、统一、可验证的快速决策入口**，并让 agy 与 compatible API 共享一套使用体验。无训练的首版在工程上可行，官方 LLM adapter 也说明这是一条有实际用途的路线；竞争力应从安装体验、响应开销、输出稳定性和任务实测中获得。[官方 LLM adapter](https://github.com/typesafe-ai/system-one-adapter-python)
 
-当前仍需在实现阶段核实：
+初稿列出的实现阶段核实事项如下；后续实施与实验记录以仓库 README 和实验目录为准：
 
 1. 本机 agy 的具体版本、可用模型标识、非交互输入输出与认证行为。
 2. compatible endpoint 的真实模型、鉴权、schema/JSON 支持和用量字段。
@@ -387,3 +395,6 @@ JSON / JSONL / 简洁文本 + 耗时与状态
 | S20 | [jev-benchmarks](https://github.com/AbdelStark/jev-benchmarks) | 独立 pilot 与方法限制 |
 | S21 | [jev-calibration-audit](https://github.com/jujumilk3/jev-calibration-audit) | 独立 API 观察 |
 | S22 | [jev-behavior-study](https://github.com/RINNECODER/jev-behavior-study) | 受控任务与表述敏感性 |
+| S23 | [OpenRouter Jev 1.13](https://openrouter.ai/typesafe/jev-1.13) | 后续核实：模型模态与接入渠道 |
+| S24 | [OpenRouter OpenAPI](https://openrouter.ai/openapi.json) | 后续核实：原生 Decisions 端点与请求响应契约 |
+| S25 | [TypeSafe Primitives](https://docs.typesafe.ai/primitives) | 后续核实：原语语义与批量状态定位 |

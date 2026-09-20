@@ -18,6 +18,8 @@
     "benchmark": "node scripts/benchmark.mjs",
     "experiment": "node experiments/run.mjs",
     "experiment:report": "node experiments/report.mjs",
+    "experiment:compare": "node experiments/compare.mjs",
+    "experiment:compare-report": "node experiments/compare-report.mjs",
     "benchmark:local": "node experiments/compare-overhead.mjs"
   }
 }
