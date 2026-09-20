@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "kind": "local_wrapper_overhead_only",
+  "tag": "before-validation-reuse",
+  "created_at": "2026-09-20T04:37:00.166Z",
+  "environment": {
+    "node": "v26.0.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "os_release": "25.4.0",
+    "cpu": "Apple M5 Pro"
+  },
+  "source": {
+    "sha256": "12ce93dbfa017dfd09c8f373ea55ec14a4c80d32ffc31938ffc8dde2469a4ace",
+    "files": {
+      "experiments/lib/metrics.mjs": "774f2380cdfbd8c8f669b1d97df7f5eea27f00f4ca6347b50b580cae889ba2a7",
+      "experiments/lib/suite.mjs": "454b2adadd4c0dc7bf25046dea57fd9ebbb231d6421882b5d3826c35945951a9",
+      "experiments/local-overhead.mjs": "2a4465c4a3a9606d47aa353b345a5b509b47c02d8cd70fa01843ca0995db1363",
+      "experiments/run.mjs": "e84863d1f847003aed3038f5cba94283ab6da26419c0ba1698042a9a63ae8f0d",
+      "package.json": "24ad1f24df6fda9ee69f0297cf7ab7e83690f6354a4ae216b9cf014b1f6b1bae",
+      "src/agy.mjs": "09e974fc25d9a3951e8fa3ac9d17de42aeab3b9c422256fc2e4624e9605dc82e",
+      "src/cli.mjs": "95cffef8faf381893be49286d754be86974ba345ca2545779ddc2b08675b61d6",
+      "src/config.mjs": "7edd2965b00c6d753f465e4cfe398b3709761d0d4ac7623f1ffc6191cbb743fc",
+      "src/decision.mjs": "9db12410b1427fac51717d16ac9d76d426449f7627113bc98c36ed5469929512",
+      "src/errors.mjs": "43746a56956376351bab5974d51ffb4a9d67c919f99d85f55107683cb60f77cf",
+      "src/providers.mjs": "031f5d770e6d414e4ef443c29be7aa00da3f07a6483933df0d4ec19191cb822e"
+    }
+  },
+  "dataset_sha256": "f0bfdd47121bf16ee1600583ea06aa58a69aeecd8e5d679560dc1447ba696e2c",
+  "protocol": {
+    "iterations_per_batch_size": 1000,
+    "excluded_warmup_iterations": 100,
+    "batch_sizes": [
+      1,
+      8,
+      32
+    ],
+    "concurrency": 1,
+    "transport": "in-process global fetch fixture; zero network calls",
+    "timing": "decide() including prompt/schema, request serialization, fixture response parsing and strict validation",
+    "provider_inference": false,
+    "accuracy_measurement": false
+  },
+  "batches": [
+    {
+      "batch_size": 1,
+      "n": 1000,
+      "p50_ms": 0.026209000000008587,
+      "p95_ms": 0.04116600000000403,
+      "mean_ms": 0.028725092999999945
+    },
+    {
+      "batch_size": 8,
+      "n": 1000,
+      "p50_ms": 0.0835830000000044,
+      "p95_ms": 0.1109170000000006,
+      "mean_ms": 0.08728629899999917
+    },
+    {
+      "batch_size": 32,
+      "n": 1000,
+      "p50_ms": 0.24475000000001046,
+      "p95_ms": 0.29804200000000947,
+      "mean_ms": 0.25210938000000066
+    }
+  ],
+  "interpretation": "These timings measure local wrapper work with fixed gold outputs, not AGY, network latency, model speed, model accuracy, or a Jev comparison. GC/JIT and host load affect results."
+}

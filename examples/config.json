@@ -1,0 +1,11 @@
+{
+  "provider": "agy",
+  "timeoutMs": 60000,
+  "agy": { "model": "gemini-3.8-flash-low", "agyBin": "agy" },
+  "openai": {
+    "baseUrl": "http://localhost:8000/v1",
+    "model": "your-model-id",
+    "apiKeyEnv": "OPENAI_API_KEY",
+    "responseFormat": "json_schema"
+  }
+}

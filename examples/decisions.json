@@ -1,0 +1,14 @@
+{
+  "state": {
+    "service": "checkout",
+    "tests": "passed",
+    "error_rate_percent": 0.1,
+    "rollback_ready": true,
+    "policy": "Ship when tests pass, error rate is below 0.5%, and rollback is ready."
+  },
+  "questions": [
+    { "id": "action", "type": "choice", "prompt": "What should we do according to the policy?", "options": ["ship", "hold", "investigate"] },
+    { "id": "ready", "type": "boolean", "prompt": "Does this release meet all the policy conditions?" },
+    { "id": "risk", "type": "score", "prompt": "Rate operational risk: 0 is minimal, 10 is extreme.", "min": 0, "max": 10 }
+  ]
+}

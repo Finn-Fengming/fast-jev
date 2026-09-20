@@ -1,0 +1,18 @@
+{
+  "name": "fast-jev",
+  "version": "0.1.0",
+  "description": "Small, typed AI decisions through local agy or OpenAI-compatible models.",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "bin": { "fast-jev": "bin/fast-jev.mjs", "fjev": "bin/fast-jev.mjs" },
+  "exports": { ".": "./src/decision.mjs" },
+  "files": ["bin", "src", "examples", "docs", "scripts/benchmark.mjs", "README.md", "README.zh-CN.md"],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check bin/fast-jev.mjs && node --check src/cli.mjs && node --check src/providers.mjs && node --check src/decision.mjs && node --check src/agy.mjs",
+    "benchmark": "node scripts/benchmark.mjs",
+    "experiment": "node experiments/run.mjs",
+    "experiment:report": "node experiments/report.mjs",
+    "benchmark:local": "node experiments/compare-overhead.mjs"
+  }
+}

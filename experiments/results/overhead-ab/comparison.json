@@ -1,0 +1,358 @@
+{
+  "kind": "local_wrapper_optimization_ab",
+  "created_at": "2026-09-20T04:39:15.040Z",
+  "pairs": 5,
+  "order": "Alternating AB/BA; fresh Node process per variant, 100 warmups then measured iterations per batch size",
+  "batches": [
+    {
+      "batch_size": 1,
+      "pair_count": 5,
+      "before_p50_median_ms": 0.026042000000003895,
+      "after_p50_median_ms": 0.021958000000012134,
+      "before_p50_range_ms": [
+        0.0257090000000062,
+        0.026791000000002896
+      ],
+      "after_p50_range_ms": [
+        0.021791000000007443,
+        0.022125000000002615
+      ],
+      "paired_reduction_fraction": [
+        0.17416296517486382,
+        0.15604219215706458,
+        0.163236310575064,
+        0.15138164251158223,
+        0.145902213232454
+      ],
+      "median_paired_reduction_fraction": 0.15604219215706458
+    },
+    {
+      "batch_size": 8,
+      "pair_count": 5,
+      "before_p50_median_ms": 0.08287499999998715,
+      "after_p50_median_ms": 0.05529099999998266,
+      "before_p50_range_ms": [
+        0.08208399999999472,
+        0.08583299999999383
+      ],
+      "after_p50_range_ms": [
+        0.05458299999999383,
+        0.0557500000000033
+      ],
+      "paired_reduction_fraction": [
+        0.35048291449667024,
+        0.34138159879333585,
+        0.3396495176077264,
+        0.32541806425059183,
+        0.32640953169940284
+      ],
+      "median_paired_reduction_fraction": 0.3396495176077264
+    },
+    {
+      "batch_size": 32,
+      "pair_count": 5,
+      "before_p50_median_ms": 0.241375000000005,
+      "after_p50_median_ms": 0.1550420000000372,
+      "before_p50_range_ms": [
+        0.239167000000009,
+        0.24254199999998605
+      ],
+      "after_p50_range_ms": [
+        0.15237500000000637,
+        0.15587499999998045
+      ],
+      "paired_reduction_fraction": [
+        0.35732780301972683,
+        0.3669716004452836,
+        0.3657791663744322,
+        0.35439461418954743,
+        0.3517416700463218
+      ],
+      "median_paired_reduction_fraction": 0.35732780301972683
+    }
+  ],
+  "runs": [
+    {
+      "pair": 0,
+      "variant": "before-validation-reuse",
+      "directory": "pair-1-before-validation-reuse",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.026791000000002896,
+          "p95_ms": 0.04462499999999636,
+          "mean_ms": 0.029863659999999983
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.08583299999999383,
+          "p95_ms": 0.1472919999999931,
+          "mean_ms": 0.09372627500000003
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.24254199999998605,
+          "p95_ms": 0.325540999999987,
+          "mean_ms": 0.25569553699999964
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "variant": "current",
+      "directory": "pair-1-current",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.022125000000002615,
+          "p95_ms": 0.03458299999999781,
+          "mean_ms": 0.024125119000000295
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.0557500000000033,
+          "p95_ms": 0.07404200000000571,
+          "mean_ms": 0.059270149999999674
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.15587499999998045,
+          "p95_ms": 0.2093330000000151,
+          "mean_ms": 0.1629137600000002
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "variant": "current",
+      "directory": "pair-2-current",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.02208300000000918,
+          "p95_ms": 0.034749999999995396,
+          "mean_ms": 0.02416253899999989
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.05458299999999383,
+          "p95_ms": 0.07287499999999625,
+          "mean_ms": 0.057746211000000006
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.15237500000000637,
+          "p95_ms": 0.1912499999999966,
+          "mean_ms": 0.1578098310000001
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "variant": "before-validation-reuse",
+      "directory": "pair-2-before-validation-reuse",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.026165999999989253,
+          "p95_ms": 0.03962500000000091,
+          "mean_ms": 0.028279499999999985
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.08287499999998715,
+          "p95_ms": 0.11187499999999773,
+          "mean_ms": 0.08629729700000073
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.2407079999999837,
+          "p95_ms": 0.29654200000004494,
+          "mean_ms": 0.24942669499999998
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "variant": "before-validation-reuse",
+      "directory": "pair-3-before-validation-reuse",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.026042000000003895,
+          "p95_ms": 0.03983300000000156,
+          "mean_ms": 0.028047053000000027
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.08354199999999423,
+          "p95_ms": 0.11016600000000665,
+          "mean_ms": 0.0873068350000001
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.2422910000000229,
+          "p95_ms": 0.2948750000000473,
+          "mean_ms": 0.2497677449999986
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "variant": "current",
+      "directory": "pair-3-current",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.021791000000007443,
+          "p95_ms": 0.03420799999999957,
+          "mean_ms": 0.023431462999999864
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.05516700000001151,
+          "p95_ms": 0.0759999999999934,
+          "mean_ms": 0.0589700010000001
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.15366599999998698,
+          "p95_ms": 0.1979170000000181,
+          "mean_ms": 0.15895482300000005
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "variant": "current",
+      "directory": "pair-4-current",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.021958000000012134,
+          "p95_ms": 0.035124999999993634,
+          "mean_ms": 0.02388197199999982
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.055708999999993125,
+          "p95_ms": 0.07587499999999636,
+          "mean_ms": 0.05901488000000021
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.15583300000000122,
+          "p95_ms": 0.20341700000000174,
+          "mean_ms": 0.16221445700000184
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "variant": "before-validation-reuse",
+      "directory": "pair-4-before-validation-reuse",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.025874999999999204,
+          "p95_ms": 0.03912499999999852,
+          "mean_ms": 0.027947528000000096
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.08258299999999963,
+          "p95_ms": 0.11004200000002129,
+          "mean_ms": 0.08614224600000027
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.241375000000005,
+          "p95_ms": 0.29162500000001046,
+          "mean_ms": 0.24806295499999867
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "variant": "before-validation-reuse",
+      "directory": "pair-5-before-validation-reuse",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.0257090000000062,
+          "p95_ms": 0.04070799999999508,
+          "mean_ms": 0.027702647999999785
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.08208399999999472,
+          "p95_ms": 0.10958299999998644,
+          "mean_ms": 0.08564940500000046
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.239167000000009,
+          "p95_ms": 0.2925000000000182,
+          "mean_ms": 0.24639061899999976
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "variant": "current",
+      "directory": "pair-5-current",
+      "batches": [
+        {
+          "batch_size": 1,
+          "n": 1000,
+          "p50_ms": 0.021958000000012134,
+          "p95_ms": 0.03483300000000611,
+          "mean_ms": 0.02423108900000006
+        },
+        {
+          "batch_size": 8,
+          "n": 1000,
+          "p50_ms": 0.05529099999998266,
+          "p95_ms": 0.07508399999998971,
+          "mean_ms": 0.05847021699999976
+        },
+        {
+          "batch_size": 32,
+          "n": 1000,
+          "p50_ms": 0.1550420000000372,
+          "p95_ms": 0.18941599999999426,
+          "mean_ms": 0.15889091700000071
+        }
+      ]
+    }
+  ],
+  "inference_measured": false,
+  "interpretation": "Local fixture only. These results do not measure AGY inference or demonstrate that fast-jev beats Jev. Every raw timing sample is retained in the run directories."
+}

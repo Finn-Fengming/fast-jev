@@ -1,0 +1,265 @@
+# fast-jev
+
+[English](README.md) · [简体中文](README.zh-CN.md)
+
+在终端里快速完成结构化判断。复用本机 **agy** 登录，或连接 **OpenAI-compatible API**；无需训练模型，零运行时依赖。
+
+```sh
+fjev choose "下一步做什么？" \
+  --option 发布 --option 排查 \
+  --context "发布测试没有通过。" --text
+```
+
+借鉴 Jev 的封闭决策模式。这是独立封装，不是 Jev 模型或 TypeSafe API 客户端。置信度来自**模型自报，未经校准**。原理、证据和取舍见[完整调研](docs/research-jev.md)。
+
+## 安装
+
+需要 **Node.js 22+**。在本仓库目录执行：
+
+```sh
+npm install -g .
+fast-jev --help
+# fjev 是 fast-jev 的短命令
+```
+
+也可以不安装，直接运行：
+
+```sh
+node bin/fast-jev.mjs --help
+```
+
+以上是本地安装方式，不依赖 npm 上已经发布同名包。
+
+## 选择后端
+
+### agy：默认后端
+
+确保本机 `agy` 已安装、已登录并能正常使用。不需要额外 key、配置文件或 `init` 步骤。
+
+```sh
+fjev doctor
+fjev check "健康检查是否成功？" --context "HTTP 200 OK"
+```
+
+默认模型为 `gemini-3.8-flash-low`，该标识已在检查的本机 `agy models` 中确认。可用 `--model ID` 或 `--agy-bin /path/to/agy` 覆盖；实际模型可用性取决于你的 agy 安装和账户。
+
+agy 在临时工作目录中运行，通过 stdin 接收提示，并读取临时 schema 文件。适配器启用 agy 的 plan 模式与 sandbox，禁用斜杠命令。它复用现有登录和用户级设置；临时目录不是独立配置档，也不代表所有工具均不可用。权限、认证和日志仍由本机 agy 管理。
+
+### OpenAI-compatible API
+
+显式指定后端和模型：
+
+```sh
+export OPENAI_API_KEY='your-key'
+fjev check "健康检查是否成功？" --context "HTTP 200 OK" \
+  --provider openai \
+  --base-url https://gateway.example/v1 \
+  --model your-model-id
+```
+
+`--base-url` 支持以 `/v1` 结尾的 API 根路径，也支持完整 `/chat/completions` 地址，默认值为 `https://api.openai.com/v1`。本地免认证端点可以不设置 key。
+
+输出模式需要明确选择：
+
+| `--response-format` | 行为 |
+| --- | --- |
+| `json_schema`，默认 | 请求 strict JSON Schema 输出 |
+| `json_object` | 请求 JSON mode |
+| `text` | 不发送 `response_format`，在提示中要求 JSON |
+
+各兼容服务支持的能力不同。不支持 strict schema 时，可自行选择 `json_object` 或 `text`；所有模式都执行相同的本地校验。**fast-jev 不会自动降级模式、切换后端或重试。** `--effort` 和 `--max-tokens` 均可选，仅在后端支持对应值时设置。
+
+## 命令
+
+```sh
+# 单选；classify 是别名
+fjev choose "应由哪个团队处理？" --option 账单 --option 技术 --option 其他 \
+  --context "同一笔订单扣了两次钱。"
+echo "我无法登录" | fjev classify "应由哪个团队处理？" \
+  --options '["账单","技术","其他"]'
+
+# 是非判断；有效的 false 也属于成功结果
+fjev check "这是一条缺陷报告吗？" --file ticket.txt
+
+# 数值评分，默认范围为 0–1
+fjev score "紧急程度：0 是日常事项，10 是正在发生的服务中断。" \
+  --min 0 --max 10 --context "结账服务不可用。" --explain
+
+# 对 JSON 数组降序排名，或保留符合条件的条目
+fjev rank "预期收益相对于投入的性价比" --input examples/items.json --top 2
+fjev filter "能在两天内完成吗？" --input examples/items.json
+
+# 一次模型调用回答多个类型化问题；batch 是别名
+fjev decide --input examples/decisions.json --pretty
+cat examples/decisions.json | fjev batch --input -
+
+# 配置与诊断
+fjev config --pretty
+fjev doctor
+fjev doctor --live
+```
+
+单项判断通过 `--context`、`--file` 或管道输入文本。`--context` 与 `--file` 可以合并；两者均未提供时才读取管道文本。`rank` / `filter` 接收 JSON 数组，`decide` 接收请求对象；支持 `--input FILE`、`--input -` 或直接管道输入 JSON。`rank` / `filter` 还可用 `--context` / `--file` 添加共享上下文。
+
+`rank`、`filter`、`decide` 会将问题合并到**一次调用**，不会逐条发起模型请求；这不代表模型内部独立或并行推断。每次最多 **100 个问题/条目**，序列化输入上限 **256 KiB**；单选支持 **2–100 个不重复字符串**。响应格式不合法时，整次调用失败。
+
+## 结果与拒绝决策
+
+默认输出 JSON。`--pretty` 美化格式，`--text` 只输出值；对于 `rank` / `filter`，输出保留条目的 JSON 数组。`--explain` 增加简短理由。
+
+以下仅展示输出结构，不是性能实测：
+
+```json
+{
+  "command": "choose",
+  "result": {
+    "id": "decision",
+    "type": "choice",
+    "value": "排查",
+    "confidence": 0.91,
+    "status": "ok"
+  },
+  "meta": {
+    "provider": "agy",
+    "model": "gemini-3.8-flash-low",
+    "elapsed_ms": 1500,
+    "backend_duration_ms": null,
+    "usage": null,
+    "confidence_kind": "self_reported",
+    "calibrated": false
+  }
+}
+```
+
+`score.value` 表示所问维度的分值，`confidence` 表示模型对答案的支持程度，二者相互独立。当前版本直接返回选项、布尔值或范围内的数值；**不输出 Jev 候选概率分布，也不复现其 Score / Noul 语义**。
+
+```sh
+fjev choose "下一步做什么？" --option 发布 --option 排查 \
+  --context "测试结果缺失。" --min-confidence 0.8
+```
+
+低于阈值时，`value` 设为 `null`，`status` 设为 `abstained`，退出码为 **4**。默认阈值为 0。排名/筛选会从 `result` 中排除这些条目，并在 `abstained` 字段单独列出；只要有一项拒绝决策，退出码仍为 4。阈值是分流规则，不是准确率保证。
+
+| 退出码 | 含义 |
+| --- | --- |
+| `0` | 有效结果，包括布尔值 `false` |
+| `1` | 后端或输出错误 |
+| `2` | 输入或配置不合法 |
+| `4` | 至少一项拒绝决策 |
+| `124` | 超时 |
+| `130` | 已取消 |
+
+结果写入 stdout，错误以 JSON 写入 stderr。后端默认超时 **60 秒**，可用 `--timeout MS` 修改。
+
+## 配置
+
+配置文件是可选的。默认读取 `$XDG_CONFIG_HOME/fast-jev/config.json`，未设置 XDG 时读取 `~/.config/fast-jev/config.json`。也可通过 `--config PATH` 或 `FAST_JEV_CONFIG` 指定路径。示例见 [examples/config.json](examples/config.json)：
+
+```sh
+fjev config --config examples/config.json --pretty
+fjev check "是否准备就绪？" --context "全部必要检查已通过。" \
+  --config examples/config.json --provider openai
+```
+
+优先级为：**命令行参数 → 环境变量 → 所选后端的配置 → 默认值**。`provider` 和 `timeoutMs` 放在顶层，其余后端字段分别放在 `agy` / `openai` 对象下。API key 放在环境变量中，不写进配置文件；`config` 展示最终配置时不打印 key。
+
+| 环境变量 | 用途 |
+| --- | --- |
+| `FAST_JEV_PROVIDER` | `agy` 或 `openai` |
+| `FAST_JEV_MODEL` | 覆盖当前后端的模型 |
+| `FAST_JEV_TIMEOUT_MS` | 后端超时，单位毫秒 |
+| `FAST_JEV_AGY_BIN` | agy 可执行文件 |
+| `FAST_JEV_EFFORT` | 可选 `low`、`medium`、`high` |
+| `OPENAI_BASE_URL` | compatible API 根路径或补全地址 |
+| `OPENAI_API_KEY` | compatible API 默认凭据 |
+| `FAST_JEV_API_KEY` | 优先于所配置凭据变量的覆盖值 |
+| `FAST_JEV_RESPONSE_FORMAT` | `json_schema`、`json_object`、`text` |
+| `FAST_JEV_CONFIG` | 显式配置文件路径 |
+
+`openai.apiKeyEnv` 可指定其他凭据变量名。`--max-tokens` / `openai.maxTokens` 对应 API 的 `max_tokens`。`--effort` 对应 agy 参数或 API 的 `reasoning_effort`，未配置时不发送。避免模型后缀与 effort 冲突，例如 `-medium` 的 agy 模型配 `--effort low`。
+
+## JavaScript API
+
+在仓库根目录的脚本中使用：
+
+```js
+import { decide } from './src/decision.mjs';
+
+const output = await decide({
+  state: '发布测试没有通过。',
+  questions: [
+    { id: 'action', type: 'choice', prompt: '下一步做什么？', options: ['发布', '排查'] },
+    { id: 'ready', type: 'boolean', prompt: '测试通过了吗？' },
+    { id: 'risk', type: 'score', prompt: '风险：0 低，10 高。', min: 0, max: 10 }
+  ]
+}, { provider: 'agy', minConfidence: 0.8 });
+
+console.log(output.results);
+```
+
+将本目录安装为其他项目的本地依赖后，可从 `'fast-jev'` 导入。另有 `buildDecision`、`validateRequest`、`validateOutput` 导出。JavaScript API 不会自动加载 CLI 配置或环境变量；使用 HTTP 时显式传入 `{ provider: 'openai', model, baseUrl, apiKey: process.env.OPENAI_API_KEY }`，取消请求可传 `signal: AbortSignal`。
+
+## 检查与测试
+
+```sh
+# 只查看请求、提示和 schema，不调用模型
+fjev decide --input examples/decisions.json --dry-run --pretty
+
+npm test
+npm run check
+```
+
+`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。
+
+可以进行小规模真实调用计时：
+
+```sh
+npm run benchmark -- --provider agy --runs 3
+npm run benchmark -- --provider openai --model your-model-id --runs 3
+```
+
+脚本记录样本、失败和成功调用的 p50/p95。每次 run 都发起真实请求；三次调用只能做冒烟检查，不足以可靠估计尾部时延，也不是准确率或校准评测。
+
+| 现象 | 处理方式 |
+| --- | --- |
+| 找不到 agy 或缺少必要参数 | 检查 `agy --version`，更新 agy，或设置 `--agy-bin` |
+| API HTTP 400 | 检查模型，并显式选择端点支持的输出模式 |
+| 超时 | 检查后端连通性，再按需要增加 `--timeout` |
+
+
+## 可复现实验
+
+[实验指南](experiments/README.md) 包含固定的 96 条中英文诊断案例（开发集 32、测试集 64）、固定随机种子、逐条原始结果、源码/数据哈希，以及从原始输出重新评分的报告脚本。标签是按明确规则预先生成的 AI 辅助参考答案，未经独立人工标注。
+
+请从克隆的仓库根目录运行以下命令；npm 安装包不包含 `experiments/`。
+
+```sh
+# 先查看计划，不调用模型
+npm run experiment -- --provider agy --model gemini-3.8-flash-low --plan --split test --out experiments/results/my-plan
+# 仅用开发集选配置，冻结后再运行测试集
+npm run experiment -- --provider agy --model gemini-3.8-flash-low --split dev --repeats 1 --out experiments/results/my-dev
+npm run experiment -- --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 1 --out experiments/results/my-test
+npm run experiment:report -- experiments/results/my-test
+```
+
+**当前证据（2026-09-20）：** 已保存的单例/批量目录是计划，正式测试案例运行数为零。模型质量和推理时延尚未测量。[公开 Jev 实验](experiments/baselines/jev-public.md)单独列出来源与条件，不同数据集与环境不能用于直接排名。
+
+已通过复用校验后的请求，去掉一次重复输入校验。5 组交替 AB/BA 实验、每组每种批量大小各 1,000 个样本，得到以下各次运行 p50 的中位数：
+
+| 每次条目数 | 优化前 | 优化后 | 配对降幅中位数 |
+| ---: | ---: | ---: | ---: |
+| 1 | 0.0260 ms | 0.0220 ms | 15.60% |
+| 8 | 0.0829 ms | 0.0553 ms | 33.96% |
+| 32 | 0.2414 ms | 0.1550 ms | 35.73% |
+
+这仅是**无网络、无模型调用的本地封装开销**，不是 agy 响应时间，也不是与 Jev 的速度比较。优化前代码和全部 30,000 个时延样本均已保留。[A/B 原始结果](experiments/results/overhead-ab/comparison.json)。
+
+```sh
+npm run benchmark:local -- --out experiments/results/my-overhead-ab
+```
+
+## 能力边界
+
+封装校验结构、合法选项和数值范围，无法保证判断正确或抵抗所有提示注入。精确运算交给代码，阈值用自己的带标签数据评估。输入会发送到所选后端，agy 使用其既有认证与服务路由。没有测量就不承诺具体时延、成本或校准水平。
+
+更多背景见 [Jev 完整调研与验证方案](docs/research-jev.md)，其中区分了原始决策模型与本项目的无训练封装。

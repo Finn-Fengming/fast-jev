@@ -1,0 +1,772 @@
+{
+  "schema_version": 1,
+  "title": "Published Jev reference results, not a local head-to-head benchmark",
+  "accessed_date": "2026-09-20",
+  "jev_api_calls_made": 0,
+  "local_model_inference_reproduced": false,
+  "comparison_policy": {
+    "synthetic_direct_ranking_allowed": false,
+    "cross_dataset_best_metric_splicing_allowed": false,
+    "missing_values": "null means not established by the inspected sources, never zero.",
+    "requirements_for_direct_comparison": [
+      "Same item IDs, reference labels, candidate descriptions, question semantics and scoring.",
+      "Prespecified holdout and failure policy; matched model versions.",
+      "Comparable latency boundaries, concurrency, connection warmup, retries and regions.",
+      "Report every attempted call; no unsupported accuracy or speed victory claims."
+    ]
+  },
+  "sources": {
+    "btzsc": {
+      "url": "https://github.com/AbdelStark/jev-benchmarks/blob/0d610cc53e79bcbec691312b0c4adb4a0e371642/results/reports/btzsc-pilot-v1.json",
+      "raw_url": "https://raw.githubusercontent.com/AbdelStark/jev-benchmarks/0d610cc53e79bcbec691312b0c4adb4a0e371642/results/reports/btzsc-pilot-v1.json",
+      "repository_commit": "0d610cc53e79bcbec691312b0c4adb4a0e371642",
+      "source_sha256": "292db65ade535b9cd9c06477b6f7863e03a6106ec0a5fa56378a08164ee14598",
+      "experiment_date": "2026-09-17",
+      "accessed_date": "2026-09-20",
+      "kind": "independent_author_report",
+      "verification": "Published artifact and method inspected; model calls and raw-result recomputation not reproduced locally."
+    },
+    "mmlu_prox": {
+      "url": "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/results/parallel_ko_en.json",
+      "raw_url": "https://raw.githubusercontent.com/jujumilk3/jev-calibration-audit/daab9e2c2d5d5683bf07f3482deb653c26856219/results/parallel_ko_en.json",
+      "repository_commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+      "source_sha256": "8e3c89618d603b4cf8310a3b9993c75f3c7b6118f54a2fdaed90aaeb73913e72",
+      "experiment_date": "2026-09-18",
+      "accessed_date": "2026-09-20",
+      "kind": "independent_author_report",
+      "verification": "Published artifact and method inspected; model calls and raw-result recomputation not reproduced locally."
+    },
+    "interference": {
+      "url": "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/results/interference.json",
+      "raw_url": "https://raw.githubusercontent.com/jujumilk3/jev-calibration-audit/daab9e2c2d5d5683bf07f3482deb653c26856219/results/interference.json",
+      "repository_commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+      "source_sha256": "1709fe5439d9a3f897e7d34e97c1902a3380c51dad67f65ca7cba977bbcaa311",
+      "experiment_date": "2026-09-18",
+      "accessed_date": "2026-09-20",
+      "kind": "independent_author_report",
+      "verification": "Published artifact and method inspected; model calls and raw-result recomputation not reproduced locally."
+    },
+    "latency_15": {
+      "url": "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/results/preflight.json",
+      "raw_url": "https://raw.githubusercontent.com/jujumilk3/jev-calibration-audit/daab9e2c2d5d5683bf07f3482deb653c26856219/results/preflight.json",
+      "repository_commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+      "source_sha256": "0e35fc5c5e2498f6521b9015731cca481150d9da1aa483d732132d21be8b7522",
+      "experiment_date": "2026-09-18",
+      "accessed_date": "2026-09-20",
+      "kind": "independent_author_report",
+      "verification": "Published artifact and method inspected; model calls and raw-result recomputation not reproduced locally."
+    },
+    "latency_10": {
+      "url": "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/results/preflight_n50.json",
+      "raw_url": "https://raw.githubusercontent.com/jujumilk3/jev-calibration-audit/daab9e2c2d5d5683bf07f3482deb653c26856219/results/preflight_n50.json",
+      "repository_commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+      "source_sha256": "950bdba38d35eddda7e4da466bab6bd0c8f07b5db39655ce5e077edc90c40177",
+      "experiment_date": "2026-09-18",
+      "accessed_date": "2026-09-20",
+      "kind": "independent_author_report",
+      "verification": "Published artifact and method inspected; model calls and raw-result recomputation not reproduced locally."
+    },
+    "behavior": {
+      "url": "https://github.com/RINNECODER/jev-behavior-study/blob/e4a1d7ec691a91f33d3b5879a780e6f27328f173/DECISION_AND_LIMITS_REPORT.md",
+      "raw_url": "https://raw.githubusercontent.com/RINNECODER/jev-behavior-study/e4a1d7ec691a91f33d3b5879a780e6f27328f173/DECISION_AND_LIMITS_REPORT.md",
+      "repository_commit": "e4a1d7ec691a91f33d3b5879a780e6f27328f173",
+      "source_sha256": "8e832e321740b8993144eba0b13e563ed114ebbad960e50098e36b5de18965b8",
+      "experiment_date": "2026-09-16",
+      "accessed_date": "2026-09-20",
+      "kind": "independent_author_report",
+      "verification": "Published artifact and method inspected; model calls and raw-result recomputation not reproduced locally."
+    },
+    "vendor": {
+      "url": "https://evals.typesafe.ai/",
+      "repository_commit": null,
+      "source_sha256": "f2f3cb6032395751d17581e4e48df6fadc2735c0a9f60ef878847dbdb8cae3d7",
+      "experiment_date": null,
+      "accessed_date": "2026-09-20",
+      "kind": "vendor_report",
+      "verification": "Public HTML chart title and evaluation method inspected; not reproduced locally. Chart values are rounded."
+    }
+  },
+  "methods": {
+    "btzsc": {
+      "accuracy": "Argmax of returned label probabilities equals the gold label; final failed predictions count as incorrect. The published retained set has no final failures.",
+      "latency": "perf_counter around SDK client.system_one, including SDK/network time and first measured connection establishment; no Jev warmup. Retained-success latency does not reconstruct the four superseded validation failures. SDK retry policy was not explicitly overridden.",
+      "concurrency": 1,
+      "concurrency_evidence": "Inspected serial for-loop in runner.py.",
+      "region": "France (client); service region not specified in report",
+      "latency_statistic": "Reported quantiles over retained calls",
+      "raw_predictions_public": false,
+      "method_urls": [
+        "https://github.com/AbdelStark/jev-benchmarks/blob/0d610cc53e79bcbec691312b0c4adb4a0e371642/README.md",
+        "https://github.com/AbdelStark/jev-benchmarks/blob/0d610cc53e79bcbec691312b0c4adb4a0e371642/results/reports/btzsc-pilot-v1.md",
+        "https://github.com/AbdelStark/jev-benchmarks/blob/0d610cc53e79bcbec691312b0c4adb4a0e371642/src/jev_benchmarks/adapters/jev.py",
+        "https://github.com/AbdelStark/jev-benchmarks/blob/0d610cc53e79bcbec691312b0c4adb4a0e371642/src/jev_benchmarks/runner.py",
+        "https://github.com/AbdelStark/jev-benchmarks/blob/0d610cc53e79bcbec691312b0c4adb4a0e371642/docs/PROTOCOL.md"
+      ]
+    },
+    "audit": {
+      "accuracy": "Selected Choice label equals dataset gold; successful calls only. Interference further retains the intersection of successful items in all arms.",
+      "latency": "perf_counter around one httpx.Client.post; timer resets each retry. Reported latency excludes previous failed attempts, backoff, JSON parsing, scoring and CLI startup. Persistent shared HTTP client.",
+      "concurrency": null,
+      "concurrency_evidence": "Run-level worker setting not recorded in aggregate. Source defaults: 10 for MMLU-ProX and 6 for interference; these defaults are not asserted as actual settings.",
+      "region": "Seoul (client), per author report",
+      "raw_predictions_public": true,
+      "method_urls": [
+        "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/FINDINGS.md",
+        "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/src/jev_audit/client.py",
+        "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/src/jev_audit/runner.py",
+        "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/src/jev_audit/experiments/parallel_ko_en.py",
+        "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/src/jev_audit/experiments/interference.py",
+        "https://github.com/jujumilk3/jev-calibration-audit/blob/daab9e2c2d5d5683bf07f3482deb653c26856219/src/jev_audit/preflight.py"
+      ]
+    },
+    "behavior": {
+      "accuracy": "Selected Choice equals deterministic expected label, including repeated requests. Repeats are not independent problems.",
+      "latency": null,
+      "concurrency": 4,
+      "concurrency_evidence": "Report states four workers, shuffled schedule, one question per request, no automatic retries.",
+      "region": null,
+      "raw_predictions_public": true,
+      "method_urls": [
+        "https://github.com/RINNECODER/jev-behavior-study/blob/e4a1d7ec691a91f33d3b5879a780e6f27328f173/DECISION_AND_LIMITS_REPORT.md",
+        "https://github.com/RINNECODER/jev-behavior-study/blob/e4a1d7ec691a91f33d3b5879a780e6f27328f173/LIMITS_PROTOCOL.md",
+        "https://github.com/RINNECODER/jev-behavior-study/blob/e4a1d7ec691a91f33d3b5879a780e6f27328f173/verify_results.py"
+      ]
+    },
+    "vendor": {
+      "accuracy": "Agreement with reference workflows driven by averaged high-thinking GPT-6 Astra and Claude Fable 5.1 outputs; equal-weight mean across four workflows. Not human-labeled classification accuracy.",
+      "latency": "Chart time per case, averaged with equal weight across four workflows; detailed clock boundaries are not disclosed in inspected material.",
+      "concurrency": null,
+      "region": "Vendor blog says published evals generally run from West Coast laptops near service; exact configuration for this chart is not established.",
+      "raw_predictions_public": null,
+      "method_urls": [
+        "https://evals.typesafe.ai/",
+        "https://typesafe.ai/blog/introducing-system-one-models-and-jev"
+      ]
+    }
+  },
+  "records": [
+    {
+      "id": "btzsc_agnews",
+      "source_id": "btzsc",
+      "method_id": "btzsc",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "repository": "btzsc/btzsc",
+        "revision": "fef2a2ac62b69c58670047dddf045c53d7c3cb5e",
+        "condition": "agnews",
+        "labels": 4,
+        "seed": 20260917
+      },
+      "sample_count": 100,
+      "independent_problem_count": 100,
+      "experiment_date": "2026-09-17",
+      "metrics": {
+        "accuracy": 0.91,
+        "macro_f1": 0.9046162752649198,
+        "latency_p50_ms": 255.8936455170624,
+        "latency_p95_ms": 332.2682707919739,
+        "final_failures": 0
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Three datasets are a pilot; no overall winner inferred.",
+        "Raw examples/predictions excluded from public repository; aggregate reports include hashes.",
+        "Four superseded validation failures were retried; two retained probability vectors were renormalized from sums of 0.99."
+      ]
+    },
+    {
+      "id": "btzsc_banking77",
+      "source_id": "btzsc",
+      "method_id": "btzsc",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "repository": "btzsc/btzsc",
+        "revision": "fef2a2ac62b69c58670047dddf045c53d7c3cb5e",
+        "condition": "banking77",
+        "labels": 72,
+        "seed": 20260917
+      },
+      "sample_count": 100,
+      "independent_problem_count": 100,
+      "experiment_date": "2026-09-17",
+      "metrics": {
+        "accuracy": 0.87,
+        "macro_f1": 0.8574074074074074,
+        "latency_p50_ms": 246.3563960045576,
+        "latency_p95_ms": 334.2410829267464,
+        "final_failures": 0
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Three datasets are a pilot; no overall winner inferred.",
+        "Raw examples/predictions excluded from public repository; aggregate reports include hashes.",
+        "Four superseded validation failures were retried; two retained probability vectors were renormalized from sums of 0.99.",
+        "The BTZSC variant exposes 72 candidates, not 77; 200 no-positive-candidate rows were excluded."
+      ]
+    },
+    {
+      "id": "btzsc_emotiondair",
+      "source_id": "btzsc",
+      "method_id": "btzsc",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "repository": "btzsc/btzsc",
+        "revision": "fef2a2ac62b69c58670047dddf045c53d7c3cb5e",
+        "condition": "emotiondair",
+        "labels": 6,
+        "seed": 20260917
+      },
+      "sample_count": 100,
+      "independent_problem_count": 100,
+      "experiment_date": "2026-09-17",
+      "metrics": {
+        "accuracy": 0.48,
+        "macro_f1": 0.4792068046730887,
+        "latency_p50_ms": 236.34893749840558,
+        "latency_p95_ms": 289.4168669707142,
+        "final_failures": 0
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Three datasets are a pilot; no overall winner inferred.",
+        "Raw examples/predictions excluded from public repository; aggregate reports include hashes.",
+        "Four superseded validation failures were retried; two retained probability vectors were renormalized from sums of 0.99."
+      ]
+    },
+    {
+      "id": "mmlu_prox_en",
+      "source_id": "mmlu_prox",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "MMLU-ProX",
+        "revision": null,
+        "condition": "en"
+      },
+      "sample_count": 999,
+      "independent_problem_count": 999,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.8128,
+        "latency_p50_ms": 254.1,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "English, Korean and mixed-prompt arms share 999 items; blind controls use 300-item subsets.",
+        "Probabilities and self-reported confidence are distinct; omitted Brier values are not the BTZSC multiclass definition."
+      ]
+    },
+    {
+      "id": "mmlu_prox_ko",
+      "source_id": "mmlu_prox",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "MMLU-ProX",
+        "revision": null,
+        "condition": "ko"
+      },
+      "sample_count": 999,
+      "independent_problem_count": 999,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.7477,
+        "latency_p50_ms": 255.9,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "English, Korean and mixed-prompt arms share 999 items; blind controls use 300-item subsets.",
+        "Probabilities and self-reported confidence are distinct; omitted Brier values are not the BTZSC multiclass definition."
+      ]
+    },
+    {
+      "id": "mmlu_prox_ko_state_en_prompt",
+      "source_id": "mmlu_prox",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "MMLU-ProX",
+        "revision": null,
+        "condition": "ko_state_en_prompt"
+      },
+      "sample_count": 999,
+      "independent_problem_count": 999,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.7477,
+        "latency_p50_ms": 256.0,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "English, Korean and mixed-prompt arms share 999 items; blind controls use 300-item subsets.",
+        "Probabilities and self-reported confidence are distinct; omitted Brier values are not the BTZSC multiclass definition."
+      ]
+    },
+    {
+      "id": "mmlu_prox_ko_blind",
+      "source_id": "mmlu_prox",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "MMLU-ProX",
+        "revision": null,
+        "condition": "ko_blind"
+      },
+      "sample_count": 300,
+      "independent_problem_count": 300,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.3833,
+        "latency_p50_ms": 258.7,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "English, Korean and mixed-prompt arms share 999 items; blind controls use 300-item subsets.",
+        "Probabilities and self-reported confidence are distinct; omitted Brier values are not the BTZSC multiclass definition."
+      ]
+    },
+    {
+      "id": "mmlu_prox_en_blind",
+      "source_id": "mmlu_prox",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "MMLU-ProX",
+        "revision": null,
+        "condition": "en_blind"
+      },
+      "sample_count": 300,
+      "independent_problem_count": 300,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.4633,
+        "latency_p50_ms": 261.1,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "English, Korean and mixed-prompt arms share 999 items; blind controls use 300-item subsets.",
+        "Probabilities and self-reported confidence are distinct; omitted Brier values are not the BTZSC multiclass definition."
+      ]
+    },
+    {
+      "id": "kobbq_alone",
+      "source_id": "interference",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "KoBBQ",
+        "revision": null,
+        "condition": "alone",
+        "questions_per_request": 1
+      },
+      "sample_count": 247,
+      "independent_problem_count": 247,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.9676,
+        "latency_p50_ms": 255.9,
+        "latency_p95_ms": 477.4
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Source prose says 250 items; published paired JSON retains 247. Use machine-readable paired values.",
+        "Bundled-question accuracy grades the target question, not all 11 or 16 answers."
+      ]
+    },
+    {
+      "id": "kobbq_plus10",
+      "source_id": "interference",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "KoBBQ",
+        "revision": null,
+        "condition": "plus10",
+        "questions_per_request": 11
+      },
+      "sample_count": 247,
+      "independent_problem_count": 247,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.9717,
+        "latency_p50_ms": 263.6,
+        "latency_p95_ms": 427.6
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Source prose says 250 items; published paired JSON retains 247. Use machine-readable paired values.",
+        "Bundled-question accuracy grades the target question, not all 11 or 16 answers."
+      ]
+    },
+    {
+      "id": "kobbq_plus10_hostile",
+      "source_id": "interference",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "KoBBQ",
+        "revision": null,
+        "condition": "plus10_hostile",
+        "questions_per_request": 16
+      },
+      "sample_count": 247,
+      "independent_problem_count": 247,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": 0.9717,
+        "latency_p50_ms": 271.4,
+        "latency_p95_ms": 415.2
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Source prose says 250 items; published paired JSON retains 247. Use machine-readable paired values.",
+        "Bundled-question accuracy grades the target question, not all 11 or 16 answers."
+      ]
+    },
+    {
+      "id": "latency_15_one_question",
+      "source_id": "latency_15",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Repeated support-ticket latency probe",
+        "condition": "one_question",
+        "questions_per_request": 1,
+        "uid_added": true
+      },
+      "sample_count": 15,
+      "independent_problem_count": 1,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": null,
+        "latency_p50_ms": 280.0,
+        "latency_p95_ms": 396.6,
+        "latency_min_ms": 218.0,
+        "latency_max_ms": 396.6
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "run_at": "2026-09-18T08:53:03.787666+00:00",
+      "concurrency_override": 1,
+      "notes": [
+        "Sequential alternating single/three-question requests after prior preflight calls; warm client.",
+        "Author quantiles index sorted values at n//2 and floor(0.95*n), not interpolated percentiles; p95 equals maximum for these small samples."
+      ]
+    },
+    {
+      "id": "latency_15_three_questions",
+      "source_id": "latency_15",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Repeated support-ticket latency probe",
+        "condition": "three_questions",
+        "questions_per_request": 3,
+        "uid_added": true
+      },
+      "sample_count": 15,
+      "independent_problem_count": 1,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": null,
+        "latency_p50_ms": 266.1,
+        "latency_p95_ms": 314.1,
+        "latency_min_ms": 218.1,
+        "latency_max_ms": 314.1
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "run_at": "2026-09-18T08:53:03.787666+00:00",
+      "concurrency_override": 1,
+      "notes": [
+        "Sequential alternating single/three-question requests after prior preflight calls; warm client.",
+        "Author quantiles index sorted values at n//2 and floor(0.95*n), not interpolated percentiles; p95 equals maximum for these small samples."
+      ]
+    },
+    {
+      "id": "latency_10_one_question",
+      "source_id": "latency_10",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Repeated support-ticket latency probe",
+        "condition": "one_question",
+        "questions_per_request": 1,
+        "uid_added": true
+      },
+      "sample_count": 10,
+      "independent_problem_count": 1,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": null,
+        "latency_p50_ms": 294.7,
+        "latency_p95_ms": 971.2,
+        "latency_min_ms": 229.1,
+        "latency_max_ms": 971.2
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "run_at": "2026-09-18T09:27:20.010685+00:00",
+      "concurrency_override": 1,
+      "notes": [
+        "Sequential alternating single/three-question requests after prior preflight calls; warm client.",
+        "Author quantiles index sorted values at n//2 and floor(0.95*n), not interpolated percentiles; p95 equals maximum for these small samples."
+      ]
+    },
+    {
+      "id": "latency_10_three_questions",
+      "source_id": "latency_10",
+      "method_id": "audit",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Repeated support-ticket latency probe",
+        "condition": "three_questions",
+        "questions_per_request": 3,
+        "uid_added": true
+      },
+      "sample_count": 10,
+      "independent_problem_count": 1,
+      "experiment_date": "2026-09-18",
+      "metrics": {
+        "accuracy": null,
+        "latency_p50_ms": 249.4,
+        "latency_p95_ms": 797.0,
+        "latency_min_ms": 222.9,
+        "latency_max_ms": 797.0
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "run_at": "2026-09-18T09:27:20.010685+00:00",
+      "concurrency_override": 1,
+      "notes": [
+        "Sequential alternating single/three-question requests after prior preflight calls; warm client.",
+        "Author quantiles index sorted values at n//2 and floor(0.95*n), not interpolated percentiles; p95 equals maximum for these small samples."
+      ]
+    },
+    {
+      "id": "behavior_purpose_focused_direct",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "purpose_focused_direct"
+      },
+      "sample_count": 288,
+      "independent_problem_count": 48,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 1.0,
+        "correct": 288,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "behavior_descriptive_action",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "descriptive_action"
+      },
+      "sample_count": 288,
+      "independent_problem_count": 48,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 1.0,
+        "correct": 288,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "behavior_two_step_pipeline",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "two_step_pipeline"
+      },
+      "sample_count": 288,
+      "independent_problem_count": 48,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 1.0,
+        "correct": 288,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "behavior_arithmetic_all_orders",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "arithmetic_all_orders"
+      },
+      "sample_count": 432,
+      "independent_problem_count": 6,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 0.6666666666666666,
+        "correct": 288,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "behavior_regular_logic",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "regular_logic"
+      },
+      "sample_count": 162,
+      "independent_problem_count": null,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 1.0,
+        "correct": 162,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "behavior_scrambled_logic",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "scrambled_logic"
+      },
+      "sample_count": 54,
+      "independent_problem_count": null,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 0.46296296296296297,
+        "correct": 25,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "behavior_dispersed_version_lookup",
+      "source_id": "behavior",
+      "method_id": "behavior",
+      "model": "jev-1.13.0",
+      "dataset": {
+        "name": "Controlled synthetic behavior study",
+        "condition": "dispersed_version_lookup"
+      },
+      "sample_count": 54,
+      "independent_problem_count": null,
+      "experiment_date": "2026-09-16",
+      "metrics": {
+        "accuracy": 0.7962962962962963,
+        "correct": 43,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Includes three repeated calls per condition; do not treat all requests as independent task coverage.",
+        "Harder follow-ups were adapted after earlier findings.",
+        "Latency is not supplied for this selected report table."
+      ]
+    },
+    {
+      "id": "vendor_workflow_mean",
+      "source_id": "vendor",
+      "method_id": "vendor",
+      "model": null,
+      "dataset": {
+        "name": "Security Incidents, Agent Trace Observability, Invoice Processing, Customer Service; equal-weight mean"
+      },
+      "sample_count": null,
+      "independent_problem_count": null,
+      "experiment_date": null,
+      "metrics": {
+        "accuracy": 0.678,
+        "latency_mean_ms": 400,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null,
+        "cost_per_case_usd": 0.0004
+      },
+      "reproduced_locally": false,
+      "comparable_to_fast_jev_synthetic": false,
+      "notes": [
+        "Model chart label is Jev; exact model version not displayed in the inspected chart.",
+        "Values are rounded chart titles, not full-precision raw observations.",
+        "Publication date and sample count not exposed in the inspected chart; blog announcing this evaluation is dated 2026-09-15.",
+        "Do not convert mean workflow time to single-decision p50 or combine with accuracy from another study."
+      ]
+    }
+  ]
+}

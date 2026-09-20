@@ -1,0 +1,5 @@
+[
+  { "name": "Cache hot reads", "effort_days": 2, "expected_latency_reduction_percent": 40 },
+  { "name": "Rewrite the service", "effort_days": 60, "expected_latency_reduction_percent": 50 },
+  { "name": "Add an index", "effort_days": 1, "expected_latency_reduction_percent": 30 }
+]

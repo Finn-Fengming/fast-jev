@@ -1,0 +1,267 @@
+# fast-jev
+
+[English](README.md) · [简体中文](README.zh-CN.md)
+
+Small, typed AI decisions from your terminal. Use your existing **agy** login or an **OpenAI-compatible API**—no model training, no runtime dependencies.
+
+```sh
+fjev choose "What should we do next?" \
+  --option ship --option investigate \
+  --context "The release tests failed." --text
+```
+
+Inspired by Jev's closed-decision pattern. This is an independent wrapper, not the Jev model or a TypeSafe API client. Confidence is **self-reported and uncalibrated**. See the [research report](docs/research-jev.md) for the evidence and design tradeoffs.
+
+## Install
+
+Requires **Node.js 22+**. From this repository:
+
+```sh
+npm install -g .
+fast-jev --help
+# fjev is an alias for fast-jev
+```
+
+Or run without installing:
+
+```sh
+node bin/fast-jev.mjs --help
+```
+
+These are local installation instructions; this repository does not assume a published npm package.
+
+## Pick a backend
+
+### agy: the default
+
+Have `agy` installed, signed in, and working on this machine. No additional key, config file, or `init` command is needed.
+
+```sh
+fjev doctor
+fjev check "Did the health check succeed?" --context "HTTP 200 OK"
+```
+
+The default model is `gemini-3.8-flash-low`, an identifier listed by the inspected local `agy models`. Use `--model ID` or `--agy-bin /path/to/agy` to override. Model availability depends on your agy installation and account.
+
+agy runs in a temporary working directory, receives the prompt through stdin, and uses a temporary schema file. The adapter enables agy's plan mode and sandbox and disables slash commands. It reuses your existing login and user-level settings; the temporary directory is not a separate profile or a guarantee that tools are unavailable. Permissions, authentication, and logs remain under your local agy's control.
+
+### OpenAI-compatible API
+
+Choose the backend and model explicitly:
+
+```sh
+export OPENAI_API_KEY='your-key'
+fjev check "Did the health check succeed?" --context "HTTP 200 OK" \
+  --provider openai \
+  --base-url https://gateway.example/v1 \
+  --model your-model-id
+```
+
+`--base-url` accepts an API root such as `/v1` or the full `/chat/completions` URL. Its default is `https://api.openai.com/v1`. Local endpoints that do not require authentication may omit the key.
+
+Output modes are explicit:
+
+| `--response-format` | Behavior |
+| --- | --- |
+| `json_schema` (default) | Request strict JSON Schema output |
+| `json_object` | Request JSON mode |
+| `text` | Omit `response_format`; request JSON in the prompt |
+
+Compatible servers differ. Select `json_object` or `text` if your endpoint does not support strict schema. Every mode uses the same local validation. **fast-jev does not automatically downgrade modes, switch backends, or retry.** `--effort` and `--max-tokens` are optional; use them only if your backend supports the requested values.
+
+## Commands
+
+```sh
+# Choose one option; classify is an alias
+fjev choose "Support queue?" --option billing --option technical --option other \
+  --context "I was charged twice."
+echo "I cannot sign in" | fjev classify "Support queue?" \
+  --options '["billing","technical","other"]'
+
+# Boolean; a valid false result is still a successful command
+fjev check "Is this a bug report?" --file ticket.txt
+
+# Numeric score; default range is 0–1
+fjev score "Urgency: 0 means routine, 10 means an active outage." \
+  --min 0 --max 10 --context "Checkout is unavailable." --explain
+
+# Rank descending or keep matching items from a JSON array
+fjev rank "Expected benefit relative to effort" --input examples/items.json --top 2
+fjev filter "Can this be completed within two days?" --input examples/items.json
+
+# Several typed questions in one model call; batch is an alias
+fjev decide --input examples/decisions.json --pretty
+cat examples/decisions.json | fjev batch --input -
+
+# Configuration and diagnostics
+fjev config --pretty
+fjev doctor
+fjev doctor --live
+```
+
+For single decisions, supply `--context`, `--file`, or piped text. `--context` and `--file` are combined; piped text is read only when neither is supplied. `rank` and `filter` take a JSON array; `decide` takes a request object. These JSON commands accept `--input FILE`, `--input -`, or piped JSON. Optional `--context`/`--file` on `rank` and `filter` add shared context.
+
+`rank`, `filter`, and `decide` each bundle their questions into **one call**, rather than one call per item. That does not guarantee independent or parallel model inference. Requests are limited to **100 questions/items** and **256 KiB** of serialized input; a choice supports **2–100 distinct strings**. A malformed response fails the whole call.
+
+## Results and abstention
+
+JSON is the default. `--pretty` indents it; `--text` prints only the value (or a JSON array of retained items for `rank`/`filter`). `--explain` adds a short reason.
+
+Example output shape—illustrative, not a benchmark:
+
+```json
+{
+  "command": "choose",
+  "result": {
+    "id": "decision",
+    "type": "choice",
+    "value": "investigate",
+    "confidence": 0.91,
+    "status": "ok"
+  },
+  "meta": {
+    "provider": "agy",
+    "model": "gemini-3.8-flash-low",
+    "elapsed_ms": 1500,
+    "backend_duration_ms": null,
+    "usage": null,
+    "confidence_kind": "self_reported",
+    "calibrated": false
+  }
+}
+```
+
+`score.value` measures the requested dimension; `confidence` expresses the model's support for its answer. They are separate. This version returns direct choices, booleans, and bounded numeric scores; it does **not** return Jev probability distributions or reproduce Jev's Score/Noul semantics.
+
+```sh
+fjev choose "Next step?" --option ship --option investigate \
+  --context "The test results are missing." --min-confidence 0.8
+```
+
+Below the threshold, `value` becomes `null`, `status` becomes `abstained`, and the command exits **4**. The default threshold is 0. Rank/filter omit abstained items from `result` and report them separately in `abstained`; any abstention still produces exit 4. A threshold is a routing rule, not a guarantee of accuracy.
+
+| Exit code | Meaning |
+| --- | --- |
+| `0` | Valid result, including boolean `false` |
+| `1` | Backend or output error |
+| `2` | Invalid input or configuration |
+| `4` | At least one abstention |
+| `124` | Timeout |
+| `130` | Canceled |
+
+Results go to stdout; errors are JSON on stderr. The default backend timeout is **60 seconds**; override with `--timeout MS`.
+
+## Configuration
+
+Configuration is optional. The default path is `$XDG_CONFIG_HOME/fast-jev/config.json`, or `~/.config/fast-jev/config.json` when XDG is unset. Use `--config PATH` or `FAST_JEV_CONFIG` for another file. Start from [examples/config.json](examples/config.json):
+
+```sh
+fjev config --config examples/config.json --pretty
+fjev check "Is it ready?" --context "All required checks passed." \
+  --config examples/config.json --provider openai
+```
+
+Precedence: **flags → environment → selected provider's config → defaults**. `provider` and `timeoutMs` are top-level settings; backend-specific fields live under `agy` or `openai`. API keys stay in environment variables, not the config file. `config` reports resolved settings without printing the key.
+
+| Environment variable | Purpose |
+| --- | --- |
+| `FAST_JEV_PROVIDER` | `agy` or `openai` |
+| `FAST_JEV_MODEL` | Override the selected backend's model |
+| `FAST_JEV_TIMEOUT_MS` | Backend timeout in milliseconds |
+| `FAST_JEV_AGY_BIN` | agy executable |
+| `FAST_JEV_EFFORT` | Optional `low`, `medium`, or `high` |
+| `OPENAI_BASE_URL` | Compatible API root or completion URL |
+| `OPENAI_API_KEY` | Default compatible API credential |
+| `FAST_JEV_API_KEY` | Credential override, ahead of the configured key variable |
+| `FAST_JEV_RESPONSE_FORMAT` | `json_schema`, `json_object`, or `text` |
+| `FAST_JEV_CONFIG` | Explicit config file path |
+
+`openai.apiKeyEnv` can select a different credential variable. `--max-tokens` / `openai.maxTokens` map to the compatible endpoint's `max_tokens`. `--effort` maps to agy's effort option or the API's `reasoning_effort` and is omitted unless configured. Avoid conflicting model suffixes and effort settings, such as a `-medium` agy model with `--effort low`.
+
+## JavaScript API
+
+From a script in the repository root:
+
+```js
+import { decide } from './src/decision.mjs';
+
+const output = await decide({
+  state: 'The release tests failed.',
+  questions: [
+    { id: 'action', type: 'choice', prompt: 'Next step?', options: ['ship', 'investigate'] },
+    { id: 'ready', type: 'boolean', prompt: 'Did the tests pass?' },
+    { id: 'risk', type: 'score', prompt: 'Risk: 0 is low, 10 is high.', min: 0, max: 10 }
+  ]
+}, { provider: 'agy', minConfidence: 0.8 });
+
+console.log(output.results);
+```
+
+After installing this directory as a local package dependency, import from `'fast-jev'`. The exports also include `buildDecision`, `validateRequest`, and `validateOutput`. The API does not automatically load CLI config/environment settings: for HTTP, pass `{ provider: 'openai', model, baseUrl, apiKey: process.env.OPENAI_API_KEY }`. Pass an `AbortSignal` as `signal` to cancel.
+
+## Inspect and test
+
+```sh
+# Show the request, prompt, and schema without calling a model
+fjev decide --input examples/decisions.json --dry-run --pretty
+
+npm test
+npm run check
+```
+
+`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency.
+
+For a small, real-call timing check:
+
+```sh
+npm run benchmark -- --provider agy --runs 3
+npm run benchmark -- --provider openai --model your-model-id --runs 3
+```
+
+The script reports samples, failures, and successful-call p50/p95. Each run makes a real request; three runs are only a smoke check, not a reliable tail-latency estimate, accuracy study, or calibration benchmark.
+
+| Symptom | Next step |
+| --- | --- |
+| agy missing or required flags unavailable | Check `agy --version`, update agy, or set `--agy-bin` |
+| API HTTP 400 | Check the model and explicitly select a supported response format |
+| Timeout | Check backend connectivity; increase `--timeout` only when appropriate |
+
+
+## Reproducible experiments
+
+The [experiment guide](experiments/README.md) includes a frozen 96-case English/Chinese diagnostic suite (32 dev / 64 test), seeded request order, raw records, source/data hashes, and a report generator that independently recomputes scores. Reference labels are AI-assisted and rule-derived, not independently human-annotated.
+
+Run these commands from a repository checkout; the npm package excludes `experiments/`.
+
+```sh
+# Inspect the plan without making a model call
+npm run experiment -- --provider agy --model gemini-3.8-flash-low --plan --split test --out experiments/results/my-plan
+# Use dev to choose settings, then freeze settings before evaluating test
+npm run experiment -- --provider agy --model gemini-3.8-flash-low --split dev --repeats 1 --out experiments/results/my-dev
+npm run experiment -- --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 1 --out experiments/results/my-test
+npm run experiment:report -- experiments/results/my-test
+```
+
+**Current evidence (2026-09-20):** The saved single/batch schedules are plans, with zero measured test cases. Model quality and inference latency have not yet been measured. [Published Jev experiments](experiments/baselines/jev-public.md) are historical references from different datasets and environments, and cannot establish a direct ranking.
+
+We measured and improved local wrapper overhead by reusing an already validated request. In five alternating AB/BA pairs, each with 1,000 measured samples per batch size, the medians of per-run p50 were:
+
+| Items per call | Before | After | Median paired reduction |
+| ---: | ---: | ---: | ---: |
+| 1 | 0.0260 ms | 0.0220 ms | 15.60% |
+| 8 | 0.0829 ms | 0.0553 ms | 33.96% |
+| 32 | 0.2414 ms | 0.1550 ms | 35.73% |
+
+These are **local fixture timings with zero network or model inference**, not AGY response times or a Jev comparison. The saved pre-change implementation and all 30,000 samples are included. [Raw A/B comparison](experiments/results/overhead-ab/comparison.json).
+
+```sh
+npm run benchmark:local -- --out experiments/results/my-overhead-ab
+```
+
+## Limits
+
+This wrapper validates structure, allowed values, and ranges; it cannot guarantee correct judgments or resist every prompt injection. Keep exact arithmetic in code and evaluate thresholds on your own labeled examples. Inputs are sent to the selected backend; agy reuses its own authentication and service routing. No latency, cost, or calibration claims are made without measurements.
+
+Read the [full Jev research and validation plan](docs/research-jev.md) for the distinction between the original decision model and this no-training wrapper.
+
+Implementation details: [architecture](docs/architecture.md) · [verification record](docs/validation.md).
