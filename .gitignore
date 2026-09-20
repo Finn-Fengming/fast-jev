@@ -6,3 +6,13 @@ node_modules/
 coverage/
 benchmark-results*.json
 .DS_Store
+
+# Local publication artifacts and credentials
+dist/
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+*.log
+.cache/

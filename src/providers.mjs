@@ -1,4 +1,5 @@
 import { FastJevError, inputError } from './errors.mjs';
+import { safeUsage } from './privacy.mjs';
 
 export const DEFAULT_AGY_MODEL = 'gemini-3.8-flash-low';
 export const DEFAULT_TIMEOUT = 60_000;
@@ -108,7 +109,7 @@ export async function runOpenAI(rawOptions) {
     let data;
     try { data = JSON.parse(choice.message.content); }
     catch { throw new FastJevError('INVALID_RESPONSE', 'The model did not return a single JSON object; use a model with structured output support.'); }
-    return { data, usage: envelope.usage ?? null, model, provider: 'openai', backendDurationMs: Math.round(performance.now() - started) };
+    return { data, usage: safeUsage(envelope.usage), model, provider: 'openai', backendDurationMs: Math.round(performance.now() - started) };
   } catch (error) {
     if (signal?.aborted) throw new FastJevError('ABORTED', 'Request canceled.', 130);
     if (deadline.aborted) throw new FastJevError('TIMEOUT', `Provider exceeded ${timeoutMs} ms.`, 124);

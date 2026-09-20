@@ -2,7 +2,7 @@ import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { Readable } from 'node:stream';
 import { spawnSync } from 'node:child_process';
-import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -47,7 +47,8 @@ test('help and version work without model credentials or installed backends', as
     assert.match(output.stdout, /fast-jev.*typed decisions/);
     assert.equal(output.stderr, '');
   }
-  assert.equal((await invoke(['--version'])).stdout, '0.1.0\n');
+  const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.equal((await invoke(['--version'])).stdout, `${version}\n`);
 });
 
 test('dry-run creates exact choice requests without calling a provider', async (t) => {

@@ -248,9 +248,9 @@ test('runner measures a local fake agy end to end, preserves numeric predictions
   await writeFile(binary, `#!${process.execPath}\n
 import { appendFileSync } from 'node:fs';
 const args = process.argv.slice(2);
-if (args[0] === '--version') { console.log('fixture-agy-1'); process.exit(0); }
-if (args[0] === '--help') { console.log('  --json-schema Schema'); process.exit(0); }
-if (args[0] === 'models') { console.log('gemini-3.8-flash-low Fixture'); process.exit(0); }
+if (args[0] === '--version') { console.log('AGY 1.2.7'); process.exit(0); }
+if (args[0] === '--help') { console.log('  --json-schema Schema\\n  --private-option Private'); process.exit(0); }
+if (args[0] === 'models') { console.log('gemini-3.8-flash-low Fixture\\nPRIVATE_MODEL Fixture'); process.exit(0); }
 let input = '';
 for await (const chunk of process.stdin) input += chunk;
 const prompt = JSON.parse(input).message.content;
@@ -277,8 +277,12 @@ console.log(JSON.stringify({ event: 'result', result: {
   const inputs = parseJsonl(await readFile(capture, 'utf8'));
   assert.equal(JSON.parse(stdout).status, 'completed');
   assert.equal(manifest.status, 'completed');
-  assert.equal(manifest.backend.agy_version, 'fixture-agy-1');
+  assert.equal(manifest.backend.agy_version, '1.2.7');
   assert.equal(manifest.backend.requested_model_listed, true);
+  const probe = JSON.parse(await readFile(join(out, 'probe.json'), 'utf8'));
+  assert.deepEqual(probe.models, ['gemini-3.8-flash-low']);
+  assert.deepEqual(probe.capabilities, ['--json-schema']);
+  assert.equal(probe.metadata_scope, 'sanitized_to_tested_backend');
   assert.equal(manifest.dataset.snapshot_sha256, sha256(await readFile(join(out, 'cases.jsonl'))));
   assert.equal(summary.requests.planned, 4);
   assert.equal(summary.requests.attempted, 4);

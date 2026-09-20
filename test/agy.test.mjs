@@ -23,6 +23,7 @@ import { readFileSync } from 'node:fs';
 const config = ${JSON.stringify(config)};
 const args = process.argv.slice(2);
 const emit = (value) => process.stdout.write(JSON.stringify(value) + '\\n');
+if (args[0] === config.probeFailure) { console.error(config.stderr); process.exit(1); }
 if (args[0] === '--version') { console.log('1.2.3'); process.exit(0); }
 if (args[0] === '--help') { console.error('Usage:\\n  --input-format Format\\n  --output-format Format\\n  --json-schema Schema\\n  --agent Agent\\n  --disable-slash-commands Disable'); process.exit(0); }
 if (args[0] === 'models') { console.log('gemini-3.8-flash-low\\tGemini 3.8 Flash (Low)\\ngemini-3.8-flash-high\\tGemini 3.8 Flash (High)'); process.exit(0); }
@@ -32,15 +33,15 @@ else {
   for await (const chunk of process.stdin) input += chunk;
   if (config.mode === 'malformed') { console.log('not json'); process.exit(0); }
   if (config.mode === 'oversized') { process.stdout.write('x'.repeat(10000)); process.exit(0); }
-  if (config.mode === 'stderr-failure') { console.error('authentication required'); process.exit(1); }
+  if (config.mode === 'stderr-failure') { console.error(config.stderr ?? 'authentication required'); process.exit(1); }
   emit({ event: 'init', init: { tools: config.tools ?? [], model: args[args.indexOf('--model') + 1] } });
   const payload = config.inspect ? {
     args, input: JSON.parse(input), cwd: process.cwd(),
     schema: JSON.parse(readFileSync(args[args.indexOf('--json-schema') + 1], 'utf8')),
   } : { ok: true };
-  const result = { status: config.status ?? 'SUCCESS', duration_seconds: 1.25, usage: { input_tokens: 12, output_tokens: 7 }, response: '{"ok":true}' };
+  const result = { status: config.status ?? 'SUCCESS', duration_seconds: 1.25, usage: config.usage ?? { input_tokens: 12, output_tokens: 7 }, response: '{"ok":true}' };
   if (config.mode !== 'missing-structured') result.structured_output = payload;
-  if (config.status && config.status !== 'SUCCESS') result.error = 'explicit backend failure';
+  if (config.status && config.status !== 'SUCCESS') result.error = config.error ?? 'explicit backend failure';
   emit({ event: 'result', result });
   if (config.mode === 'multiple-results') emit({ event: 'result', result });
   process.exit(config.exitCode ?? 0);
@@ -89,7 +90,7 @@ test('probe reads version, model slugs and help written to stderr without infere
 for (const status of ['ERROR', 'WAITING', 'CANCELED', 'INTERRUPTED', 'INVALID', 'RUNNING']) {
   test(`rejects backend ${status} even with exit code zero`, async (t) => {
     const agyBin = await fixture(t, { status });
-    await assert.rejects(runAgy({ agyBin, prompt: 'ok', schema }), { code: 'AGY_FAILED', message: /explicit backend failure/ });
+    await assert.rejects(runAgy({ agyBin, prompt: 'ok', schema }), { code: 'AGY_FAILED', message: 'AGY failed. Run fast-jev doctor and check AGY directly for details.' });
   });
 }
 
@@ -100,7 +101,69 @@ test('rejects nonzero exits even if the JSON status says SUCCESS', async (t) => 
 
 test('reports authentication failures from stderr', async (t) => {
   const agyBin = await fixture(t, { mode: 'stderr-failure' });
-  await assert.rejects(runAgy({ agyBin, prompt: 'ok', schema }), { code: 'AGY_FAILED', message: /authentication required/ });
+  await assert.rejects(runAgy({ agyBin, prompt: 'ok', schema }), { code: 'AGY_FAILED', message: /requires authentication/ });
+});
+
+for (const [label, diagnostic, advice] of [
+  ['authentication', 'authentication required', 'Sign in to AGY'],
+  ['quota', 'resource_exhausted 429', 'Check usage limits'],
+  ['timeout', 'request timed out', 'increase --timeout'],
+  ['unknown', 'unexpected backend failure', 'check AGY directly'],
+]) {
+  test(`AGY ${label} diagnostics return safe advice without echoing stderr`, async (t) => {
+    const canary = 'private-backend-canary';
+    const agyBin = await fixture(t, { mode: 'stderr-failure', stderr: `${diagnostic}; credential=${canary}; prompt=${canary}` });
+    await assert.rejects(runAgy({ agyBin, prompt: 'ok', schema }), (error) => {
+      assert.equal(error.code, 'AGY_FAILED');
+      assert.ok(error.message.includes(advice));
+      assert.ok(!error.message.includes(canary), 'Backend stderr must stay private.');
+      assert.equal(error.cause, undefined);
+      return true;
+    });
+  });
+}
+
+test('AGY result envelopes cannot inject diagnostics or status into errors', async (t) => {
+  const canary = 'private-result-canary';
+  const agyBin = await fixture(t, { status: canary, error: { message: `authentication required; ${canary}`, code: canary } });
+  await assert.rejects(runAgy({ agyBin, prompt: 'ok', schema }), (error) => {
+    assert.equal(error.code, 'AGY_FAILED');
+    assert.ok(error.message.includes('Sign in to AGY'));
+    assert.ok(!error.message.includes(canary), 'Backend envelope must stay private.');
+    return true;
+  });
+});
+
+test('probe failures keep backend diagnostics private', async (t) => {
+  const canary = 'private-probe-canary';
+  const agyBin = await fixture(t, { probeFailure: 'models', stderr: `authorization failed; ${canary}` });
+  await assert.rejects(probeAgy({ agyBin }), (error) => {
+    assert.equal(error.code, 'AGY_FAILED');
+    assert.ok(error.message.includes('AGY models check failed'));
+    assert.ok(!error.message.includes(canary), 'Probe stderr must stay private.');
+    return true;
+  });
+});
+
+test('AGY usage preserves numeric counts and excludes arbitrary backend metadata', async (t) => {
+  const canary = 'private-usage-canary';
+  const agyBin = await fixture(t, { usage: {
+    input_tokens: 12, output_tokens: 7, thinking_tokens: 0, cache_read_tokens: 2,
+    total_tokens: canary, secret: canary, prompt_tokens_details: { cached_tokens: 2, note: canary },
+  } });
+  const result = await runAgy({ agyBin, prompt: 'ok', schema });
+  assert.ok(!JSON.stringify(result.usage).includes(canary), 'Usage metadata must contain token counts only.');
+  assert.deepEqual(result.usage, { input_tokens: 12, output_tokens: 7, thinking_tokens: 0, cache_read_tokens: 2, prompt_tokens_details: { cached_tokens: 2 } });
+});
+
+test('missing executable diagnostics omit private paths and native error causes', async () => {
+  const canary = 'private-executable-canary';
+  await assert.rejects(runAgy({ agyBin: `/nonexistent/${canary}`, prompt: 'ok', schema }), (error) => {
+    assert.equal(error.code, 'AGY_NOT_FOUND');
+    assert.ok(!error.message.includes(canary), 'Executable paths must stay private.');
+    assert.equal(error.cause, undefined);
+    return true;
+  });
 });
 
 for (const mode of ['missing-structured', 'malformed', 'multiple-results']) {

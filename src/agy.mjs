@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
+import { safeUsage } from './privacy.mjs';
 
 const DEFAULT_MODEL = 'gemini-3.8-flash-low';
 const MAX_OUTPUT_BYTES = 2 * 1024 * 1024;
@@ -30,8 +31,13 @@ function validateOptions({ agyBin, timeoutMs, signal, maxBuffer }) {
   return !isAbsolute(agyBin) && /[/\\]/.test(agyBin) ? resolve(agyBin) : agyBin;
 }
 
-function diagnostic(value) {
-  return String(value ?? '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '').trim().slice(0, 1800);
+function failureMessage(error, stderr) {
+  // Inspect a few diagnostic fields for advice; never return subprocess text.
+  const diagnostic = [error, error?.message, error?.code, stderr].filter((value) => typeof value === 'string').join('\n');
+  if (/\btimeout\b|\btimed out\b/i.test(diagnostic)) return 'AGY reported a timeout. Retry later or increase --timeout.';
+  if (/\bquota\b|\brate.?limit\b|\bresource_exhausted\b|\b429\b/i.test(diagnostic)) return 'AGY quota or rate limit reached. Check usage limits and retry later.';
+  if (/\bauth(?:entication|orization)?\b|\bunauthenticated\b|\bunauthorized\b|\blog[ -]?in\b|\bsign[ -]?in\b|\b401\b/i.test(diagnostic)) return 'AGY requires authentication. Sign in to AGY and retry.';
+  return 'AGY failed. Run fast-jev doctor and check AGY directly for details.';
 }
 
 function runProcess(binary, args, { cwd, input = '', timeoutMs, signal, maxBuffer, onLine }) {
@@ -81,8 +87,8 @@ function runProcess(binary, args, { cwd, input = '', timeoutMs, signal, maxBuffe
         cwd, shell: false, detached: group, windowsHide: true,
         stdio: ['pipe', 'pipe', 'pipe'],
       });
-    } catch (error) {
-      finish(new AgyError('AGY_START', `Could not start AGY: ${error.message}`, { cause: error }));
+    } catch {
+      finish(new AgyError('AGY_START', 'Could not start AGY. Check the executable and local permissions.'));
       return;
     }
     timeout = setTimeout(() => stop(new AgyError('AGY_TIMEOUT', `AGY exceeded the ${timeoutMs} ms timeout. Check your AGY login/network or increase --timeout.`)), timeoutMs);
@@ -116,9 +122,9 @@ function runProcess(binary, args, { cwd, input = '', timeoutMs, signal, maxBuffe
     child.stderr.on('data', (chunk) => read(chunk, 'stderr'));
     child.on('error', (error) => {
       const message = error.code === 'ENOENT'
-        ? `AGY executable not found: ${binary}. Install AGY, sign in, and ensure it is on PATH (or set agyBin).`
-        : `Could not start AGY: ${error.message}`;
-      finish(new AgyError(error.code === 'ENOENT' ? 'AGY_NOT_FOUND' : 'AGY_START', message, { cause: error }));
+        ? 'AGY executable not found. Install AGY, sign in, and ensure it is on PATH (or set agyBin).'
+        : 'Could not start AGY. Check the executable and local permissions.';
+      finish(new AgyError(error.code === 'ENOENT' ? 'AGY_NOT_FOUND' : 'AGY_START', message));
     });
     child.on('close', (code, exitSignal) => {
       if (!failure && onLine && pending.trim()) {
@@ -129,7 +135,7 @@ function runProcess(binary, args, { cwd, input = '', timeoutMs, signal, maxBuffe
     // A process may exit before consuming stdin; its exit envelope is the useful error.
     child.stdin.on('error', (error) => {
       if (error.code !== 'EPIPE' && error.code !== 'ERR_STREAM_DESTROYED') {
-        stop(new AgyError('AGY_STDIN', `Could not send the prompt to AGY: ${error.message}`));
+        stop(new AgyError('AGY_STDIN', 'Could not send the prompt to AGY. Check AGY directly and retry.'));
       }
     });
     child.stdin.end(input);
@@ -178,14 +184,13 @@ export async function runAgy({
     });
     const envelope = results.at(-1);
     if (outcome.code !== 0 || envelope?.status !== 'SUCCESS') {
-      const reason = diagnostic(envelope?.error || outcome.stderr) || `status ${envelope?.status ?? 'missing'}, exit ${outcome.code ?? outcome.exitSignal}`;
-      throw new AgyError('AGY_FAILED', `AGY failed: ${reason}`);
+      throw new AgyError('AGY_FAILED', failureMessage(envelope?.error, outcome.stderr));
     }
     if (results.length !== 1 || !init) throw new AgyError('AGY_PROTOCOL', 'AGY must return one init event and exactly one successful result.');
     if (!Object.hasOwn(envelope, 'structured_output')) throw new AgyError('AGY_PROTOCOL', 'AGY succeeded without structured_output. Update AGY or check --json-schema support.');
     return {
       data: envelope.structured_output,
-      usage: envelope.usage && typeof envelope.usage === 'object' ? envelope.usage : null,
+      usage: safeUsage(envelope.usage),
       backendDurationMs: Number.isFinite(envelope.duration_seconds) ? Math.round(envelope.duration_seconds * 1000) : null,
       model,
     };
@@ -204,7 +209,7 @@ export async function probeAgy({ agyBin = 'agy', timeoutMs = 15_000, signal, max
     for (const outcome of outcomes) if (outcome.status === 'rejected') throw outcome.reason;
     const [versionRun, helpRun, modelsRun] = outcomes.map((outcome) => outcome.value);
     for (const [name, run] of [['--version', versionRun], ['--help', helpRun], ['models', modelsRun]]) {
-      if (run.code !== 0) throw new AgyError('AGY_FAILED', `AGY ${name} failed: ${diagnostic(run.stderr) || `exit ${run.code}`}`);
+      if (run.code !== 0) throw new AgyError('AGY_FAILED', `AGY ${name} check failed. ${failureMessage(undefined, run.stderr)}`);
     }
     const help = `${helpRun.stdout}\n${helpRun.stderr}`;
     return {

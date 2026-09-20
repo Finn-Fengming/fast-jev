@@ -10,6 +10,7 @@ import { resolveConfig } from '../src/config.mjs';
 import { loadSuite, buildBatch, unpackResults, shuffle, sourceHashes, hash } from './lib/suite.mjs';
 import { scoreCase, summarize, percentile } from './lib/metrics.mjs';
 import { classifyError } from './lib/errors.mjs';
+import { publicAgyProbe } from './lib/privacy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { values } = parseArgs({ options: {
@@ -83,7 +84,7 @@ const manifest = {
   status: values.plan ? 'planned' : 'running', source, git_commit: commit,
   environment: { node: process.version, platform: process.platform, arch: process.arch, os_release: release(), cpu: cpus()[0]?.model ?? null, logical_cpus: cpus().length, memory_gib: Math.round(totalmem() / 2 ** 30) },
   dataset: { filename: 'decision-suite.jsonl', sha256: suite.sha256, snapshot_sha256: hash(snapshot), bytes: suite.bytes, total_cases: suite.cases.length, eligible_cases: eligible.length, selected_cases: selected.length, split: values.split, is_subset: limit < eligible.length, selected_ids: selected.map(x => x.id) },
-  backend: { provider: options.provider, requested_model: options.model, effort: options.effort ?? null, response_format: options.responseFormat ?? 'agy-json-schema', timeout_ms: options.timeoutMs, max_tokens: options.maxTokens ?? null, api_key_present: Boolean(options.apiKey), ...(options.provider === 'openai' ? { endpoint: options.url } : {}) },
+  backend: { provider: options.provider, requested_model: options.model, effort: options.effort ?? null, response_format: options.responseFormat ?? 'agy-json-schema', timeout_ms: options.timeoutMs, max_tokens: options.maxTokens ?? null, api_key_present: Boolean(options.apiKey), ...(options.provider === 'openai' ? { endpoint_configured: Boolean(options.url) } : {}) },
   protocol: { repeats, batch_size: batchSize, excluded_warmup_requests: warmups, max_consecutive_errors: maxErrors, seed, concurrency: 1, automatic_retries: 0, cache: 'none in fast-jev; upstream cache unknown', process: options.provider === 'agy' ? 'fresh agy process per request' : 'one Node process; fetch connection reuse allowed', planned_measured_requests: plannedRequests, planned_measured_cases: repeats * selected.length, score_tolerance: 0.5, primary_quality: 'repeat 0; backend failures count against end-to-end accuracy, unrun cases do not masquerade as failed predictions', confidence: 'not compared to calibrated probabilities', latency: 'wall clock around decide including build, backend and local validation; request-level percentiles; batch elapsed/N is amortized cost, not individual response latency' },
   order: order.map((items, repeat) => ({ repeat, case_ids: items.map(x => x.id) })),
 };
@@ -129,9 +130,10 @@ try {
       const { probeAgy } = await import('../src/agy.mjs');
       try {
         const probe = await probeAgy(options);
-        manifest.backend.agy_version = probe.version;
+        const publicProbe = publicAgyProbe(probe, options.model, options.effort);
+        manifest.backend.agy_version = publicProbe.version;
         manifest.backend.requested_model_listed = probe.models.includes(options.model);
-        await json('probe.json', probe);
+        await json('probe.json', publicProbe);
       } catch (error) { manifest.backend.probe_error = classifyError(error); }
       await json('manifest.json', manifest);
     }

@@ -14,21 +14,22 @@ fjev choose "下一步做什么？" \
 
 ## 安装
 
-需要 **Node.js 22+**。在本仓库目录执行：
+需要 **Node.js 22+**（自带 npm）。直接安装公开的 GitHub Release 包，无需克隆源码，也无需 npm 账号：
 
 ```sh
-npm install -g .
-fast-jev --help
-# fjev 是 fast-jev 的短命令
+npm install -g https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz
+fjev --help
 ```
 
-也可以不安装，直接运行：
+也可以不做全局安装，直接试用：
 
 ```sh
-node bin/fast-jev.mjs --help
+npx --yes --package=https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz fjev --help
 ```
 
-以上是本地安装方式，不依赖 npm 上已经发布同名包。
+`fast-jev` 与 `fjev` 是同一个命令。[直接下载安装包](https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz) · [SHA-256 校验值](https://github.com/Finn-Fengming/fast-jev/releases/latest/download/SHA256SUMS) · [固定版本与离线安装](docs/distribution.md)。
+
+当前使用 **GitHub Releases** 分发，尚未发布 npm registry 同名包，请使用上面的完整链接。开发者仍可在源码目录执行 `npm install -g .`。
 
 ## 选择后端
 
@@ -86,12 +87,11 @@ fjev score "紧急程度：0 是日常事项，10 是正在发生的服务中断
   --min 0 --max 10 --context "结账服务不可用。" --explain
 
 # 对 JSON 数组降序排名，或保留符合条件的条目
-fjev rank "预期收益相对于投入的性价比" --input examples/items.json --top 2
-fjev filter "能在两天内完成吗？" --input examples/items.json
+printf '%s\n' '[{"name":"增加缓存","effort_days":2},{"name":"重写服务","effort_days":60}]' | fjev rank "预期收益相对于投入的性价比" --top 1
+printf '%s\n' '[{"name":"增加缓存","effort_days":2},{"name":"重写服务","effort_days":60}]' | fjev filter "能在两天内完成吗？"
 
 # 一次模型调用回答多个类型化问题；batch 是别名
-fjev decide --input examples/decisions.json --pretty
-cat examples/decisions.json | fjev batch --input -
+printf '%s\n' '{"state":"HTTP 200 OK","questions":[{"id":"healthy","type":"boolean","prompt":"请求是否成功？"}]}' | fjev batch --pretty
 
 # 配置与诊断
 fjev config --pretty
@@ -153,12 +153,12 @@ fjev choose "下一步做什么？" --option 发布 --option 排查 \
 
 ## 配置
 
-配置文件是可选的。默认读取 `$XDG_CONFIG_HOME/fast-jev/config.json`，未设置 XDG 时读取 `~/.config/fast-jev/config.json`。也可通过 `--config PATH` 或 `FAST_JEV_CONFIG` 指定路径。示例见 [examples/config.json](examples/config.json)：
+配置文件是可选的。默认读取 `$XDG_CONFIG_HOME/fast-jev/config.json`，未设置 XDG 时读取 `~/.config/fast-jev/config.json`。也可通过 `--config PATH` 或 `FAST_JEV_CONFIG` 指定路径。将[配置模板](https://raw.githubusercontent.com/Finn-Fengming/fast-jev/main/examples/config.json)另存为 `config.json`：
 
 ```sh
-fjev config --config examples/config.json --pretty
+fjev config --config config.json --pretty
 fjev check "是否准备就绪？" --context "全部必要检查已通过。" \
-  --config examples/config.json --provider openai
+  --config config.json --provider openai
 ```
 
 优先级为：**命令行参数 → 环境变量 → 所选后端的配置 → 默认值**。`provider` 和 `timeoutMs` 放在顶层，其余后端字段分别放在 `agy` / `openai` 对象下。API key 放在环境变量中，不写进配置文件；`config` 展示最终配置时不打印 key。
@@ -180,10 +180,14 @@ fjev check "是否准备就绪？" --context "全部必要检查已通过。" \
 
 ## JavaScript API
 
-在仓库根目录的脚本中使用：
+在自己的项目中安装：
+
+```sh
+npm install https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz
+```
 
 ```js
-import { decide } from './src/decision.mjs';
+import { decide } from 'fast-jev';
 
 const output = await decide({
   state: '发布测试没有通过。',
@@ -197,19 +201,22 @@ const output = await decide({
 console.log(output.results);
 ```
 
-将本目录安装为其他项目的本地依赖后，可从 `'fast-jev'` 导入。另有 `buildDecision`、`validateRequest`、`validateOutput` 导出。JavaScript API 不会自动加载 CLI 配置或环境变量；使用 HTTP 时显式传入 `{ provider: 'openai', model, baseUrl, apiKey: process.env.OPENAI_API_KEY }`，取消请求可传 `signal: AbortSignal`。
+另有 `buildDecision`、`validateRequest`、`validateOutput` 导出。JavaScript API 不会自动加载 CLI 配置或环境变量；使用 HTTP 时显式传入 `{ provider: 'openai', model, baseUrl, apiKey: process.env.OPENAI_API_KEY }`，取消请求可传 `signal: AbortSignal`。
 
 ## 检查与测试
 
 ```sh
 # 只查看请求、提示和 schema，不调用模型
-fjev decide --input examples/decisions.json --dry-run --pretty
+fjev check "HTTP OK?" --context "HTTP 200 OK" --dry-run --pretty
 
+# 以下开发检查在源码目录运行
 npm test
 npm run check
+npm run package
+npm run test:package
 ```
 
-`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。本地 113 项测试通过；[CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)的 Linux/macOS × Node.js 22/24 四组任务也全部通过。
+`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。本地 130 项测试通过；[CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)的 Linux/macOS × Node.js 22/24 四组任务也全部通过。
 
 可以进行小规模真实调用计时：
 
@@ -281,3 +288,5 @@ npm run benchmark:local -- --out experiments/results/my-overhead-ab
 封装校验结构、合法选项和数值范围，无法保证判断正确或抵抗所有提示注入。精确运算交给代码，阈值用自己的带标签数据评估。输入会发送到所选后端，agy 使用其既有认证与服务路由。没有测量就不承诺具体时延、成本或校准水平。
 
 更多背景见 [Jev 完整调研与验证方案](docs/research-jev.md)，其中区分了原始决策模型与本项目的无训练封装。
+
+[安装与分发](docs/distribution.md) · [隐私与发布内容](docs/security.md)。

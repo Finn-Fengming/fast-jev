@@ -14,21 +14,22 @@ Inspired by Jev's closed-decision pattern. This is an independent wrapper, not t
 
 ## Install
 
-Requires **Node.js 22+**. From this repository:
+Requires **Node.js 22+** (includes npm). Install the public GitHub Release package directly; no source checkout or npm account is needed:
 
 ```sh
-npm install -g .
-fast-jev --help
-# fjev is an alias for fast-jev
+npm install -g https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz
+fjev --help
 ```
 
-Or run without installing:
+Or try it without a global installation:
 
 ```sh
-node bin/fast-jev.mjs --help
+npx --yes --package=https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz fjev --help
 ```
 
-These are local installation instructions; this repository does not assume a published npm package.
+`fast-jev` and `fjev` are the same command. [Download the package](https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz) · [SHA-256 checksums](https://github.com/Finn-Fengming/fast-jev/releases/latest/download/SHA256SUMS) · [Pinned versions and offline installation](docs/distribution.md).
+
+Distribution currently uses **GitHub Releases**; `npm install -g fast-jev` is not a published registry installation path. Developers can still use `npm install -g .` from a checkout.
 
 ## Pick a backend
 
@@ -86,12 +87,11 @@ fjev score "Urgency: 0 means routine, 10 means an active outage." \
   --min 0 --max 10 --context "Checkout is unavailable." --explain
 
 # Rank descending or keep matching items from a JSON array
-fjev rank "Expected benefit relative to effort" --input examples/items.json --top 2
-fjev filter "Can this be completed within two days?" --input examples/items.json
+printf '%s\n' '[{"name":"Cache reads","effort_days":2},{"name":"Rewrite","effort_days":60}]' | fjev rank "Expected benefit relative to effort" --top 1
+printf '%s\n' '[{"name":"Cache reads","effort_days":2},{"name":"Rewrite","effort_days":60}]' | fjev filter "Can this be completed within two days?"
 
 # Several typed questions in one model call; batch is an alias
-fjev decide --input examples/decisions.json --pretty
-cat examples/decisions.json | fjev batch --input -
+printf '%s\n' '{"state":"HTTP 200 OK","questions":[{"id":"healthy","type":"boolean","prompt":"Did the request succeed?"}]}' | fjev batch --pretty
 
 # Configuration and diagnostics
 fjev config --pretty
@@ -153,12 +153,12 @@ Results go to stdout; errors are JSON on stderr. The default backend timeout is 
 
 ## Configuration
 
-Configuration is optional. The default path is `$XDG_CONFIG_HOME/fast-jev/config.json`, or `~/.config/fast-jev/config.json` when XDG is unset. Use `--config PATH` or `FAST_JEV_CONFIG` for another file. Start from [examples/config.json](examples/config.json):
+Configuration is optional. The default path is `$XDG_CONFIG_HOME/fast-jev/config.json`, or `~/.config/fast-jev/config.json` when XDG is unset. Use `--config PATH` or `FAST_JEV_CONFIG` for another file. Save [this config template](https://raw.githubusercontent.com/Finn-Fengming/fast-jev/main/examples/config.json) as `config.json`:
 
 ```sh
-fjev config --config examples/config.json --pretty
+fjev config --config config.json --pretty
 fjev check "Is it ready?" --context "All required checks passed." \
-  --config examples/config.json --provider openai
+  --config config.json --provider openai
 ```
 
 Precedence: **flags → environment → selected provider's config → defaults**. `provider` and `timeoutMs` are top-level settings; backend-specific fields live under `agy` or `openai`. API keys stay in environment variables, not the config file. `config` reports resolved settings without printing the key.
@@ -180,10 +180,14 @@ Precedence: **flags → environment → selected provider's config → defaults*
 
 ## JavaScript API
 
-From a script in the repository root:
+Install in your project:
+
+```sh
+npm install https://github.com/Finn-Fengming/fast-jev/releases/latest/download/fast-jev.tgz
+```
 
 ```js
-import { decide } from './src/decision.mjs';
+import { decide } from 'fast-jev';
 
 const output = await decide({
   state: 'The release tests failed.',
@@ -197,19 +201,22 @@ const output = await decide({
 console.log(output.results);
 ```
 
-After installing this directory as a local package dependency, import from `'fast-jev'`. The exports also include `buildDecision`, `validateRequest`, and `validateOutput`. The API does not automatically load CLI config/environment settings: for HTTP, pass `{ provider: 'openai', model, baseUrl, apiKey: process.env.OPENAI_API_KEY }`. Pass an `AbortSignal` as `signal` to cancel.
+The exports also include `buildDecision`, `validateRequest`, and `validateOutput`. The API does not automatically load CLI config/environment settings: for HTTP, pass `{ provider: 'openai', model, baseUrl, apiKey: process.env.OPENAI_API_KEY }`. Pass an `AbortSignal` as `signal` to cancel.
 
 ## Inspect and test
 
 ```sh
 # Show the request, prompt, and schema without calling a model
-fjev decide --input examples/decisions.json --dry-run --pretty
+fjev check "HTTP OK?" --context "HTTP 200 OK" --dry-run --pretty
 
+# The following checks are for a source checkout
 npm test
 npm run check
+npm run package
+npm run test:package
 ```
 
-`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency. All 113 local tests passed; the [CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml) passed on Linux/macOS with Node.js 22/24.
+`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency. All 130 local tests passed; the [CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml) passed on Linux/macOS with Node.js 22/24.
 
 For a small, real-call timing check:
 
@@ -283,3 +290,5 @@ This wrapper validates structure, allowed values, and ranges; it cannot guarante
 Read the [full Jev research and validation plan](docs/research-jev.md) for the distinction between the original decision model and this no-training wrapper.
 
 Implementation details: [architecture](docs/architecture.md) · [verification record](docs/validation.md).
+
+[Distribution](docs/distribution.md) · [Privacy and package contents](docs/security.md).

@@ -108,7 +108,11 @@ export async function main(argv, { stdin = process.stdin, stdout = process.stdou
   let exitCode = 0;
   try {
     const { values: flags, positionals } = parse(argv);
-    if (flags.version) { stdout.write('0.1.0\n'); return 0; }
+    if (flags.version) {
+      const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+      stdout.write(`${version}\n`);
+      return 0;
+    }
     if (flags.help || !positionals.length) { stdout.write(HELP); return 0; }
     const aliases = { classify: 'choose', batch: 'decide' };
     const command = Object.hasOwn(aliases, positionals[0]) ? aliases[positionals[0]] : positionals[0];

@@ -2,6 +2,9 @@
   "name": "fast-jev",
   "version": "0.1.0",
   "description": "Small, typed AI decisions through local agy or OpenAI-compatible models.",
+  "repository": { "type": "git", "url": "git+https://github.com/Finn-Fengming/fast-jev.git" },
+  "homepage": "https://github.com/Finn-Fengming/fast-jev#readme",
+  "bugs": { "url": "https://github.com/Finn-Fengming/fast-jev/issues" },
   "type": "module",
   "engines": { "node": ">=22" },
   "bin": { "fast-jev": "bin/fast-jev.mjs", "fjev": "bin/fast-jev.mjs" },
@@ -9,6 +12,8 @@
   "files": ["bin", "src", "examples", "docs", "scripts/benchmark.mjs", "README.md", "README.zh-CN.md"],
   "scripts": {
     "test": "node --test test/*.test.mjs",
+    "package": "node scripts/package.mjs",
+    "test:package": "node scripts/check-package.mjs",
     "check": "node --check bin/fast-jev.mjs && node --check src/cli.mjs && node --check src/providers.mjs && node --check src/decision.mjs && node --check src/agy.mjs",
     "benchmark": "node scripts/benchmark.mjs",
     "experiment": "node experiments/run.mjs",

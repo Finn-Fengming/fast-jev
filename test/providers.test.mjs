@@ -68,6 +68,24 @@ test('HTTP failures do not leak upstream content or silently retry', async t => 
   assert.equal(calls, 1);
 });
 
+test('compatible usage omits private fields while preserving token detail counters', async t => {
+  const canary = 'private-compatible-usage-canary';
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({
+    choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(data) } }],
+    usage: {
+      prompt_tokens: 10, completion_tokens: 8, total_tokens: 18, credential: canary,
+      prompt_tokens_details: { cached_tokens: 2, metadata: { credential: canary } },
+      completion_tokens_details: { reasoning_tokens: 0, accepted_prediction_tokens: canary },
+    },
+  })));
+  const output = await decide(request, { ...base, provider: 'openai' });
+  assert.ok(!JSON.stringify(output.meta.usage).includes(canary), 'Usage metadata must contain token counts only.');
+  assert.deepEqual(output.meta.usage, {
+    prompt_tokens: 10, completion_tokens: 8, total_tokens: 18,
+    prompt_tokens_details: { cached_tokens: 2 }, completion_tokens_details: { reasoning_tokens: 0 },
+  });
+});
+
 test('truncation, refusal, tool calls and invalid JSON are rejected', async t => {
   const replies = [
     response('{}', { finish_reason: 'length' }),

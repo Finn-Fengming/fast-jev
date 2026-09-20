@@ -8,10 +8,13 @@ and source hashes. These identify the measurement snapshot, not the newly publis
 Git commits, and the old commit identifiers may no longer resolve. They have not
 been replaced with identifiers that did not exist at measurement time.
 
-All production files under `src/` and the fixed dataset are byte-identical to their
-measurement versions. The republished baseline changes documentation, generic
+The republished baseline retains the production files under `src/` and the fixed
+dataset byte-for-byte from their measurement versions. The republished baseline changes documentation, generic
 experiment error reporting and failure fixtures; prompts, model configuration,
 scoring, schedules, raw predictions, timeout failures and timings are unchanged.
+The release code additionally limits diagnostic messages and usage metadata, reads
+the CLI version from package metadata, and minimizes exported probe/endpoint details.
+These post-measurement changes have not been re-benchmarked against the model.
 The current runner also includes the post-measurement timeout-classification fix
 in [ERRATA.md](ERRATA.md). Runner source hashes therefore differ from those recorded
 at execution, as disclosed here; this is not a new model evaluation.
@@ -22,6 +25,15 @@ selected development cases. The frozen evaluation parameters and all evidence
 needed to recompute reported accuracy and latency remain available.
 
 中文：Git 历史重新发布后，复现命令使用新的基线提交。实验清单仍保留运行时的
-原始提交标识与源码哈希，不把新提交伪装成当时的源码版本。生产推理代码、固定
-数据集、原始预测、超时记录、耗时和评分未改变；变化涉及文档、实验错误文案与
-测试示例，另有已公开说明的超时分类修复。
+原始提交标识与源码哈希，不把新提交伪装成当时的源码版本。基线推理代码、固定
+数据集、原始预测、超时记录、耗时和评分未改变。发布版随后增加诊断与元数据
+隐私限制、版本读取和安装包检查，没有重新运行模型 benchmark。
+
+## Published diagnostic metadata
+
+Five `probe.json` files and the live preflight `stdout.json.agy` object are minimized
+to the tested version/model and required flags. Their `metadata_scope` and
+`privacy_note` fields identify this editorial change. The same cleanup was applied
+to reachable history. Raw prediction/request records, labels, timings, manifests,
+summary metrics and recomputed reports are unchanged. Probe files are not inputs
+to scoring or recorded artifact-hash verification.
