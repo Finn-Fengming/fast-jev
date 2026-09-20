@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-20T08:10:55.771Z",
+  "status": "partial",
+  "recorded_status": "partial",
+  "backend": {
+    "provider": "agy",
+    "requested_model": "gemini-3.8-flash-low",
+    "effort": null,
+    "response_format": "agy-json-schema",
+    "timeout_ms": 30000,
+    "max_tokens": null,
+    "api_key_present": false,
+    "agy_version": "1.2.7",
+    "requested_model_listed": true
+  },
+  "protocol": {
+    "repeats": 1,
+    "excluded_warmup_requests": 1,
+    "max_consecutive_errors": 3,
+    "seed": 20260920,
+    "concurrency": 1,
+    "automatic_retries": 0,
+    "score_tolerance": 0.5,
+    "primary_quality": "One measured repeat; backend failures count against end-to-end accuracy; unrun cases remain visible.",
+    "cache": "none in fast-jev; upstream cache unknown",
+    "schedule": "Paired serial requests on identical cases, alternating AGY/Jev then Jev/AGY across pairs, including warmups.",
+    "latency": "Wall clock around the complete adapter call: input validation, provider request construction, transport/process startup, parsing and result validation; canonical batch construction, warmup, probing and artifact writes excluded. Batch elapsed/N is amortized cost, not individual response latency.",
+    "boolean_threshold": "Jev noul >= 0.5 becomes true; no confidence gating.",
+    "score_conversion": "Native Jev score is retained without rounding; both backends use absolute error <= 0.5 plus separate MAE and exact match.",
+    "dataset_disclosure": "Previously observed, frozen synthetic test cases; this is a fresh measurement, not a new blind holdout.",
+    "batch_size": 1,
+    "planned_measured_requests": 64,
+    "planned_measured_cases": 64,
+    "process": "fresh agy process per request"
+  },
+  "integrity": {
+    "snapshot_sha256": "084dfcd0772d93850d6e80532c8fac289bf13e3773b9e09c4e633e27567f949a",
+    "bundled_suite_matches": true,
+    "recorded_source_sha256": "9f6c59b2ece1d41e07859d9b8973c02ace983af790cbd5bff00d8d49bab82b75",
+    "reporting_source_files": {
+      "experiments/report.mjs": "ae5d498a476a5b5191e625125a83d6302d2cedbdb9624b1ecbbfd9fb175bdb56",
+      "experiments/lib/metrics.mjs": "b962d32d48c64eddf8221b8da069a2530c50ebb781f6900097036e9109729602",
+      "experiments/lib/suite.mjs": "174dc3912f915f527d9e1f6b1a5dd6fa710e89e67b6505392da8f2dfe710190c"
+    },
+    "artifact_sha256": {
+      "manifest.json": "db43dca74753edcf25a9754f25534469c27c18d23c7f33783875c3f6b9ebaf84",
+      "cases.jsonl": "084dfcd0772d93850d6e80532c8fac289bf13e3773b9e09c4e633e27567f949a",
+      "records.jsonl": "bbef79398a5e55462cc20fbf0e372a747c77e539872aeba3da1416c4603d37da",
+      "requests.jsonl": "984337d3db339565eb82e8c532ecd31fac22bbce0c149e51712107d0bb166f24"
+    },
+    "checks": [
+      "snapshot hash",
+      "selected case IDs and counts",
+      "planned order and full measured record coverage",
+      "unique requests and case/repeat records",
+      "request reconstruction hashes",
+      "raw request/case output and duration agreement",
+      "scores recomputed from frozen labels"
+    ]
+  },
+  "quality": {
+    "record_count": 64,
+    "unique_case_count": 64,
+    "attempted_count": 15,
+    "success_count": 8,
+    "error_count": 7,
+    "not_run_count": 49,
+    "valid_count": 8,
+    "valid_rate": 0.5333333333333333,
+    "coverage": {
+      "planned_case_count": 64,
+      "recorded_case_count": 64,
+      "attempted_case_count": 15,
+      "successful_case_count": 8,
+      "recorded_case_rate": 1,
+      "attempted_case_rate": 0.234375,
+      "expected_record_count": 64,
+      "recorded_record_rate": 1
+    },
+    "primary": {
+      "record_count": 64,
+      "unique_case_count": 64,
+      "attempted_count": 15,
+      "success_count": 8,
+      "error_count": 7,
+      "not_run_count": 49,
+      "valid_count": 8,
+      "correct_count": 8,
+      "valid_rate": 0.5333333333333333,
+      "end_to_end_correct_rate": 0.5333333333333333,
+      "observed_success_accuracy": 1,
+      "choice_bool_question_count": 6,
+      "choice_bool_accuracy": 1,
+      "score_question_count": 2,
+      "score_valid_count": 2,
+      "score_mae": 0,
+      "score_normalized_mae": 0,
+      "score_exact_match": 1,
+      "score_within_tolerance": 1,
+      "latency_ms": {
+        "sample_count": 15,
+        "mean": 20710.306999999997,
+        "min": 8052.707,
+        "max": 30269.483,
+        "p50": 16194.848,
+        "p95": 30269.483
+      },
+      "successful_latency_ms": {
+        "sample_count": 8,
+        "mean": 12349.104999999998,
+        "min": 8052.707,
+        "max": 16194.848,
+        "p50": 12248.895,
+        "p95": 16194.848
+      },
+      "errors_by_code": {
+        "AGY_TIMEOUT": 7
+      },
+      "accuracy_wilson95": {
+        "method": "Wilson",
+        "confidence_level": 0.95,
+        "unit": "unique case, first measured repeat",
+        "sample_size": 15,
+        "lower": 0.30116980025498397,
+        "upper": 0.7519046463426261
+      }
+    },
+    "repeated": {
+      "record_count": 64,
+      "unique_case_count": 64,
+      "attempted_count": 15,
+      "success_count": 8,
+      "error_count": 7,
+      "not_run_count": 49,
+      "valid_count": 8,
+      "correct_count": 8,
+      "valid_rate": 0.5333333333333333,
+      "end_to_end_correct_rate": 0.5333333333333333,
+      "observed_success_accuracy": 1,
+      "choice_bool_question_count": 6,
+      "choice_bool_accuracy": 1,
+      "score_question_count": 2,
+      "score_valid_count": 2,
+      "score_mae": 0,
+      "score_normalized_mae": 0,
+      "score_exact_match": 1,
+      "score_within_tolerance": 1,
+      "latency_ms": {
+        "sample_count": 15,
+        "mean": 20710.306999999997,
+        "min": 8052.707,
+        "max": 30269.483,
+        "p50": 16194.848,
+        "p95": 30269.483
+      },
+      "successful_latency_ms": {
+        "sample_count": 8,
+        "mean": 12349.104999999998,
+        "min": 8052.707,
+        "max": 16194.848,
+        "p50": 12248.895,
+        "p95": 16194.848
+      },
+      "errors_by_code": {
+        "AGY_TIMEOUT": 7
+      }
+    },
+    "repeat_consistency": {
+      "expected_repeats": 1,
+      "complete_case_count": 0,
+      "eligible_case_count": 0,
+      "consistent_case_count": 0,
+      "consistency_rate": null,
+      "definition": "Exact typed predictions across all planned repeats; only complete cases with all repeats successful and valid. Scores use exact equality, not the accuracy tolerance."
+    },
+    "by_category": {
+      "grounded_boolean": {
+        "record_count": 16,
+        "unique_case_count": 16,
+        "attempted_count": 5,
+        "success_count": 1,
+        "error_count": 4,
+        "not_run_count": 11,
+        "valid_count": 1,
+        "correct_count": 1,
+        "valid_rate": 0.2,
+        "end_to_end_correct_rate": 0.2,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 1,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 0,
+        "score_valid_count": 0,
+        "score_mae": null,
+        "score_normalized_mae": null,
+        "score_exact_match": null,
+        "score_within_tolerance": null,
+        "latency_ms": {
+          "sample_count": 5,
+          "mean": 27452.772599999997,
+          "min": 16194.848,
+          "max": 30269.483,
+          "p50": 30268.046,
+          "p95": 30269.483
+        },
+        "successful_latency_ms": {
+          "sample_count": 1,
+          "mean": 16194.848,
+          "min": 16194.848,
+          "max": 16194.848,
+          "p50": 16194.848,
+          "p95": 16194.848
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 4
+        }
+      },
+      "policy_choice": {
+        "record_count": 16,
+        "unique_case_count": 16,
+        "attempted_count": 4,
+        "success_count": 3,
+        "error_count": 1,
+        "not_run_count": 12,
+        "valid_count": 3,
+        "correct_count": 3,
+        "valid_rate": 0.75,
+        "end_to_end_correct_rate": 0.75,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 3,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 0,
+        "score_valid_count": 0,
+        "score_mae": null,
+        "score_normalized_mae": null,
+        "score_exact_match": null,
+        "score_within_tolerance": null,
+        "latency_ms": {
+          "sample_count": 4,
+          "mean": 15398.259750000001,
+          "min": 8052.707,
+          "max": 30262.239,
+          "p50": 10942.266,
+          "p95": 30262.239
+        },
+        "successful_latency_ms": {
+          "sample_count": 3,
+          "mean": 10443.6,
+          "min": 8052.707,
+          "max": 12335.827,
+          "p50": 10942.266,
+          "p95": 12335.827
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 1
+        }
+      },
+      "routing_choice": {
+        "record_count": 16,
+        "unique_case_count": 16,
+        "attempted_count": 3,
+        "success_count": 2,
+        "error_count": 1,
+        "not_run_count": 13,
+        "valid_count": 2,
+        "correct_count": 2,
+        "valid_rate": 0.6666666666666666,
+        "end_to_end_correct_rate": 0.6666666666666666,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 2,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 0,
+        "score_valid_count": 0,
+        "score_mae": null,
+        "score_normalized_mae": null,
+        "score_exact_match": null,
+        "score_within_tolerance": null,
+        "latency_ms": {
+          "sample_count": 3,
+          "mean": 18484.124333333333,
+          "min": 11445.33,
+          "max": 30267.037,
+          "p50": 13740.006,
+          "p95": 30267.037
+        },
+        "successful_latency_ms": {
+          "sample_count": 2,
+          "mean": 12592.668,
+          "min": 11445.33,
+          "max": 13740.006,
+          "p50": 11445.33,
+          "p95": 13740.006
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 1
+        }
+      },
+      "rubric_score": {
+        "record_count": 16,
+        "unique_case_count": 16,
+        "attempted_count": 3,
+        "success_count": 2,
+        "error_count": 1,
+        "not_run_count": 13,
+        "valid_count": 2,
+        "correct_count": 2,
+        "valid_rate": 0.6666666666666666,
+        "end_to_end_correct_rate": 0.6666666666666666,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 0,
+        "choice_bool_accuracy": null,
+        "score_question_count": 2,
+        "score_valid_count": 2,
+        "score_mae": 0,
+        "score_normalized_mae": 0,
+        "score_exact_match": 1,
+        "score_within_tolerance": 1,
+        "latency_ms": {
+          "sample_count": 3,
+          "mean": 18781.77666666667,
+          "min": 12248.895,
+          "max": 30263.474,
+          "p50": 13832.961,
+          "p95": 30263.474
+        },
+        "successful_latency_ms": {
+          "sample_count": 2,
+          "mean": 13040.928,
+          "min": 12248.895,
+          "max": 13832.961,
+          "p50": 12248.895,
+          "p95": 13832.961
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 1
+        }
+      }
+    },
+    "by_language": {
+      "en": {
+        "record_count": 32,
+        "unique_case_count": 32,
+        "attempted_count": 7,
+        "success_count": 3,
+        "error_count": 4,
+        "not_run_count": 25,
+        "valid_count": 3,
+        "correct_count": 3,
+        "valid_rate": 0.42857142857142855,
+        "end_to_end_correct_rate": 0.42857142857142855,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 2,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 1,
+        "score_valid_count": 1,
+        "score_mae": 0,
+        "score_normalized_mae": 0,
+        "score_exact_match": 1,
+        "score_within_tolerance": 1,
+        "latency_ms": {
+          "sample_count": 7,
+          "mean": 22384.818857142855,
+          "min": 8052.707,
+          "max": 30269.483,
+          "p50": 30263.474,
+          "p95": 30269.483
+        },
+        "successful_latency_ms": {
+          "sample_count": 3,
+          "mean": 11875.224666666667,
+          "min": 8052.707,
+          "max": 13832.961,
+          "p50": 13740.006,
+          "p95": 13832.961
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 4
+        }
+      },
+      "zh": {
+        "record_count": 32,
+        "unique_case_count": 32,
+        "attempted_count": 8,
+        "success_count": 5,
+        "error_count": 3,
+        "not_run_count": 24,
+        "valid_count": 5,
+        "correct_count": 5,
+        "valid_rate": 0.625,
+        "end_to_end_correct_rate": 0.625,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 4,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 1,
+        "score_valid_count": 1,
+        "score_mae": 0,
+        "score_normalized_mae": 0,
+        "score_exact_match": 1,
+        "score_within_tolerance": 1,
+        "latency_ms": {
+          "sample_count": 8,
+          "mean": 19245.109125,
+          "min": 10942.266,
+          "max": 30268.046,
+          "p50": 12335.827,
+          "p95": 30268.046
+        },
+        "successful_latency_ms": {
+          "sample_count": 5,
+          "mean": 12633.4332,
+          "min": 10942.266,
+          "max": 16194.848,
+          "p50": 12248.895,
+          "p95": 16194.848
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 3
+        }
+      }
+    },
+    "by_kind": {
+      "boolean": {
+        "record_count": 16,
+        "unique_case_count": 16,
+        "attempted_count": 5,
+        "success_count": 1,
+        "error_count": 4,
+        "not_run_count": 11,
+        "valid_count": 1,
+        "correct_count": 1,
+        "valid_rate": 0.2,
+        "end_to_end_correct_rate": 0.2,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 1,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 0,
+        "score_valid_count": 0,
+        "score_mae": null,
+        "score_normalized_mae": null,
+        "score_exact_match": null,
+        "score_within_tolerance": null,
+        "latency_ms": {
+          "sample_count": 5,
+          "mean": 27452.772599999997,
+          "min": 16194.848,
+          "max": 30269.483,
+          "p50": 30268.046,
+          "p95": 30269.483
+        },
+        "successful_latency_ms": {
+          "sample_count": 1,
+          "mean": 16194.848,
+          "min": 16194.848,
+          "max": 16194.848,
+          "p50": 16194.848,
+          "p95": 16194.848
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 4
+        }
+      },
+      "choice": {
+        "record_count": 32,
+        "unique_case_count": 32,
+        "attempted_count": 7,
+        "success_count": 5,
+        "error_count": 2,
+        "not_run_count": 25,
+        "valid_count": 5,
+        "correct_count": 5,
+        "valid_rate": 0.7142857142857143,
+        "end_to_end_correct_rate": 0.7142857142857143,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 5,
+        "choice_bool_accuracy": 1,
+        "score_question_count": 0,
+        "score_valid_count": 0,
+        "score_mae": null,
+        "score_normalized_mae": null,
+        "score_exact_match": null,
+        "score_within_tolerance": null,
+        "latency_ms": {
+          "sample_count": 7,
+          "mean": 16720.773142857142,
+          "min": 8052.707,
+          "max": 30267.037,
+          "p50": 12335.827,
+          "p95": 30267.037
+        },
+        "successful_latency_ms": {
+          "sample_count": 5,
+          "mean": 11303.2272,
+          "min": 8052.707,
+          "max": 13740.006,
+          "p50": 11445.33,
+          "p95": 13740.006
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 2
+        }
+      },
+      "score": {
+        "record_count": 16,
+        "unique_case_count": 16,
+        "attempted_count": 3,
+        "success_count": 2,
+        "error_count": 1,
+        "not_run_count": 13,
+        "valid_count": 2,
+        "correct_count": 2,
+        "valid_rate": 0.6666666666666666,
+        "end_to_end_correct_rate": 0.6666666666666666,
+        "observed_success_accuracy": 1,
+        "choice_bool_question_count": 0,
+        "choice_bool_accuracy": null,
+        "score_question_count": 2,
+        "score_valid_count": 2,
+        "score_mae": 0,
+        "score_normalized_mae": 0,
+        "score_exact_match": 1,
+        "score_within_tolerance": 1,
+        "latency_ms": {
+          "sample_count": 3,
+          "mean": 18781.77666666667,
+          "min": 12248.895,
+          "max": 30263.474,
+          "p50": 13832.961,
+          "p95": 30263.474
+        },
+        "successful_latency_ms": {
+          "sample_count": 2,
+          "mean": 13040.928,
+          "min": 12248.895,
+          "max": 13832.961,
+          "p50": 12248.895,
+          "p95": 13832.961
+        },
+        "errors_by_code": {
+          "AGY_TIMEOUT": 1
+        }
+      }
+    },
+    "methodology": {
+      "primary": "First measured repeat only; warmup excluded. Backend failures count as incorrect in end_to_end_correct_rate. not_run records are excluded from attempted denominators and reported in coverage.",
+      "score_tolerance": 0.5,
+      "score_tolerance_boundary": "inclusive: absolute error <= 0.5",
+      "score_mae": "Valid numeric score predictions only; invalid, missing and abstained predictions have no numeric error and count as incorrect for score_within_tolerance.",
+      "question_accuracy": "choice_bool_accuracy and score_within_tolerance use questions present in scored successful backend responses, including invalid/missing/abstained questions as incorrect. Backend errors are counted by end_to_end_correct_rate.",
+      "confidence": "Self-reported model confidence is not used as a probability or a correctness score.",
+      "latency": "Milliseconds per recorded case request, including failures; successful_latency_ms excludes backend errors. A batched request duration may be shared by multiple cases, so these are not independent request samples and no throughput is computed here.",
+      "uncertainty": "Wilson 95% interval uses only unique cases from repeat 0. A small synthetic benchmark is not a random sample of production tasks; the interval does not justify generalization or a cross-benchmark superiority claim."
+    }
+  },
+  "requests": {
+    "planned": 64,
+    "attempted": 15,
+    "successful": 8,
+    "failed": 7,
+    "not_run": 49,
+    "warmup_attempts": 1,
+    "success_latency_ms": {
+      "sample_count": 8,
+      "p50": 12248.895,
+      "p95": 16194.848,
+      "mean": 12349.104999999998
+    },
+    "error_latency_ms": {
+      "sample_count": 7,
+      "p50": 30267.037,
+      "p95": 30269.483,
+      "mean": 30265.96642857143
+    },
+    "measured_request_time_ms": 310654.605,
+    "successful_cases_per_second": 0.025752072788362498,
+    "successful_amortized_ms_per_case": 12349.104999999998
+  },
+  "interpretation": "Only successful model outputs measure conditional prediction quality. Error timings are not successful inference latency. External Jev figures are not directly comparable. Stored record.score values were ignored. Artifact hashes verify internal consistency, not independent provenance."
+}

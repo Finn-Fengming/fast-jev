@@ -1,0 +1,18 @@
+{
+  "version": "1.2.7",
+  "models": [
+    "gemini-3.8-flash-low"
+  ],
+  "capabilities": [
+    "--disable-slash-commands",
+    "--input-format",
+    "--json-schema",
+    "--mode",
+    "--model",
+    "--output-format",
+    "--print-timeout",
+    "--sandbox"
+  ],
+  "metadata_scope": "sanitized_to_tested_backend",
+  "privacy_note": "Metadata is limited to the requested model and required adapter flags; unrelated local inventory is omitted."
+}

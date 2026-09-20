@@ -258,3 +258,49 @@ test('a plan has complete not-run records, null quality and no invented speed ra
   assert.equal(report.modes.b1.speed_ratio.success_p50_agy_over_jev, null);
   assert.equal(report.modes.b1.backends.jev.requests.all_attempt_latency_ms.sample_count, 0);
 });
+
+test('recorded source metadata must have an internally consistent digest', async t => {
+  const state = await fixture(t);
+  state.manifest.source.sha256 = '0'.repeat(64);
+  await state.save();
+  await assert.rejects(generateComparisonReport(state.directory), /recorded source hash is inconsistent/);
+});
+
+test('system-clock drift is disclosed without rewriting monotonic request latency', async t => {
+  const state = await fixture(t);
+  const entry = state.sequence[1];
+  entry.finished_at = new Date(Date.parse(entry.finished_at) + 4).toISOString();
+  state.children.get(entry.directory).requests[0].finished_at = entry.finished_at;
+  await state.save();
+  const report = await generateComparisonReport(state.directory);
+  assert.deepEqual(report.integrity.clock_warnings, [{ sequence_index: 1, kind: 'utc_duration_differs_from_monotonic' }]);
+  assert.equal(report.modes.b1.backends.jev.requests.success_latency_ms.p50, 100);
+  assert.match(await readFile(join(state.directory, 'comparison.md'), 'utf8'), /UTC clock warnings: 1/);
+});
+
+test('an interrupted half-pair retains asymmetric coverage and explicit unrun cases', async t => {
+  const state = await fixture(t);
+  // Both warmups completed; Jev attempted the first measured case before cancellation.
+  state.sequence.splice(3);
+  state.manifest.status = 'partial';
+  state.manifest.stop_reason = 'canceled';
+  for (const [directory, child] of state.children) {
+    const retained = new Set(state.sequence.filter(row => row.directory === directory).map(row => row.request_id));
+    child.requests = child.requests.filter(row => retained.has(row.request_id));
+    child.records = child.records.filter(row => retained.has(row.request_id));
+    const attempted = new Set(child.records.filter(row => row.phase === 'measure').map(row => row.case_id));
+    for (const item of cases.filter(item => !attempted.has(item.id))) child.records.push({ phase: 'measure', repeat: 0, case_id: item.id,
+      category: item.category, language: item.language, kind: item.request.questions[0].type,
+      status: 'not_run', elapsed_ms: null, reason: 'canceled' });
+    child.manifest.status = attempted.size ? 'partial' : 'blocked';
+  }
+  await state.save();
+  const report = await generateComparisonReport(state.directory);
+  assert.equal(report.status, 'partial');
+  assert.equal(report.modes.b1.backends.jev.quality.coverage.attempted_case_count, 1);
+  assert.equal(report.modes.b1.backends.agy.quality.coverage.attempted_case_count, 0);
+  assert.equal(report.modes.b1.backends.jev.quality.primary.not_run_count, 2);
+  assert.equal(report.modes.b1.backends.agy.quality.primary.end_to_end_correct_rate, null);
+  assert.equal(report.modes.b1.backends.jev.quality.primary.end_to_end_correct_rate, 0);
+  assert.equal(report.modes.b1.speed_ratio.matched_success_pair_count, 0);
+});
