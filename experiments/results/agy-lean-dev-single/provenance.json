@@ -1,0 +1,9 @@
+{
+  "base_commit": "bcac77dff826e688b081761357eea24e07fbe833",
+  "isolated_checkout": true,
+  "changed_production_file": "src/agy.mjs",
+  "replacement": "experiments/variants/agy-lean-candidate.mjs",
+  "replacement_sha256": "31458445fdb0968700e89656e1d16345629b55d01a542302ab3b428bc020d97f",
+  "adopted": false,
+  "reason": "Same 8/8 dev correctness, but no demonstrated reduction in context or mean/tail latency; one small sequential comparison does not establish an improvement."
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-20T06:08:56.743Z",
+  "experiment": "agy-decision-suite-v1",
+  "status": "completed",
+  "source": {
+    "sha256": "39c400b34c827b88fb243e65d698249eb0c8808392b4071a932c5eefa3e88230",
+    "files": {
+      "experiments/compare-overhead.mjs": "7b95b1bbc29aa9000a68d15ceaaaba2b0dc959b59c312728449c939de88393c3",
+      "experiments/lib/metrics.mjs": "b962d32d48c64eddf8221b8da069a2530c50ebb781f6900097036e9109729602",
+      "experiments/lib/suite.mjs": "174dc3912f915f527d9e1f6b1a5dd6fa710e89e67b6505392da8f2dfe710190c",
+      "experiments/local-overhead.mjs": "9466b2d6b6c2ddfd3608044bdfaff1be7af36e6df2d5f2e941fd313de9b36d23",
+      "experiments/report.mjs": "ae5d498a476a5b5191e625125a83d6302d2cedbdb9624b1ecbbfd9fb175bdb56",
+      "experiments/run.mjs": "bae2ca43180d480c6008b4b707d63cfb0e67b97deae0a92fb1efdbbc5be7d3ea",
+      "experiments/variants/decision-before-validation-reuse.mjs": "8967545fd781223686feb2f78ddfbddfa948c3a801c6446fcf6012ac38fa0df3",
+      "package.json": "ae908d575b21372095d18d5610efef89042b263a12e8bb1d6912dd5816af2b72",
+      "src/agy.mjs": "09e974fc25d9a3951e8fa3ac9d17de42aeab3b9c422256fc2e4624e9605dc82e",
+      "src/cli.mjs": "95cffef8faf381893be49286d754be86974ba345ca2545779ddc2b08675b61d6",
+      "src/config.mjs": "7edd2965b00c6d753f465e4cfe398b3709761d0d4ac7623f1ffc6191cbb743fc",
+      "src/decision.mjs": "ab06d87de38d06d29bec767ba63107f5a286a09f1f27f392904bec8cbaaf5910",
+      "src/errors.mjs": "43746a56956376351bab5974d51ffb4a9d67c919f99d85f55107683cb60f77cf",
+      "src/providers.mjs": "031f5d770e6d414e4ef443c29be7aa00da3f07a6483933df0d4ec19191cb822e"
+    }
+  },
+  "git_commit": "bcac77dff826e688b081761357eea24e07fbe833",
+  "environment": {
+    "node": "v26.0.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "os_release": "25.4.0",
+    "cpu": "Apple M5 Pro",
+    "logical_cpus": 18,
+    "memory_gib": 48
+  },
+  "dataset": {
+    "filename": "decision-suite.jsonl",
+    "sha256": "f0bfdd47121bf16ee1600583ea06aa58a69aeecd8e5d679560dc1447ba696e2c",
+    "snapshot_sha256": "ea7e09f7a30e21bd448994513597018591eb7cc68724ecb2616150bdbb50d348",
+    "bytes": 82920,
+    "total_cases": 96,
+    "eligible_cases": 32,
+    "selected_cases": 8,
+    "split": "dev",
+    "is_subset": true,
+    "selected_ids": [
+      "grounded_boolean-zh-02",
+      "policy_choice-zh-03",
+      "rubric_score-en-01",
+      "routing_choice-zh-03",
+      "rubric_score-en-02",
+      "grounded_boolean-zh-01",
+      "rubric_score-zh-03",
+      "routing_choice-en-03"
+    ]
+  },
+  "backend": {
+    "provider": "agy",
+    "requested_model": "gemini-3.8-flash-low",
+    "effort": null,
+    "response_format": "agy-json-schema",
+    "timeout_ms": 30000,
+    "max_tokens": null,
+    "api_key_present": false,
+    "agy_version": "1.2.7",
+    "requested_model_listed": true
+  },
+  "protocol": {
+    "repeats": 1,
+    "batch_size": 1,
+    "excluded_warmup_requests": 1,
+    "max_consecutive_errors": 3,
+    "seed": 20260920,
+    "concurrency": 1,
+    "automatic_retries": 0,
+    "cache": "none in fast-jev; upstream cache unknown",
+    "process": "fresh agy process per request",
+    "planned_measured_requests": 8,
+    "planned_measured_cases": 8,
+    "score_tolerance": 0.5,
+    "primary_quality": "repeat 0; backend failures count against end-to-end accuracy, unrun cases do not masquerade as failed predictions",
+    "confidence": "not compared to calibrated probabilities",
+    "latency": "wall clock around decide including build, backend and local validation; request-level percentiles; batch elapsed/N is amortized cost, not individual response latency"
+  },
+  "order": [
+    {
+      "repeat": 0,
+      "case_ids": [
+        "rubric_score-en-01",
+        "grounded_boolean-zh-01",
+        "rubric_score-en-02",
+        "rubric_score-zh-03",
+        "routing_choice-en-03",
+        "routing_choice-zh-03",
+        "policy_choice-zh-03",
+        "grounded_boolean-zh-02"
+      ]
+    }
+  ],
+  "finished_at": "2026-09-20T06:10:56.105Z"
+}

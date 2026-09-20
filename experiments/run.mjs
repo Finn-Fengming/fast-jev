@@ -9,6 +9,7 @@ import { decide } from '../src/decision.mjs';
 import { resolveConfig } from '../src/config.mjs';
 import { loadSuite, buildBatch, unpackResults, shuffle, sourceHashes, hash } from './lib/suite.mjs';
 import { scoreCase, summarize, percentile } from './lib/metrics.mjs';
+import { classifyError } from './lib/errors.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { values } = parseArgs({ options: {
@@ -94,15 +95,6 @@ const requests = [];
 let stopReason = null;
 let fatal = null;
 const append = async (path, value) => appendFile(path, JSON.stringify(value) + '\n');
-const classifyError = error => {
-  const text = String(error.message ?? '');
-  const category = /auth|sign.?in|login/i.test(text) ? 'authentication'
-      : /timeout|exceeded.+ms/i.test(text) ? 'timeout'
-        : /429|quota|rate.limit/i.test(text) ? 'rate_limit'
-          : error.code === 'ABORTED' ? 'canceled' : 'backend_or_output';
-  const known = { authentication: 'Provider requires working authentication.', timeout: 'Provider exceeded the configured timeout.', rate_limit: 'Provider reported a rate or quota limit.', canceled: 'Experiment was canceled.', backend_or_output: 'Provider execution or output validation failed; reproduce locally for diagnostics.' };
-  return { code: error.code ?? 'ERROR', category, message: known[category] };
-};
 async function execute(items, repeat, phase) {
   const { request, mapping } = buildBatch(items);
   const requestId = `r${requests.length}`;

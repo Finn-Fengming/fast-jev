@@ -143,7 +143,7 @@ test('backend failures are incorrect end-to-end, excluded from observed-success 
   const summary = summarize([
     record('pass'),
     record('wrong', { score: scoreCase(example, results({ route: { value: 'ship' } })) }),
-    record('fail', { status: 'error', score: undefined, elapsed_ms: 5, error: { code: 'BACKEND_FAILURE' } }),
+    record('fail', { status: 'error', score: undefined, elapsed_ms: 5, error: { code: 'AGY_FAILED' } }),
     record('skip', { status: 'not_run', score: undefined, elapsed_ms: undefined }),
   ], { plannedCases: 4 });
   assert.equal(summary.attempted_count, 3);
@@ -154,7 +154,7 @@ test('backend failures are incorrect end-to-end, excluded from observed-success 
   assert.equal(summary.primary.choice_bool_accuracy, 3 / 4);
   assert.equal(summary.primary.latency_ms.sample_count, 3);
   assert.equal(summary.primary.successful_latency_ms.sample_count, 2);
-  assert.deepEqual(summary.primary.errors_by_code, { BACKEND_FAILURE: 1 });
+  assert.deepEqual(summary.primary.errors_by_code, { AGY_FAILED: 1 });
   const failed = summarize([record('fail', { status: 'error', score: undefined })]);
   assert.equal(failed.primary.end_to_end_correct_rate, 0);
   assert.equal(failed.primary.observed_success_accuracy, null);

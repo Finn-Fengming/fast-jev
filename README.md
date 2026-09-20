@@ -209,7 +209,7 @@ npm test
 npm run check
 ```
 
-`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency.
+`--dry-run` includes your input in its output. `doctor` checks setup; agy's model listing may contact its service. It does not prove inference works. `doctor --live` makes one real test decision and may incur provider usage. Tests use local fixtures/mocks; they do not establish model accuracy or production latency. All 113 local tests passed; the [CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml) passed on Linux/macOS with Node.js 22/24.
 
 For a small, real-call timing check:
 
@@ -226,6 +226,7 @@ The script reports samples, failures, and successful-call p50/p95. Each run make
 | API HTTP 400 | Check the model and explicitly select a supported response format |
 | Timeout | Check backend connectivity; increase `--timeout` only when appropriate |
 
+A [live check on 2026-09-20](experiments/results/agy-recovered-preflight-20260920/report.json) succeeded with agy 1.2.7 and `gemini-3.8-flash-low`: the decision took 20,956 ms, while the backend reported 7,293 ms. These have different timing boundaries; one check is not a latency distribution.
 
 ## Reproducible experiments
 
@@ -237,12 +238,29 @@ Run these commands from a repository checkout; the npm package excludes `experim
 # Inspect the plan without making a model call
 npm run experiment -- --provider agy --model gemini-3.8-flash-low --plan --split test --out experiments/results/my-plan
 # Use dev to choose settings, then freeze settings before evaluating test
-npm run experiment -- --provider agy --model gemini-3.8-flash-low --split dev --repeats 1 --out experiments/results/my-dev
-npm run experiment -- --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 1 --out experiments/results/my-test
-npm run experiment:report -- experiments/results/my-test
+env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split dev --limit 8 --repeats 1 --out experiments/results/my-dev
+env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 1 --batch-size 1 --out experiments/results/my-test-single
+env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 3 --batch-size 8 --out experiments/results/my-test-batch-8
+npm run experiment:report -- experiments/results/my-test-single
+npm run experiment:report -- experiments/results/my-test-batch-8
 ```
 
-**Current evidence (2026-09-20):** The saved single/batch schedules are plans, with zero measured test cases. Model quality and inference latency have not yet been measured. [Published Jev experiments](experiments/baselines/jev-public.md) are historical references from different datasets and environments, and cannot establish a direct ranking.
+**Live AGY results (2026-09-20).** The frozen 64-case test suite has real singleton and batch results:
+
+| Mode | First-repeat correct / attempted | Request success / attempted (all repeats) | Successful-request p50 / p95 |
+| --- | ---: | ---: | ---: |
+| [Singleton, one repeat](experiments/results/agy-recovered-test-single/report.md) | 62/64 (96.88%) | 62/64 | 11.92 s / 23.73 s |
+| [Batch of eight, three repeats](experiments/results/agy-recovered-test-batch-8/report.md) | 64/64 (100%) | 24/24 | 12.82 s / 21.16 s |
+
+Both failed requests were `AGY_TIMEOUT` at the 30 s timeout. All 62 successful predictions were correct; score tasks matched exactly in 16/16 cases (MAE 0). The 96.88% end-to-end rate includes the two failures. Successful-request percentiles exclude them; all-attempt p50/p95 were 11.94 s / 29.59 s.
+
+Batch mode answered all 192 case executions correctly, with exactly consistent predictions for all 64 cases across three repeats. Those repeats are not 192 independent quality samples. Mean batch time divided by eight was **1.69 s per case**, an amortized cost rather than individual response latency; request p50 was still 12.82 s. This small synthetic suite is not a production-quality guarantee.
+
+The raw singleton artifacts incorrectly label the two timeout errors as `authentication` in a secondary category field. Their `AGY_TIMEOUT` codes, failure counts and reported metrics are correct. The [erratum](experiments/ERRATA.md) preserves the original records and documents the error-classification fix applied after both formal runs.
+
+The [formal protocol](experiments/protocols/agy-recovery-20260920.md) was frozen before testing: all 64 test cases, one singleton repeat and three batch-of-eight repeats, a 30 s timeout, and unchanged production code. It contains the exact reproduction commands. Earlier [singleton](experiments/results/agy-recovered-dev-single/report.md) and [batch](experiments/results/agy-recovered-dev-batch-8/report.md) development checks each scored 8/8. A [lean-agent candidate](experiments/results/agy-lean-dev-single/report.md) also scored 8/8 on dev, but did not improve mean or tail latency and was not adopted. The historical `agy-single` and `agy-batch-8` directories remain **unexecuted plans**; actual runs use separate directories.
+
+[Published Jev experiments](experiments/baselines/jev-public.md) are separately sourced historical references. Different datasets, environments, and timing boundaries prevent a direct ranking or a claim that fast-jev beats Jev.
 
 We measured and improved local wrapper overhead by reusing an already validated request. In five alternating AB/BA pairs, each with 1,000 measured samples per batch size, the medians of per-run p50 were:
 

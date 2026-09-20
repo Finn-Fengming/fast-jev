@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "agy-timeout-classification-20260920",
+  "recorded_after_both_formal_runs": true,
+  "reason": "The experiment runner matched login in the AGY timeout troubleshooting hint before checking the timeout code.",
+  "raw_files_unchanged": true,
+  "metrics_unchanged": true,
+  "raw_sha256": {
+    "requests.jsonl": "5bd35f063a41944d4c9de3f722bd3ff8fddb4ca2ca799814b8fed6057d243412",
+    "records.jsonl": "eb00f372d7e2c16481aa7944273ee172cf51303dc149c4c21828ec5d10290705"
+  },
+  "corrections": [
+    {
+      "request_id": "r2",
+      "case_ids": [
+        "grounded_boolean-en-08"
+      ],
+      "error_code": "AGY_TIMEOUT",
+      "recorded_category": "authentication",
+      "correct_category": "timeout",
+      "correct_message": "Provider exceeded the configured timeout.",
+      "elapsed_ms": 30267.61
+    },
+    {
+      "request_id": "r7",
+      "case_ids": [
+        "grounded_boolean-en-10"
+      ],
+      "error_code": "AGY_TIMEOUT",
+      "recorded_category": "authentication",
+      "correct_category": "timeout",
+      "correct_message": "Provider exceeded the configured timeout.",
+      "elapsed_ms": 30265.159
+    }
+  ],
+  "fix": "experiments/lib/errors.mjs prioritizes AGY_TIMEOUT/TIMEOUT and ABORTED codes over diagnostic text. Production inference code and frozen run outputs were not changed."
+}

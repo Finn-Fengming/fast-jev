@@ -209,7 +209,7 @@ npm test
 npm run check
 ```
 
-`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。
+`--dry-run` 输出包含你的输入。`doctor` 检查配置，其中 agy 模型列表可能联系其服务；它不证明推理可用。`doctor --live` 发起一次真实测试判断，可能产生后端用量。测试采用本地固定数据或模拟后端，不能证明模型准确率或生产时延。本地 113 项测试通过；[CI](https://github.com/Finn-Fengming/fast-jev/actions/workflows/ci.yml)的 Linux/macOS × Node.js 22/24 四组任务也全部通过。
 
 可以进行小规模真实调用计时：
 
@@ -226,6 +226,7 @@ npm run benchmark -- --provider openai --model your-model-id --runs 3
 | API HTTP 400 | 检查模型，并显式选择端点支持的输出模式 |
 | 超时 | 检查后端连通性，再按需要增加 `--timeout` |
 
+[2026-09-20 的真实检查](experiments/results/agy-recovered-preflight-20260920/report.json)已成功，使用 agy 1.2.7 与 `gemini-3.8-flash-low`：一次决策耗时 20,956 ms，后端报告耗时 7,293 ms。两者计时边界不同，单次检查也不能代表时延分布。完整记录见 [验证文档](docs/validation.md)，实现边界见 [架构说明](docs/architecture.md)。
 
 ## 可复现实验
 
@@ -237,12 +238,29 @@ npm run benchmark -- --provider openai --model your-model-id --runs 3
 # 先查看计划，不调用模型
 npm run experiment -- --provider agy --model gemini-3.8-flash-low --plan --split test --out experiments/results/my-plan
 # 仅用开发集选配置，冻结后再运行测试集
-npm run experiment -- --provider agy --model gemini-3.8-flash-low --split dev --repeats 1 --out experiments/results/my-dev
-npm run experiment -- --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 1 --out experiments/results/my-test
-npm run experiment:report -- experiments/results/my-test
+env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split dev --limit 8 --repeats 1 --out experiments/results/my-dev
+env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 1 --batch-size 1 --out experiments/results/my-test-single
+env -u FAST_JEV_EFFORT npm run experiment -- --config examples/config.json --provider agy --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 --split test --repeats 3 --batch-size 8 --out experiments/results/my-test-batch-8
+npm run experiment:report -- experiments/results/my-test-single
+npm run experiment:report -- experiments/results/my-test-batch-8
 ```
 
-**当前证据（2026-09-20）：** 已保存的单例/批量目录是计划，正式测试案例运行数为零。模型质量和推理时延尚未测量。[公开 Jev 实验](experiments/baselines/jev-public.md)单独列出来源与条件，不同数据集与环境不能用于直接排名。
+**agy 真实测试结果（2026-09-20）。** 固定的 64 条测试案例已取得真实单例与批量结果：
+
+| 模式 | 首轮正确 / 已尝试案例 | 成功 / 已尝试请求（全部轮次） | 成功请求 p50 / p95 |
+| --- | ---: | ---: | ---: |
+| [单例，1 轮](experiments/results/agy-recovered-test-single/report.md) | 62/64（96.88%） | 62/64 | 11.92 秒 / 23.73 秒 |
+| [每批 8 例，3 轮](experiments/results/agy-recovered-test-batch-8/report.md) | 64/64（100%） | 24/24 | 12.82 秒 / 21.16 秒 |
+
+两次失败均为 30 秒超时限制触发的 `AGY_TIMEOUT`。其余 62 条成功预测全部正确；评分题 16/16 完全命中，MAE 为 0。96.88% 的端到端正确率包含这两次失败；成功请求时延分位数不包含失败，全体请求 p50/p95 为 11.94 秒 / 29.59 秒。
+
+批量模式三轮共 192 次案例执行全部正确，64 条案例的预测跨轮完全一致；重复调用不等于 192 条独立质量样本。平均批次耗时除以八为 **1.69 秒/例**，这是摊销耗时，每次请求 p50 仍为 12.82 秒。这套小规模合成案例不能保证生产环境质量。
+
+原始单例记录的辅助错误类别曾将两次超时误标为 `authentication`；`AGY_TIMEOUT` 错误码、失败数量和指标均正确。[勘误](experiments/ERRATA.md)保留原记录，并说明两组正式运行结束后应用的错误分类修复。
+
+[正式协议](experiments/protocols/agy-recovery-20260920.md)在测试前冻结：完整 64 条测试案例，单例 1 轮、8 例批量 3 轮，超时 30 秒，生产代码保持原样；协议附完整复现命令。此前[单例](experiments/results/agy-recovered-dev-single/report.md)与[批量](experiments/results/agy-recovered-dev-batch-8/report.md)开发检查各答对 8/8。[精简 agent 候选方案](experiments/results/agy-lean-dev-single/report.md)在开发集同样答对 8/8，但平均和尾部时延没有改善，因此未采用。历史 `agy-single`、`agy-batch-8` 目录仍是**未执行的计划**；实际实验另存目录。
+
+[公开 Jev 实验](experiments/baselines/jev-public.md)单独列出来源与条件。不同数据集、环境和计时方法不用于直接排名，也不能据此声称 fast-jev 超过 Jev。
 
 已通过复用校验后的请求，去掉一次重复输入校验。5 组交替 AB/BA 实验、每组每种批量大小各 1,000 个样本，得到以下各次运行 p50 的中位数：
 

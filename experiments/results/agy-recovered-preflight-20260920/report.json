@@ -1,0 +1,29 @@
+{
+  "kind": "live_agy_preflight",
+  "captured_at": "2026-09-20T06:06:05.651083+00:00",
+  "command": [
+    "node",
+    "bin/fast-jev.mjs",
+    "doctor",
+    "--live",
+    "--timeout",
+    "30000"
+  ],
+  "provider": "agy",
+  "requested_model": "gemini-3.8-flash-low",
+  "agy_version": "1.2.7",
+  "exit_code": 0,
+  "status": "ready",
+  "decision_elapsed_ms": 20956,
+  "backend_duration_ms": 7293,
+  "usage": {
+    "input_tokens": 13082,
+    "output_tokens": 1621,
+    "thinking_tokens": 1573,
+    "cache_read_tokens": 0,
+    "total_tokens": 14703
+  },
+  "source_decision_sha256": "ab06d87de38d06d29bec767ba63107f5a286a09f1f27f392904bec8cbaaf5910",
+  "accuracy": null,
+  "interpretation": "One successful real-provider connectivity check. Decision timing excludes doctor setup/probe; this is not a quality evaluation or reliable latency distribution."
+}

@@ -94,7 +94,7 @@ async function fixture(t, { batchSize = 2, status = 'ok', measured = true, selec
       records.push({
         phase: 'measure', repeat: 0, case_id: item.id,
         category: item.category, language: item.language, kind: item.request.questions[0].type,
-        status: 'not_run', elapsed_ms: null, reason: 'warmup_backend_failure',
+        status: 'not_run', elapsed_ms: null, reason: 'warmup_backend_or_output',
       });
     }
     requests.push({ request_id: 'warmup', phase: 'warmup', repeat: -1, case_ids: ['dev-case'], question_count: 1, status: 'error', elapsed_ms: 5, error: { code: 'AGY_FAILED' } });

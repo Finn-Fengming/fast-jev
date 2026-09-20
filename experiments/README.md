@@ -1,18 +1,41 @@
 # fast-jev 实验与复现
 
-本目录保存实验计划、离线封装开销实验、固定数据集与公开 Jev 参考资料。当前单例/批量目录是未执行计划；离线固定输出只用于测量本地代码开销，不代表模型准确率或推理速度。
+本目录保存真实 agy 实验、离线封装开销实验、固定数据集与公开 Jev 参考资料。**2026-09-20 的真实测试覆盖 64 条测试案例：正式单例正确率为 62/64（96.88%，含 2 次超时），每批 8 例模式首轮为 64/64（100%），三轮共 192 次案例执行全部正确。** 正式测试采用[事先冻结的协议](protocols/agy-recovery-20260920.md)，开发结果和测试结果分别报告。离线固定输出只用于测量本地代码开销，公开 Jev 数字只作未匹配的历史参考。
 
 | 实验 | 证据目录 | 测量对象 |
 |---|---|---|
+| agy 连通检查 | [agy-recovered-preflight-20260920](results/agy-recovered-preflight-20260920/report.json) | 真实成功；决策 20,956 ms，后端报告 7,293 ms，计时边界不同 |
+| 正式单例测试 | [agy-recovered-test-single](results/agy-recovered-test-single/report.md) | 64 例 × 1 轮；62 正确、2 次超时，完整覆盖 |
+| 正式批量测试 | [agy-recovered-test-batch-8](results/agy-recovered-test-batch-8/report.md) | 64 例 × 3 轮；24/24 请求成功，192/192 案例执行正确 |
+| 开发集单例 | [agy-recovered-dev-single](results/agy-recovered-dev-single/report.md) | 8/8 正确，8 次请求 p50 12,570.03 ms |
+| 开发集批量 | [agy-recovered-dev-batch-8](results/agy-recovered-dev-batch-8/report.md) | 8/8 正确，1 次请求 12,790.11 ms |
+| 未采用的候选方案 | [agy-lean-dev-single](results/agy-lean-dev-single/report.md)、[审计](results/agy-lean-dev-audit/report.json) | 8/8 正确，但均值和 p95 未改善；保留负结果 |
 | agy 单例计划 | [agy-single](results/agy-single/report.md) | 每请求 1 个案例的冻结计划，**未执行**，状态 `planned` |
 | agy 批量计划 | [agy-batch-8](results/agy-batch-8/report.md) | 每请求 8 个案例的冻结计划，**未执行**，状态 `planned` |
 | 封装优化 A/B | [overhead-ab](results/overhead-ab/) | 无网络、无模型推理的本地开销 |
 | 初次开销探索 | [before](results/local-overhead-before/)、[after](results/local-overhead-after/) | 先行探索样本；正式比较使用上面的配对实验 |
 | 外部 Jev 结果 | [研究说明](baselines/jev-public.md)、[JSON](baselines/jev-public.json) | 外部作者公开结果，本项目未调用 Jev API |
 
+## 正式测试结果
+
+两种正式测试均遵循预先冻结协议，使用全部 64 条测试案例，覆盖率 100%。正确率以首轮案例为单位，请求计数及请求时延使用各模式全部正式轮次：
+
+| 模式 | 首轮正确 / 已尝试案例 | 成功 / 已尝试请求 | 成功请求 p50 / p95（ms） | 全部请求 p50 / p95（ms） |
+|---|---:|---:|---:|---:|
+| [单例 1 轮](results/agy-recovered-test-single/report.md) | 62/64（96.88%） | 62/64 | 11,918.71 / 23,732.13 | 11,939.07 / 29,590.07 |
+| [每批 8 例，3 轮](results/agy-recovered-test-batch-8/report.md) | 64/64（100%） | 24/24 | 12,815.80 / 21,160.12 | 12,815.80 / 21,160.12 |
+
+单例的两次失败都是 30 秒限制触发的 `AGY_TIMEOUT`，保留在端到端正确率分母；62 条成功输出全部正确。16 条评分案例均完全命中，MAE 为 0；此处不依赖 ≤ 0.5 的评分容差来取得正确。单例只有一轮，跨轮一致性不可用。成功请求分位数排除失败，全部请求分位数包含失败耗时；它们都包括进程启动与封装开销，不是纯模型推理时间。合成集的成绩不能证明生产流量泛化，也不能与外部 Jev 成绩直接排名。
+
+批量模式首轮 64/64 正确，三轮共 192/192 次案例执行正确，64/64 条案例的预测跨轮完全一致；首轮 16 条评分题全部精确命中，MAE 为 0。重复三次不增加独立测试案例数。成功请求均值为 13,539.35 ms，除以每批 8 例后为 **1,692.42 ms/例**。这是摊销耗时，单条输入仍须等待整个批次完成；不能把它称为单次响应时延或与 Jev 单次 API p50 对比。
+
+两组均为顺序运行，请求时延样本分别为单例 64 个（成功 62 个）与批量 24 个。观察到的批量摊销成本较低，但不能据此保证其他工作负载的提速，也不能将两次单例超时直接归因于批量与否。首轮端到端正确率的 Wilson 95% 区间为单例 89.30%–99.14%、批量 94.34%–100%；共享模板的合成案例仍限制统计独立性与代表性。
+
+[错误分类勘误](ERRATA.md)：原始单例记录将两个 `AGY_TIMEOUT` 的辅助类别误写成 `authentication`，原因是超时提示中含有 `login`，旧分类规则先匹配了该词。错误码、原始耗时、失败数量和得分均正确。两组冻结实验完成后才修复分类器，并添加 10 项回归测试；当前 113/113 测试及语法检查通过。原始数据未改写，生产适配器与评分逻辑未变。
+
 ## 固定数据与评估边界
 
-`agy-single` 和 `agy-batch-8` 当前由 `--plan` 生成，全部正式案例是 `not_run`；不是已经完成的 benchmark，也不是由真实请求生成的失败预测。正式运行请使用新的输出目录，不覆盖这些计划记录。
+`agy-single` 和 `agy-batch-8` 由 `--plan` 生成，全部正式案例是 `not_run`；它们一直是未执行计划，不是已经完成的 benchmark，也不是由真实请求生成的失败预测。实际请求另存于 `agy-recovered-*` 目录，不覆盖计划记录。
 
 [数据集说明](data/README.md)与 [decision-suite.jsonl](data/decision-suite.jsonl)包含 96 条原创合成案例：开发集 32 条、测试集 64 条，中英文各半，覆盖分类路由、布尔判断、0–2 评分和规则决策。参考答案依据题目内的明确规则预先固定，由 AI 辅助编写，**尚未独立人工标注或复核**；被测 Gemini 未参与生成或修改参考答案。
 
@@ -21,6 +44,14 @@
 ```text
 f0bfdd47121bf16ee1600583ea06aa58a69aeecd8e5d679560dc1447ba696e2c
 ```
+
+## 开发检查与配置选择
+
+[真实连通检查](results/agy-recovered-preflight-20260920/report.json)在 agy 1.2.7、`gemini-3.8-flash-low` 下完成。20,956 ms 是一次决策计时，7,293 ms 是后端报告时长；不将二者混作 CLI 时延，也不从一次检查推断准确率。
+
+生产适配器与精简 agent 候选使用相同的 8 条开发案例，各正确 8/8。生产版的请求 p50 / 均值 / p95 为 **12,570.03 / 13,069.34 / 20,561.11 ms**；候选为 **11,955.33 / 13,396.23 / 25,575.76 ms**。这只是小规模顺序实验，不能证明统计显著差异；候选虽有较低 p50，均值和尾部时延未改善，因此**不采用候选，生产源码保持原样**。批量开发检查把同 8 个案例合入 1 次请求，全部答对，耗时 12,790.11 ms；每例 1,598.76 ms 是摊销耗时，不是每例响应延迟。
+
+候选的独立审计观察到 agent 名称 `fast-jev`、57 个声明工具、0 个工具事件、`num_turns: 2` 和 26,492 输入 token。它不证明工具不可用，也不解释 token 与轮次计数的成因。[候选原始结果](results/agy-lean-dev-single/)和[审计记录](results/agy-lean-dev-audit/report.json)一起保留，不只报告最有利的数值。
 
 ## 运行真实 agy 实验
 
@@ -32,21 +63,38 @@ f0bfdd47121bf16ee1600583ea06aa58a69aeecd8e5d679560dc1447ba696e2c
 node experiments/run.mjs --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 1 --plan --out experiments/results/my-plan
 ```
 
-用开发集检查设置，然后固定参数运行测试：
+用开发集检查设置；本次评测只用其中选定的 8 例做配置选择：
 
 ```bash
-node experiments/run.mjs --provider agy --model gemini-3.8-flash-low --split dev --repeats 3 --batch-size 1 --out experiments/results/my-dev
-node experiments/run.mjs --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 1 --out experiments/results/my-agy-single
-node experiments/run.mjs --provider agy --model gemini-3.8-flash-low --split test --repeats 3 --batch-size 8 --out experiments/results/my-agy-batch-8
+env -u FAST_JEV_EFFORT node experiments/run.mjs \
+  --config examples/config.json --provider agy --model gemini-3.8-flash-low \
+  --agy-bin agy --timeout 30000 --split dev --limit 8 --repeats 1 \
+  --batch-size 1 --seed 20260920 --out experiments/results/my-dev
 ```
 
 `--out` 必须是**新目录**，已有目录会报错；计划和正式运行也应使用不同目录。省略 `--out` 会生成带时间戳的目录。完整选项见 `node experiments/run.mjs --help`。可用 `--timeout 60000` 延长默认 30 秒超时，用 `--agy-bin` 指定程序；改变参数须保留到新的实验目录。
 
-默认协议如下：
+测试前冻结的[评测协议](protocols/agy-recovery-20260920.md)将单例缩为 1 轮、批量保留 3 轮；这是依据开发阶段约 13 秒的单例耗时作出的预先调整，没有减少 64 条测试案例。复现正式设置时运行：
+
+```bash
+env -u FAST_JEV_EFFORT node experiments/run.mjs \
+  --config examples/config.json --provider agy \
+  --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 \
+  --split test --repeats 1 --batch-size 1 --warmup 1 \
+  --seed 20260920 --max-errors 3 --out experiments/results/my-agy-single
+
+env -u FAST_JEV_EFFORT node experiments/run.mjs \
+  --config examples/config.json --provider agy \
+  --model gemini-3.8-flash-low --agy-bin agy --timeout 30000 \
+  --split test --repeats 3 --batch-size 8 --warmup 1 \
+  --seed 20260920 --max-errors 3 --out experiments/results/my-agy-batch-8
+```
+
+协议边界如下：
 
 - seed 为 `20260920`，每轮按固定种子打乱顺序；并发为 1，fast-jev 无自动重试。每次请求启动新的 agy 进程；上游缓存行为未知。
 - 先执行 1 次开发案例预热请求，排除在正式指标之外。预热失败即停止；正式请求连续失败 3 次也停止。未运行案例写为 `not_run`，不能当作已产生错误预测。
-- 完整测试计划含 64 个案例 × 3 轮：单例模式 192 次正式请求，8 例模式 24 次，另加预热。重复调用用于观察稳定性和时延，不增加独立题目数。
+- 历史未执行计划两种模式均为 64 例 × 3 轮。正式协议为单例 64 例 × 1 轮、64 次正式请求；批量 64 例 × 3 轮、24 次正式请求，两种模式各加一次预热。重复调用不增加独立题目数；单例只有一轮，不报告跨轮一致性，两种模式的时延样本数不同。
 - 8 例模式把各案例事实放入 `state.inputs`，问题明确只读取对应输入。它改变输入长度和请求结构，需要单独报告正确率；不能预设批量与单例等效。
 
 若预热失败、正式预测为零，准确率及成功请求时延显示 `null` / `N/A`，不是 0% 或极速推理。失败耗时不纳入成功推理速度。
@@ -121,12 +169,16 @@ node experiments/local-overhead.mjs --variant current --iterations 1000 --warmup
 
 ## Jev 外部参考的使用
 
-[公开资料研究](baselines/jev-public.md)和[机器可读数据](baselines/jev-public.json)记录第三方及官方结果、固定来源版本和具体计时方法。原生 Jev 本次仅引用公开资料，没有调用其推理 API。不同数据集、标签、地区、并发、重试和计时边界的结果必须分开；不能拼接某研究最高准确率与另一研究最低时延，也不能据此宣称 fast-jev 胜出。
+[公开资料研究](baselines/jev-public.md)和[机器可读数据](baselines/jev-public.json)记录第三方及官方结果、固定来源版本和具体计时方法。原生 Jev 本次仅引用公开资料，没有调用其推理 API。不同数据集、标签、运行环境、并发、重试和计时边界的结果必须分开；不能拼接某研究最高准确率与另一研究最低时延，也不能据此宣称 fast-jev 胜出。
 
 ## Reproduction in English
 
-Use Node.js 22+ and a working local agy installation. From the repository root, run `experiments/run.mjs` with `--provider agy --model gemini-3.8-flash-low`, `--split dev` or `--split test`, `--repeats 3`, and `--batch-size 1` or `8`. Add `--plan` to freeze a no-inference plan. Every `--out` must name a new directory; omitting it creates a timestamped path.
+Use Node.js 22+ and a working local agy installation. The [frozen evaluation protocol](protocols/agy-recovery-20260920.md) contains exact commands with an explicit config, model, 30 s timeout and fixed seed. It evaluates all 64 test cases once in singleton mode and three times in batch-of-eight mode. This repeat-count amendment was made before test, based on development timing. Singleton repeat consistency is unavailable. Add `--plan` to create a no-inference plan. Every `--out` must name a new directory; omitting it creates a timestamped path.
 
 The suite contains 96 synthetic, AI-assisted rule-labeled cases (32 dev / 64 test), without independent human annotation. Freeze tuning on dev before test. A failed warmup stops measurement; absent predictions remain N/A. Recompute from saved evidence with `node experiments/report.mjs DIRECTORY`; stored scores are ignored. Report request-level latency separately from amortized batch cost.
 
-Run `node experiments/compare-overhead.mjs --pairs 5 --iterations 1000 --out experiments/results/my-overhead-ab` for the offline wrapper A/B. Fixed responses do not measure model quality or inference speed. External Jev results are historical references, not a matched comparison.
+Run `node experiments/compare-overhead.mjs --pairs 5 --iterations 1000 --out experiments/results/my-overhead-ab` for the offline wrapper A/B. Fixed responses do not measure model quality or inference speed.
+
+The live connectivity check succeeded. The formal singleton run scored 62/64 end-to-end, with two 30 s timeouts and all 62 successful predictions correct. Batch-of-eight scored 64/64 in the primary repeat and 192/192 across three repeats, with 24/24 successful requests and exact consistency for all 64 cases. Successful-request p50/p95 were 11.92/23.73 s for singleton and 12.82/21.16 s for batch. Batch amortized mean was 1.69 s per case, not individual response latency; repeated cases are not extra independent samples.
+
+The [erratum](ERRATA.md) documents a secondary timeout-category fix made after measurement without changing raw evidence or metrics. The lean-agent candidate did not improve mean or tail development latency and was not adopted. The synthetic suite does not establish production performance. External Jev results are historical references, not a matched comparison.

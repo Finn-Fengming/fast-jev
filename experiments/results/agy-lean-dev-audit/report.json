@@ -1,0 +1,51 @@
+{
+  "kind": "exploratory_dev_transport_audit",
+  "created_at": "2026-09-20T06:24:52.729Z",
+  "case_id": "rubric_score-en-01",
+  "request": {
+    "state": {
+      "customer_issue": "The label printer prints blank labels.",
+      "reply": "Thank you for contacting us. We value your feedback and hope to help soon."
+    },
+    "questions": [
+      {
+        "id": "decision",
+        "type": "score",
+        "prompt": "Score the support reply for two required elements: explicitly restating the customer's actual issue, and giving a concrete next action. A generic apology or promise to help does not restate an issue; a vague promise is not a concrete action. Negated or merely quoted elements do not count.\n0: Neither required element is present.\n1: Exactly one required element is present.\n2: Both required elements are present.",
+        "min": 0,
+        "max": 2
+      }
+    ]
+  },
+  "requested_model": "gemini-3.8-flash-low",
+  "status": "ok",
+  "elapsed_ms": 27909.426499999998,
+  "backend_duration_ms": 4146,
+  "usage": {
+    "input_tokens": 26492,
+    "output_tokens": 53,
+    "thinking_tokens": 0,
+    "cache_read_tokens": 0,
+    "total_tokens": 26545
+  },
+  "diagnostic": {
+    "init_agent": "fast-jev",
+    "init_tool_count": 57,
+    "tool_event_count": 0,
+    "completed_tool_event_count": 0,
+    "unique_indexed_tool_steps": 0,
+    "builtin_tool_event_counts": {},
+    "other_tool_name_event_count": 0,
+    "num_turns": 2
+  },
+  "results": [
+    {
+      "id": "decision",
+      "type": "score",
+      "value": 0,
+      "confidence": 1,
+      "status": "ok"
+    }
+  ],
+  "adapter_sha256": "11e2bd64bf9e8eaffda3a67542c52ba88178da747c7905ec64a743b142814c55"
+}
